@@ -2,9 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JAMB Past Questions – Practise real exam questions, free</title>
-<meta name="description" content="Practise JAMB UTME past questions by subject and year, with answers and explanations. Free.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script>document.documentElement.className="js"</script>
+
+<title>Free JAMB Past Questions &amp; Answers | JAMB PQ</title>
+<meta name="description" content="Practise JAMB UTME past questions by subject and year, with answers and explanations. Free, and works on any phone.">
+<meta name="keywords" content="JAMB past questions, UTME past questions, JAMB practice, JAMB CBT, free JAMB questions">
+<meta name="author" content="Osiaru">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://jamb-pq.osiaru.top/">
+
+<meta property="og:title" content="Free JAMB Past Questions &amp; Answers | JAMB PQ">
+<meta property="og:description" content="Practise JAMB UTME past questions by subject and year, with answers and explanations.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jamb-pq.osiaru.top/">
+<meta property="og:image" content="https://jamb-pq.osiaru.top/img/og.png">
+<meta property="og:site_name" content="JAMB PQ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free JAMB Past Questions &amp; Answers | JAMB PQ">
+<meta name="twitter:description" content="Practise JAMB UTME past questions by subject and year, with answers and explanations.">
+<meta name="twitter:image" content="https://jamb-pq.osiaru.top/img/og.png">
+
+<meta name="theme-color" content="#0d5c3a">
+<meta name="format-detection" content="telephone=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JAMB PQ">
+<link rel="icon" href="./img/icon.png">
+<link rel="apple-touch-icon" href="./img/icon.png">
+<link rel="manifest" href="./manifest.json">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"JAMB PQ","url":"https://jamb-pq.osiaru.top/","description":"Free JAMB UTME past questions with answers and explanations."}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
@@ -12,32 +44,42 @@
 :root{
   --ink:#10221a; --muted:#52645a; --paper:#fbfaf5; --sheet:#ffffff;
   --green:#0d5c3a; --green-d:#08402a; --pencil:#f4c430; --line:#dfe5df;
-  --ok:#0d7a44; --bad:#b3261e;
+  --ok:#0d7a44; --bad:#b3261e; --live:#19b866;
 }
 @media (prefers-color-scheme:dark){
   :root{--ink:#eef3ee; --muted:#a3b3a9; --paper:#0d1a13; --sheet:#14261c; --line:#26402f; --green:#2fa36b; --green-d:#53c78e;}
 }
 *{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth}
-body{font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:17px}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:72px}
+body{font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:17px;overflow-x:hidden;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--pencil);outline-offset:3px}
+.opt,.btn,.subjects a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-header{border-bottom:1px solid var(--line)}
-nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+
+/* header: sticky, lifts on scroll */
+header{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--paper) 94%,transparent);transition:box-shadow .2s}
+header.scrolled{box-shadow:0 6px 20px -12px rgba(8,64,42,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+nav{display:flex;align-items:center;justify-content:space-between;height:64px;position:relative}
 .logo{font-weight:800;font-size:1.2rem;text-decoration:none;display:flex;align-items:center;gap:10px}
 .logo i{width:26px;height:26px;border-radius:50%;background:var(--green);display:grid;place-items:center}
 .logo i::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--pencil)}
 nav ul{display:flex;gap:24px;list-style:none;padding:0;align-items:center}
 nav ul a{text-decoration:none;color:var(--muted);font-size:.95rem}
 nav ul a:hover{color:var(--ink)}
-.btn{display:inline-block;background:var(--green);color:#fff;font-weight:600;text-decoration:none;padding:13px 24px;border-radius:8px;border:2px solid var(--green);transition:background .15s}
+.menu-btn{display:none;background:transparent;border:1px solid var(--line);color:var(--ink);width:44px;height:44px;border-radius:10px;cursor:pointer;align-items:center;justify-content:center}
+.menu-btn svg{width:22px;height:22px}
+.btn{display:inline-block;background:var(--green);color:#fff;font-weight:600;text-decoration:none;padding:13px 24px;border-radius:8px;border:2px solid var(--green);transition:background .15s;font-family:inherit;font-size:1rem;cursor:pointer}
 .btn:hover{background:var(--green-d)}
 .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
 .btn.ghost:hover{border-color:var(--ink);background:transparent}
 nav .btn{padding:8px 16px;color:#fff!important}
 
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:72px 4px 80px}
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:64px 5px 72px}
+.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--sheet);border-radius:999px;padding:5px 14px 5px 10px;font-size:.88rem;font-weight:600;margin-bottom:18px}
+.badge i{width:9px;height:9px;border-radius:50%;background:var(--live);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(25,184,102,.55)}70%{box-shadow:0 0 0 8px rgba(25,184,102,0)}100%{box-shadow:0 0 0 0 rgba(25,184,102,0)}}
 h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.08;font-weight:800;letter-spacing:-.02em}
 .lead{color:var(--muted);font-size:1.15rem;margin:20px 0 28px;max-width:46ch}
 .cta{display:flex;flex-wrap:wrap;gap:12px}
@@ -56,6 +98,13 @@ h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.08;font-weight:800;letter-sp
 .expl{display:none;margin-top:6px;font-size:.95rem;color:var(--muted);border-left:4px solid var(--pencil);padding-left:12px}
 .expl.show{display:block}
 
+/* stats bar */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:var(--sheet);border-radius:14px;margin-bottom:72px}
+.stats div{padding:22px 16px;text-align:center;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0}
+.stats b{display:block;font-size:1.5rem;font-weight:800;color:var(--green);line-height:1.2}
+.stats span{font-size:.88rem;color:var(--muted)}
+
 section{padding:72px 0;border-top:1px solid var(--line)}
 h2{font-size:clamp(1.6rem,3.2vw,2.2rem);line-height:1.15;font-weight:800;letter-spacing:-.01em;margin-bottom:12px}
 .sub{color:var(--muted);max-width:56ch;margin-bottom:36px}
@@ -63,6 +112,7 @@ h2{font-size:clamp(1.6rem,3.2vw,2.2rem);line-height:1.15;font-weight:800;letter-
 .subjects{display:flex;flex-wrap:wrap;gap:10px}
 .subjects a{text-decoration:none;border:1px solid var(--line);background:var(--sheet);padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem}
 .subjects a:hover{border-color:var(--green);color:var(--green)}
+.subjects .loading{color:var(--muted);font-weight:400}
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;list-style:none;padding:0;counter-reset:s}
 .steps li{counter-increment:s;padding-top:16px;border-top:4px solid var(--green)}
@@ -79,27 +129,90 @@ h2{font-size:clamp(1.6rem,3.2vw,2.2rem);line-height:1.15;font-weight:800;letter-
 .final p{opacity:.9;margin:0 auto 24px;max-width:48ch}
 .final .btn{background:var(--pencil);border-color:var(--pencil);color:#10221a}
 .final .btn:hover{background:#ffd75a}
-footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:.9rem}
-footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:48px 0 24px;color:var(--muted);font-size:.95rem}
+.fcols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px}
+.fcols h3{color:var(--ink);font-size:1rem;margin-bottom:10px}
+.fcols ul{list-style:none;padding:0}
+.fcols li{margin-bottom:6px}
+.fcols a{text-decoration:none}
+.fcols a:hover{color:var(--green);text-decoration:underline}
+.fbrand p{max-width:34ch;margin-top:8px}
+.fbottom{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;font-size:.88rem}
+
+/* install banner */
+.install{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:440px;margin:0 auto;z-index:30;background:var(--sheet);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 40px -12px rgba(0,0,0,.35);padding:12px 12px 12px 16px;display:none;align-items:center;gap:12px}
+.install.show{display:flex}
+.install p{flex:1;font-size:.92rem;line-height:1.35}
+.install .btn{padding:9px 16px;font-size:.92rem}
+.install button.x{background:transparent;border:0;color:var(--muted);font-size:1.1rem;cursor:pointer;width:32px;height:32px}
+
+/* scroll reveal (only when JS is on) */
+.js .fade-in{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.js .fade-in.in{opacity:1;transform:none}
 
 @media (max-width:820px){
-  .hero{grid-template-columns:1fr;padding:48px 9px}
+  .hero{grid-template-columns:1fr;gap:32px;padding:36px 9px 48px}
   .steps,.feat{grid-template-columns:1fr}
-  nav ul li:not(:last-child){display:none}
-  section{padding:56px 0}
+  .steps{gap:24px}
+  .feat{gap:22px}
+  section{padding:48px 0}
+  .sub{margin-bottom:24px}
+  .stats{grid-template-columns:repeat(2,1fr);margin-bottom:48px}
+  .stats div:nth-child(3){border-left:0}
+  .stats div:nth-child(n+3){border-top:1px solid var(--line)}
+  .fcols{grid-template-columns:1fr 1fr}
+  .fbrand{grid-column:1/-1}
+  .menu-btn{display:inline-flex}
+  nav ul{display:none;position:absolute;top:100%;left:-20px;right:-20px;flex-direction:column;align-items:stretch;gap:0;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 14px 24px -14px rgba(8,64,42,.4);padding:8px 20px 16px}
+  nav ul.open{display:flex}
+  nav ul li a{display:block;padding:13px 4px;font-size:1.05rem}
+  nav ul li:last-child{margin-top:8px}
+  nav ul li:last-child a{text-align:center;padding:14px}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media (max-width:560px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  nav{height:56px}
+  nav ul{left:-16px;right:-16px;padding:8px 16px 16px}
+  .logo{font-size:1.1rem}
+  h1{font-size:2.05rem;line-height:1.12}
+  .lead{font-size:1.05rem;margin:14px 0 22px}
+  .cta{flex-direction:column}
+  .cta .btn{width:100%;text-align:center;padding:15px 20px}
+  .note{text-align:center}
+  .sheet{padding:18px 16px;border-radius:12px}
+  .sheet p.q{font-size:1.05rem}
+  .opt{min-height:50px;padding:10px 12px;gap:12px}
+  .subjects{gap:8px}
+  .subjects a{padding:9px 14px;font-size:.9rem}
+  .steps li{padding-top:12px}
+  .final{padding:40px 20px;margin-bottom:48px;border-radius:14px}
+  .final .btn{width:100%;text-align:center}
+  .fcols{grid-template-columns:1fr}
+  footer{padding-top:36px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important;animation:none!important}
+  .js .fade-in{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
-<header>
+<header id="mainHeader">
   <div class="wrap">
     <nav aria-label="Main">
       <a class="logo" href="/"><i aria-hidden="true"></i>JAMB PQ</a>
-      <ul>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navList">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <ul id="navList">
         <li><a href="#subjects">Subjects</a></li>
         <li><a href="#how">How it works</a></li>
         <li><a href="#why">Why JAMB PQ</a></li>
+        <li><a href="#contact">Contact</a></li>
         <li><a class="btn" href="#start">Start practising</a></li>
       </ul>
     </nav>
@@ -109,6 +222,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 <main>
   <div class="wrap hero">
     <div>
+      <span class="badge"><i aria-hidden="true"></i>Free and always available</span>
       <h1>Practise with the questions JAMB has already asked.</h1>
       <p class="lead">Past UTME questions, sorted by subject and year, with the correct answer and a short explanation for each. Free to use.</p>
       <div class="cta">
@@ -131,48 +245,52 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
     </div>
   </div>
 
+  <div class="wrap">
+    <div class="stats">
+      <div class="fade-in"><b>100%</b><span>Free to use</span></div>
+      <div class="fade-in"><b>13</b><span>Subjects</span></div>
+      <div class="fade-in"><b>Every</b><span>Question explained</span></div>
+      <div class="fade-in"><b>Any</b><span>Phone or laptop</span></div>
+    </div>
+  </div>
+
   <section id="subjects">
     <div class="wrap">
-      <h2>Pick your subject</h2>
-      <p class="sub">Choose the subjects in your combination and practise them one at a time.</p>
-      <div class="subjects">
-        <a href="#start">Use of English</a><a href="#start">Mathematics</a><a href="#start">Physics</a>
-        <a href="#start">Chemistry</a><a href="#start">Biology</a><a href="#start">Economics</a>
-        <a href="#start">Government</a><a href="#start">Literature in English</a><a href="#start">Commerce</a>
-        <a href="#start">Accounting</a><a href="#start">Geography</a><a href="#start">CRK</a><a href="#start">IRK</a>
-      </div>
+      <h2 class="fade-in">Pick your subject</h2>
+      <p class="sub fade-in">Choose the subjects in your combination and practise them one at a time.</p>
+      <div class="subjects" id="subjectList"><span class="loading">Loading subjects…</span></div>
     </div>
   </section>
 
   <section id="how">
     <div class="wrap">
-      <h2>How it works</h2>
-      <p class="sub">You can be answering questions in under a minute.</p>
+      <h2 class="fade-in">How it works</h2>
+      <p class="sub fade-in">You can be answering questions in under a minute.</p>
       <ol class="steps">
-        <li><h3>Choose a subject</h3><p>Open any subject and pick the exam year you want to practise.</p></li>
-        <li><h3>Answer the questions</h3><p>Work through the questions the way you would in the real exam.</p></li>
-        <li><h3>Check and learn</h3><p>See the correct answer and the explanation, then revisit what you got wrong.</p></li>
+        <li class="fade-in"><h3>Choose a subject</h3><p>Open any subject and pick the exam year you want to practise.</p></li>
+        <li class="fade-in"><h3>Answer the questions</h3><p>Work through the questions the way you would in the real exam.</p></li>
+        <li class="fade-in"><h3>Check and learn</h3><p>See the correct answer and the explanation, then revisit what you got wrong.</p></li>
       </ol>
     </div>
   </section>
 
   <section id="why">
     <div class="wrap">
-      <h2>Built for exam preparation</h2>
-      <p class="sub">Everything is kept simple so you spend your time practising, not searching.</p>
+      <h2 class="fade-in">Built for exam preparation</h2>
+      <p class="sub fade-in">Everything is kept simple so you spend your time practising, not searching.</p>
       <div class="feat">
-        <div><h3>Organised by year</h3><p>See how topics and question styles repeat across exam years.</p></div>
-        <div><h3>Answers with explanations</h3><p>Understand why an option is correct so you can solve similar questions.</p></div>
-        <div><h3>Light and fast</h3><p>Pages load quickly on mobile data, so you can practise anywhere.</p></div>
-        <div><h3>Free for every student</h3><p>No sign-up fee and no locked subjects.</p></div>
+        <div class="fade-in"><h3>Organised by year</h3><p>See how topics and question styles repeat across exam years.</p></div>
+        <div class="fade-in"><h3>Answers with explanations</h3><p>Understand why an option is correct so you can solve similar questions.</p></div>
+        <div class="fade-in"><h3>Light and fast</h3><p>Pages load quickly on mobile data, so you can practise anywhere.</p></div>
+        <div class="fade-in"><h3>Free for every student</h3><p>No sign-up fee and no locked subjects.</p></div>
       </div>
     </div>
   </section>
 
   <section id="start" style="border-top:0;padding-bottom:0">
     <div class="wrap">
-      <div class="final">
-        <h2>Start your next practice session</h2>
+      <div class="final fade-in">
+        <h2>Ready to start practising?</h2>
         <p>Pick a subject and answer your first set of past questions today.</p>
         <a class="btn" href="#subjects">Choose a subject</a>
       </div>
@@ -182,15 +300,59 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 
 <footer>
   <div class="wrap">
-    <span>&copy; <span id="yr">2026</span> JAMB PQ &middot; jamb-pq.osiaru.top</span>
-    <span>Powered by <a href="http://osiaru.top">Osiaru Tech</a></span>
-    <span>An independent study resource. Not affiliated with JAMB.</span>
+    <div class="fcols">
+      <div class="fbrand">
+        <h3>JAMB PQ</h3>
+        <p>Free JAMB past questions with answers and explanations.</p>
+      </div>
+      <div>
+        <h3>Quick links</h3>
+        <ul>
+          <li><a href="#subjects">Subjects</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#why">Why JAMB PQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Support</h3>
+        <ul>
+          <li><a href="#">Help centre</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Terms of service</a></li>
+        </ul>
+      </div>
+      <div id="contact">
+        <h3>Contact</h3>
+        <ul>
+          <li><a href="#">WhatsApp</a></li>
+          <li><a href="#">Telegram channel</a></li>
+          <li><a href="#">Email us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbottom">
+      <span>&copy; <span id="yr">2026</span> JAMB PQ &middot; Built by <a href="#">Osiaru Tech</a></span>
+      <span>An independent study resource. Not affiliated with JAMB.</span>
+    </div>
   </div>
 </footer>
 
+<div class="install" id="installPrompt" role="dialog" aria-label="Install JAMB PQ">
+  <p>Install JAMB PQ on your phone for quick access.</p>
+  <button class="btn" id="installBtn">Install</button>
+  <button class="x" id="installDismiss" aria-label="Dismiss">&#10005;</button>
+</div>
+
 <script>
 (function(){
+  /* ---------- config ---------- */
+  var API_URL = "";      // e.g. "https://api.example.com" – expects GET /subjects -> {data:[{name}]}
+  var APP_URL = "";      // practice app URL, e.g. "/app/". Empty keeps links on this page.
+  var FALLBACK = ["Use of English","Mathematics","Physics","Chemistry","Biology","Economics","Government","Literature in English","Commerce","Accounting","Geography","CRK","IRK"];
+
   document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ---------- sample question ---------- */
   var opts = document.querySelectorAll('#opts .opt'), expl = document.getElementById('expl'), done = false;
   opts.forEach(function(o){
     o.addEventListener('click', function(){
@@ -200,8 +362,83 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
       expl.classList.add('show');
     });
   });
+
+  /* ---------- subjects: API with 100-minute localStorage cache, static fallback ---------- */
+  var box = document.getElementById('subjectList');
+  function render(list){
+    box.innerHTML = "";
+    list.forEach(function(name){
+      var a = document.createElement('a');
+      a.textContent = name;
+      a.href = APP_URL ? APP_URL + "?subject=" + encodeURIComponent(name) : "#start";
+      box.appendChild(a);
+    });
+  }
+  function load(){
+    if(!API_URL){ render(FALLBACK); return; }
+    var cached = null;
+    try { cached = JSON.parse(localStorage.getItem("jambSubjects")); } catch(e){}
+    if(cached && cached.expires > Date.now()){ render(cached.data); return; }
+    fetch(API_URL + "/subjects").then(function(r){
+      if(!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function(j){
+      var list = j.data.map(function(s){ return String(s.name).split("_").join(" "); });
+      try { localStorage.setItem("jambSubjects", JSON.stringify({expires: Date.now() + 100*60*1000, data: list})); } catch(e){}
+      render(list);
+    }).catch(function(){ render(FALLBACK); });
+  }
+  load();
+
+  /* ---------- mobile menu ---------- */
+  var btn = document.getElementById('menuBtn'), list = document.getElementById('navList');
+  function setMenu(open){
+    list.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); setMenu(!list.classList.contains('open')); });
+  list.addEventListener('click', function(e){ if(e.target.closest('a')) setMenu(false); });
+  document.addEventListener('click', function(e){ if(!list.contains(e.target)) setMenu(false); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setMenu(false); });
+
+  /* ---------- header lifts on scroll ---------- */
+  var header = document.getElementById('mainHeader');
+  window.addEventListener('scroll', function(){
+    header.classList.toggle('scrolled', window.scrollY > 50);
+  }, {passive:true});
+
+  /* ---------- fade in on scroll ---------- */
+  var items = document.querySelectorAll('.fade-in');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, {threshold:0.1});
+    items.forEach(function(el, i){ el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
+  } else {
+    items.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* ---------- install prompt (shows only when the browser allows it) ---------- */
+  var deferred = null, banner = document.getElementById('installPrompt');
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); deferred = e;
+    var dismissed = false;
+    try { dismissed = sessionStorage.getItem('installDismissed'); } catch(err){}
+    if(!dismissed) banner.classList.add('show');
+  });
+  document.getElementById('installBtn').addEventListener('click', function(){
+    if(!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.finally(function(){ deferred = null; banner.classList.remove('show'); });
+  });
+  document.getElementById('installDismiss').addEventListener('click', function(){
+    banner.classList.remove('show');
+    try { sessionStorage.setItem('installDismissed','1'); } catch(err){}
+  });
 })();
 </script>
 </body>
 </html>
-
