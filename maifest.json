@@ -1,7 +1,7 @@
 {
   "name": "JAMB PQ",
   "short_name": "JAMB PQ",
-  "description": "Free JAMB past questions with answers and explanations.",
+  "description": "JAMB UTME past questions with answers and explanations.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#fbfaf5",
