@@ -1,0 +1,514 @@
+/* =========================================================
+   JAMB PQ · auth pages (sign-up, sign-in, forgot-password)
+   Uses the same tokens as the landing page.
+   Breakpoint note: media queries can't use var(), so
+   --bp-sm is 600px.
+   ========================================================= */
+:root {
+  /* colour */
+  --ink: #10221a;
+  --muted: #52645a;
+  --paper: #fbfaf5;
+  --sheet: #ffffff;
+  --line: #dfe5df;
+  --green: #0d5c3a;
+  --green-d: #08402a;
+  --pencil: #f4c430;
+  --ok: #0d7a44;
+  --bad: #b3261e;
+
+  --btn: #0d5c3a;
+  --btn-hover: #08402a;
+  --on-btn: #ffffff;
+  --ok-tint: rgba(13, 122, 68, .1);
+  --bad-tint: rgba(179, 38, 30, .08);
+  --overlay: rgba(8, 26, 18, .6);
+
+  /* typography */
+  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-base: clamp(1rem, .96rem + .2vw, 1.0625rem);
+  --fs-sm: .9rem;
+  --fs-xs: .85rem;
+  --fs-lead: clamp(1rem, .96rem + .25vw, 1.1rem);
+  --fs-title: clamp(1.6rem, 1.25rem + 1.8vw, 2.1rem);
+  --lh-body: 1.6;
+
+  /* spacing */
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --gutter: clamp(1rem, .6rem + 2vw, 1.5rem);
+
+  /* layout */
+  --container: 1080px;
+  --header-h: 3.5rem;
+  --logo-size: 2.5rem;
+  --tap: 2.75rem;
+  --auth-w: 26rem;
+
+  /* shape + depth + motion */
+  --radius-sm: .5rem;
+  --radius-md: .75rem;
+  --radius-lg: 1rem;
+  --shadow-card: 0 18px 40px -24px rgba(8, 64, 42, .45);
+  --shadow-pop: 0 24px 60px -20px rgba(0, 0, 0, .5);
+  --ease: .15s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #eef3ee;
+    --muted: #a3b3a9;
+    --paper: #0d1a13;
+    --sheet: #14261c;
+    --line: #26402f;
+    --green: #2fa36b;
+    --green-d: #53c78e;
+    --btn: #1f8a58;
+    --btn-hover: #2fa36b;
+    --ok: #3fbf83;
+    --bad: #ff8a80;
+    --ok-tint: rgba(63, 191, 131, .14);
+    --bad-tint: rgba(255, 138, 128, .12);
+    --overlay: rgba(0, 0, 0, .7);
+    --shadow-card: 0 18px 40px -24px rgba(0, 0, 0, .8);
+  }
+}
+
+@media (min-width: 860px) {
+  :root {
+    --header-h: 4rem;
+    --logo-size: 2.75rem;
+  }
+}
+
+/* ---------- base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--pencil);
+  outline-offset: 3px;
+}
+
+.btn,
+.link,
+.pw-toggle {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+/* ---------- header ---------- */
+.top {
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid var(--line);
+}
+
+.top nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  gap: var(--space-4);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.logo img {
+  width: var(--logo-size);
+  height: var(--logo-size);
+  flex: none;
+  object-fit: cover;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--muted);
+  font-size: .95rem;
+  text-decoration: none;
+}
+
+/* ---------- page layout ---------- */
+.auth {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6) max(var(--gutter), env(safe-area-inset-left, 0px)) var(--space-6) max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+.auth-card {
+  width: 100%;
+  max-width: var(--auth-w);
+  padding: var(--space-5) var(--space-4);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.auth-card h1 {
+  font-size: var(--fs-title);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+.auth-card .lead {
+  margin: var(--space-2) 0 var(--space-5);
+  color: var(--muted);
+  font-size: var(--fs-lead);
+  text-wrap: pretty;
+}
+
+/* ---------- form ---------- */
+.field {
+  margin-bottom: var(--space-4);
+}
+
+.field label,
+.label-row label {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;               /* 16px+ so iOS doesn't zoom on focus */
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  transition: border-color var(--ease);
+}
+
+input::placeholder {
+  color: var(--muted);
+  opacity: .7;
+}
+
+input:focus {
+  border-color: var(--green);
+}
+
+.pw {
+  position: relative;
+}
+
+.pw input {
+  padding-right: 4.5rem;
+}
+
+.pw-toggle {
+  position: absolute;
+  top: 50%;
+  right: var(--space-1);
+  transform: translateY(-50%);
+  min-width: var(--tap);
+  min-height: var(--tap);
+  padding: 0 var(--space-2);
+  font: 600 var(--fs-sm) var(--font);
+  color: var(--green);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.link {
+  padding: 0;
+  font: 600 var(--fs-sm) var(--font);
+  color: var(--green);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.msg {
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  border-left: 4px solid var(--muted);
+  border-radius: var(--radius-sm);
+}
+
+.msg:empty {
+  display: none;
+}
+
+.msg.error {
+  color: var(--bad);
+  background: var(--bad-tint);
+  border-left-color: var(--bad);
+}
+
+.msg.success {
+  color: var(--ok);
+  background: var(--ok-tint);
+  border-left-color: var(--ok);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  padding: .65rem 1.5rem;
+  font: 600 1rem/1.2 var(--font);
+  text-align: center;
+  text-decoration: none;
+  color: var(--on-btn);
+  background: var(--btn);
+  border: 2px solid var(--btn);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease);
+}
+
+.btn.block {
+  width: 100%;
+}
+
+.btn.ghost,
+.btn.google {
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--line);
+}
+
+.btn.google {
+  width: 100%;
+  background: var(--paper);
+}
+
+.btn.google svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.switch {
+  margin-top: var(--space-5);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.switch a {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* ---------- forgot-password pop-up ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: max(var(--gutter), env(safe-area-inset-top, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px)) max(var(--gutter), env(safe-area-inset-bottom, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
+  background: var(--overlay);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 24rem;
+  margin: auto;
+  padding: var(--space-5) var(--space-4);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+}
+
+.modal-card h2 {
+  font-size: 1.35rem;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.modal-card p.sub {
+  margin: var(--space-2) 0 var(--space-4);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.modal-actions .btn {
+  flex: 1;
+  padding-inline: var(--space-3);
+}
+
+/* ---------- footer ---------- */
+.auth-foot {
+  padding: var(--space-4) var(--gutter) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+/* ---------- hover (only where hover exists) ---------- */
+@media (hover: hover) {
+  .btn:hover:not(:disabled) {
+    background: var(--btn-hover);
+    border-color: var(--btn-hover);
+  }
+
+  .btn.ghost:hover:not(:disabled),
+  .btn.google:hover:not(:disabled) {
+    background: transparent;
+    border-color: var(--ink);
+  }
+
+  .back:hover {
+    color: var(--ink);
+  }
+
+  .link:hover,
+  .pw-toggle:hover,
+  .switch a:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ---------- ≥ 600px ---------- */
+@media (min-width: 600px) {
+  .auth-card {
+    padding: var(--space-6) calc(var(--space-5) + var(--space-1));
+  }
+
+  .modal-card {
+    padding: var(--space-5) calc(var(--space-5) + var(--space-1));
+  }
+}
+
+/* short landscape phones */
+@media (max-height: 480px) and (orientation: landscape) {
+  :root {
+    --header-h: 3rem;
+    --logo-size: 2rem;
+  }
+
+  .auth {
+    place-items: start center;
+    padding-block: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
