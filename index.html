@@ -113,7 +113,8 @@
       --container: 1080px;
       --header-h: 3.5rem;
       --logo-size: 2.5rem;
-      --tap: 2.75rem;          /* minimum touch target (44px) */
+      --tap: 2.75rem;
+      /* minimum touch target (44px) */
       --measure: 46ch;
 
       /* shape */
@@ -305,6 +306,24 @@
       height: 1.4rem;
     }
 
+    .menu-btn path {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform var(--ease), opacity var(--ease);
+    }
+
+    .menu-btn[aria-expanded="true"] .l1 {
+      transform: translateY(5px) rotate(45deg);
+    }
+
+    .menu-btn[aria-expanded="true"] .l2 {
+      opacity: 0;
+    }
+
+    .menu-btn[aria-expanded="true"] .l3 {
+      transform: translateY(-5px) rotate(-45deg);
+    }
+
     /* mobile dropdown panel: spans the full header width */
     nav ul {
       display: none;
@@ -445,7 +464,8 @@
     }
 
     .opt:disabled {
-      color: var(--ink);       /* keep text readable after answering (esp. dark mode) */
+      color: var(--ink);
+      /* keep text readable after answering (esp. dark mode) */
       cursor: default;
     }
 
@@ -946,7 +966,9 @@
         <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navList">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
             aria-hidden="true">
-            <path d="M4 7h16M4 12h16M4 17h16" />
+            <path class="l1" d="M4 7h16" />
+            <path class="l2" d="M4 12h16" />
+            <path class="l3" d="M4 17h16" />
           </svg>
         </button>
         <ul id="navList">
@@ -1093,7 +1115,8 @@
         </div>
       </div>
       <div class="fbottom">
-        <span>&copy; <span id="yr">2026</span> JAMB PQ &middot; Powered by <a href="https://osiaru.top/">Osiaru Tech</a></span>
+        <span>&copy; <span id="yr">2026</span> JAMB PQ &middot; Powered by <a href="https://osiaru.top/">Osiaru
+            Tech</a></span>
         <span>An independent study resource. Not affiliated with JAMB.</span>
       </div>
     </div>
@@ -1106,107 +1129,107 @@
   </div>
 
   <script>
-    (function () {
-      /* ---------- config ---------- */
-      var API_URL = "";      // e.g. "https://api.example.com" – expects GET /subjects -> {data:[{name}]}
-      var APP_URL = "";      // practice app URL, e.g. "/app/". Empty keeps links on this page.
-      var FALLBACK = ["Use of English", "Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Government", "Literature in English", "Commerce", "Accounting", "Geography", "CRK", "IRK"];
+      (function () {
+        /* ---------- config ---------- */
+        var API_URL = "";      // e.g. "https://api.example.com" – expects GET /subjects -> {data:[{name}]}
+        var APP_URL = "";      // practice app URL, e.g. "/app/". Empty keeps links on this page.
+        var FALLBACK = ["Use of English", "Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Government", "Literature in English", "Commerce", "Accounting", "Geography", "CRK", "IRK"];
 
-      document.getElementById('yr').textContent = new Date().getFullYear();
+        document.getElementById('yr').textContent = new Date().getFullYear();
 
-      /* ---------- sample question ---------- */
-      var opts = document.querySelectorAll('#opts .opt'), expl = document.getElementById('expl'), done = false;
-      opts.forEach(function (o) {
-        o.addEventListener('click', function () {
-          if (done) return; done = true;
-          opts.forEach(function (x) { x.disabled = true; if (x.dataset.k === 'B') x.classList.add('right'); });
-          if (o.dataset.k !== 'B') o.classList.add('wrong');
-          expl.classList.add('show');
-        });
-      });
-
-      /* ---------- subjects: API with 100-minute localStorage cache, static fallback ---------- */
-      var box = document.getElementById('subjectList');
-      function render(list) {
-        box.innerHTML = "";
-        list.forEach(function (name) {
-          var a = document.createElement('a');
-          a.textContent = name;
-          a.href = APP_URL ? APP_URL + "?subject=" + encodeURIComponent(name) : "#start";
-          box.appendChild(a);
-        });
-      }
-      function load() {
-        if (!API_URL) { render(FALLBACK); return; }
-        var cached = null;
-        try { cached = JSON.parse(localStorage.getItem("jambSubjects")); } catch (e) { }
-        if (cached && cached.expires > Date.now()) { render(cached.data); return; }
-        fetch(API_URL + "/subjects").then(function (r) {
-          if (!r.ok) throw new Error(r.status);
-          return r.json();
-        }).then(function (j) {
-          var list = j.data.map(function (s) { return String(s.name).split("_").join(" "); });
-          try { localStorage.setItem("jambSubjects", JSON.stringify({ expires: Date.now() + 100 * 60 * 1000, data: list })); } catch (e) { }
-          render(list);
-        }).catch(function () { render(FALLBACK); });
-      }
-      load();
-
-      /* ---------- mobile menu ---------- */
-      var btn = document.getElementById('menuBtn'), list = document.getElementById('navList');
-      function setMenu(open) {
-        list.classList.toggle('open', open);
-        btn.setAttribute('aria-expanded', open);
-        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      }
-      btn.addEventListener('click', function (e) { e.stopPropagation(); setMenu(!list.classList.contains('open')); });
-      list.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
-      document.addEventListener('click', function (e) { if (!list.contains(e.target)) setMenu(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
-      /* reset the menu state when rotating / resizing up to the desktop layout */
-      if (window.matchMedia) {
-        var mq = window.matchMedia('(min-width: 860px)');
-        var onChange = function (e) { if (e.matches) setMenu(false); };
-        if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
-      }
-
-      /* ---------- header lifts on scroll ---------- */
-      var header = document.getElementById('mainHeader');
-      window.addEventListener('scroll', function () {
-        header.classList.toggle('scrolled', window.scrollY > 50);
-      }, { passive: true });
-
-      /* ---------- fade in on scroll ---------- */
-      var items = document.querySelectorAll('.fade-in');
-      if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (en) {
-            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        /* ---------- sample question ---------- */
+        var opts = document.querySelectorAll('#opts .opt'), expl = document.getElementById('expl'), done = false;
+        opts.forEach(function (o) {
+          o.addEventListener('click', function () {
+            if (done) return; done = true;
+            opts.forEach(function (x) { x.disabled = true; if (x.dataset.k === 'B') x.classList.add('right'); });
+            if (o.dataset.k !== 'B') o.classList.add('wrong');
+            expl.classList.add('show');
           });
-        }, { threshold: 0.1 });
-        items.forEach(function (el, i) { el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
-      } else {
-        items.forEach(function (el) { el.classList.add('in'); });
-      }
+        });
 
-      /* ---------- install prompt (shows only when the browser allows it) ---------- */
-      var deferred = null, banner = document.getElementById('installPrompt');
-      window.addEventListener('beforeinstallprompt', function (e) {
-        e.preventDefault(); deferred = e;
-        var dismissed = false;
-        try { dismissed = sessionStorage.getItem('installDismissed'); } catch (err) { }
-        if (!dismissed) banner.classList.add('show');
-      });
-      document.getElementById('installBtn').addEventListener('click', function () {
-        if (!deferred) return;
-        deferred.prompt();
-        deferred.userChoice.finally(function () { deferred = null; banner.classList.remove('show'); });
-      });
-      document.getElementById('installDismiss').addEventListener('click', function () {
-        banner.classList.remove('show');
-        try { sessionStorage.setItem('installDismissed', '1'); } catch (err) { }
-      });
-    })();
+        /* ---------- subjects: API with 100-minute localStorage cache, static fallback ---------- */
+        var box = document.getElementById('subjectList');
+        function render(list) {
+          box.innerHTML = "";
+          list.forEach(function (name) {
+            var a = document.createElement('a');
+            a.textContent = name;
+            a.href = APP_URL ? APP_URL + "?subject=" + encodeURIComponent(name) : "#start";
+            box.appendChild(a);
+          });
+        }
+        function load() {
+          if (!API_URL) { render(FALLBACK); return; }
+          var cached = null;
+          try { cached = JSON.parse(localStorage.getItem("jambSubjects")); } catch (e) { }
+          if (cached && cached.expires > Date.now()) { render(cached.data); return; }
+          fetch(API_URL + "/subjects").then(function (r) {
+            if (!r.ok) throw new Error(r.status);
+            return r.json();
+          }).then(function (j) {
+            var list = j.data.map(function (s) { return String(s.name).split("_").join(" "); });
+            try { localStorage.setItem("jambSubjects", JSON.stringify({ expires: Date.now() + 100 * 60 * 1000, data: list })); } catch (e) { }
+            render(list);
+          }).catch(function () { render(FALLBACK); });
+        }
+        load();
+
+        /* ---------- mobile menu ---------- */
+        var btn = document.getElementById('menuBtn'), list = document.getElementById('navList');
+        function setMenu(open) {
+          list.classList.toggle('open', open);
+          btn.setAttribute('aria-expanded', open);
+          btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        }
+        btn.addEventListener('click', function (e) { e.stopPropagation(); setMenu(!list.classList.contains('open')); });
+        list.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+        document.addEventListener('click', function (e) { if (!list.contains(e.target)) setMenu(false); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+        /* reset the menu state when rotating / resizing up to the desktop layout */
+        if (window.matchMedia) {
+          var mq = window.matchMedia('(min-width: 860px)');
+          var onChange = function (e) { if (e.matches) setMenu(false); };
+          if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
+        }
+
+        /* ---------- header lifts on scroll ---------- */
+        var header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', function () {
+          header.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        /* ---------- fade in on scroll ---------- */
+        var items = document.querySelectorAll('.fade-in');
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+              if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+            });
+          }, { threshold: 0.1 });
+          items.forEach(function (el, i) { el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
+        } else {
+          items.forEach(function (el) { el.classList.add('in'); });
+        }
+
+        /* ---------- install prompt (shows only when the browser allows it) ---------- */
+        var deferred = null, banner = document.getElementById('installPrompt');
+        window.addEventListener('beforeinstallprompt', function (e) {
+          e.preventDefault(); deferred = e;
+          var dismissed = false;
+          try { dismissed = sessionStorage.getItem('installDismissed'); } catch (err) { }
+          if (!dismissed) banner.classList.add('show');
+        });
+        document.getElementById('installBtn').addEventListener('click', function () {
+          if (!deferred) return;
+          deferred.prompt();
+          deferred.userChoice.finally(function () { deferred = null; banner.classList.remove('show'); });
+        });
+        document.getElementById('installDismiss').addEventListener('click', function () {
+          banner.classList.remove('show');
+          try { sessionStorage.setItem('installDismissed', '1'); } catch (err) { }
+        });
+      })();
   </script>
 </body>
 
