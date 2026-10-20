@@ -1,567 +1,323 @@
 <!DOCTYPE html>
-<html lang="en" class="js">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#0d5c3a" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1a13" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="format-detection" content="telephone=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="JAMB PQ">
-
 <title>Dashboard · JAMB PQ</title>
-<meta name="description" content="Your JAMB PQ dashboard — recent practice, scores and a fresh session in one tap.">
+<meta name="description" content="Your JAMB PQ dashboard: recent practice, scores, quick practice and full CBT mocks in one place.">
 
 <link rel="icon" href="./img/icon.png">
 <link rel="apple-touch-icon" href="./img/icon.png">
 <link rel="manifest" href="./manifest.json">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
 
 <style>
-/* =========================================================
-   TOKENS — mirrored from the landing pages
-   ========================================================= */
+/* ===== Tokens (system-style: grouped surfaces, hairlines, one tint) ===== */
 :root {
-  --ink: #10221a;
-  --muted: #52645a;
-  --paper: #fbfaf5;
-  --sheet: #ffffff;
-  --line: #dfe5df;
-  --green: #0d5c3a;
-  --green-d: #08402a;
-  --pencil: #f4c430;
-  --ok: #0d7a44;
-  --bad: #b3261e;
-
-  --btn: #0d5c3a;
-  --btn-hover: #08402a;
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --label: #1c1c1e;
+  --label-2: #6c6c70;
+  --sep: rgba(60, 60, 67, .16);
+  --fill: rgba(120, 120, 128, .16);
+  --tint: #0b7a4b;
+  --tint-soft: rgba(11, 122, 75, .12);
+  --btn: #0b7a4b;
+  --btn-hover: #09663e;
   --on-btn: #ffffff;
-  --final-bg: #0d5c3a;
-  --on-final: #ffffff;
-  --on-pencil: #10221a;
-  --pencil-hover: #ffd75a;
+  --hero-bg: #0b6b43;
+  --ok: #248a3d;
+  --bad: #d70015;
+  --bar-bg: color-mix(in srgb, var(--bg) 78%, transparent);
 
-  --ok-tint: rgba(13, 122, 68, .1);
-  --bad-tint: rgba(179, 38, 30, .08);
-  --header-bg: color-mix(in srgb, var(--paper) 94%, transparent);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --fs-title: clamp(1.9rem, 1.5rem + 2vw, 2.6rem);
+  --fs-body: 1.0625rem;
+  --fs-sub: .9375rem;
+  --fs-foot: .8125rem;
+  --fs-cap: .75rem;
 
-  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --fs-base: clamp(1rem, .96rem + .2vw, 1.0625rem);
-  --fs-sm: .9rem;
-  --fs-xs: .85rem;
-  --fs-lead: clamp(1.05rem, 1rem + .3vw, 1.2rem);
-  --fs-h1: clamp(2rem, 1.25rem + 3.6vw, 3.6rem);
-  --fs-h2: clamp(1.5rem, 1.15rem + 1.8vw, 2.2rem);
-  --fs-h3: clamp(1.15rem, 1.05rem + .5vw, 1.35rem);
-  --fs-stat: clamp(1.3rem, 1.1rem + 1vw, 1.6rem);
-  --lh-body: 1.6;
-  --lh-tight: 1.1;
-
-  --space-1: .25rem;
-  --space-2: .5rem;
-  --space-3: .75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4.5rem;
-  --gutter: clamp(1rem, .6rem + 2vw, 1.5rem);
-
-  --container: 1080px;
-  --header-h: 3.5rem;
-  --logo-size: 2.5rem;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem;
+  --gutter: max(1rem, env(safe-area-inset-left, 0px));
+  --container: 980px;
+  --bar-h: 3.25rem;
+  --tab-h: 3.1rem;
   --tap: 2.75rem;
-
-  --radius-sm: .5rem;
-  --radius-md: .75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
-  --radius-pill: 999px;
-
-  --shadow-card: 0 18px 40px -24px rgba(8, 64, 42, .45);
-  --shadow-header: 0 6px 20px -12px rgba(8, 64, 42, .5);
-  --shadow-menu: 0 14px 24px -14px rgba(8, 64, 42, .4);
-  --ease: .15s ease;
-  --ease-slow: .5s ease;
+  --r-card: 1.25rem;
+  --r-pill: 999px;
+  --ease: .2s ease;
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #eef3ee;
-    --muted: #a3b3a9;
-    --paper: #0d1a13;
-    --sheet: #14261c;
-    --line: #26402f;
-    --green: #2fa36b;
-    --green-d: #53c78e;
-    --btn: #1f8a58;
-    --btn-hover: #2fa36b;
-    --final-bg: #14573a;
-    --ok: #3fbf83;
-    --bad: #ff8a80;
-    --ok-tint: rgba(63, 191, 131, .14);
-    --bad-tint: rgba(255, 138, 128, .12);
-    --shadow-card: 0 18px 40px -24px rgba(0, 0, 0, .8);
-    --shadow-header: 0 6px 20px -12px rgba(0, 0, 0, .8);
-    --shadow-menu: 0 14px 24px -14px rgba(0, 0, 0, .8);
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --label: #ffffff;
+    --label-2: #98989f;
+    --sep: rgba(84, 84, 88, .55);
+    --fill: rgba(120, 120, 128, .36);
+    --tint: #30d158;
+    --tint-soft: rgba(48, 209, 88, .16);
+    --btn: #158a4e;
+    --btn-hover: #1a9c59;
+    --hero-bg: #14573a;
+    --ok: #30d158;
+    --bad: #ff453a;
   }
 }
 
-@media (min-width: 1200px) {
-  :root { --container: 1160px; --header-h: 4rem; --logo-size: 2.75rem; }
-}
-@media (min-width: 860px) {
-  :root { --header-h: 4rem; --logo-size: 2.75rem; }
-}
-
-/* =========================================================
-   BASE
-   ========================================================= */
+/* ===== Base ===== */
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
-
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + var(--space-2));
+  scroll-padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + var(--s4));
 }
-
 body {
   font-family: var(--font);
-  background: var(--paper);
-  color: var(--ink);
-  line-height: var(--lh-body);
-  font-size: var(--fs-base);
+  font-size: var(--fs-body);
+  line-height: 1.47;
+  letter-spacing: -.011em;
+  background: var(--bg);
+  color: var(--label);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
 }
-
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
+ul { list-style: none; padding: 0; }
 p { text-wrap: pretty; }
-h1, h2, h3 { text-wrap: balance; line-height: 1.15; font-weight: 800; }
+h1, h2 { text-wrap: balance; }
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--tint) 55%, transparent); outline-offset: 2px; }
+.wrap { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip-link { position: absolute; left: var(--s4); top: -4rem; z-index: 40; padding: var(--s2) var(--s4); background: var(--surface); color: var(--tint); font-weight: 600; border-radius: var(--r-pill); }
+.skip-link:focus { top: var(--s2); }
 
-:focus-visible {
-  outline: 3px solid var(--pencil);
-  outline-offset: 3px;
-}
-
-.wrap {
-  width: 100%;
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline:
-    max(var(--gutter), env(safe-area-inset-left, 0px))
-    max(var(--gutter), env(safe-area-inset-right, 0px));
-}
-
-/* =========================================================
-   HEADER + NAV
-   ========================================================= */
+/* ===== Navigation bar (translucent, hairline appears on scroll) ===== */
 header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  position: sticky; top: 0; z-index: 20;
   padding-top: env(safe-area-inset-top, 0px);
-  border-bottom: 1px solid var(--line);
-  background: var(--paper);
-  background: var(--header-bg);
-  transition: box-shadow var(--ease);
+  background: var(--bar-bg);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: .5px solid transparent;
+  transition: border-color var(--ease);
 }
-header.scrolled {
-  box-shadow: var(--shadow-header);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-}
+header.scrolled { border-bottom-color: var(--sep); }
+nav { display: flex; align-items: center; justify-content: space-between; height: var(--bar-h); gap: var(--s4); }
+.logo { display: flex; align-items: center; gap: var(--s2); min-height: var(--tap); font-size: 1.0625rem; font-weight: 600; text-decoration: none; }
+.logo img { width: 1.75rem; height: 1.75rem; border-radius: .4rem; background: var(--tint); object-fit: cover; flex: none; }
+.nav-list { display: none; align-items: center; gap: var(--s5); }
+.nav-list a { font-size: var(--fs-foot); color: var(--label-2); text-decoration: none; transition: color var(--ease); }
+.nav-list li:last-child a { padding: .4rem .95rem; background: var(--btn); color: var(--on-btn); font-weight: 600; border-radius: var(--r-pill); }
 
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--header-h);
-  gap: var(--space-4);
+/* Tab bar (phones) */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: flex; justify-content: space-around;
+  padding: 0 var(--gutter) env(safe-area-inset-bottom, 0px);
+  background: var(--bar-bg);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-top: .5px solid var(--sep);
 }
+.tabbar a {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-height: var(--tab-h);
+  color: var(--label-2); font-size: .625rem; font-weight: 500; text-decoration: none;
+}
+.tabbar svg { width: 1.5rem; height: 1.5rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tabbar a:active { color: var(--tint); }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  font-weight: 800;
-  font-size: 1.15rem;
-  text-decoration: none;
-  min-height: var(--tap);
-}
-.logo img {
-  width: var(--logo-size);
-  height: var(--logo-size);
-  border-radius: 50%;
-  background: var(--green);
-  object-fit: cover;
-  flex: none;
-}
-
-.menu-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--tap);
-  height: var(--tap);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  color: var(--ink);
-  cursor: pointer;
-}
-.menu-btn svg { width: 1.4rem; height: 1.4rem; }
-.menu-btn path {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform var(--ease), opacity var(--ease);
-}
-.menu-btn[aria-expanded="true"] .l1 { transform: translateY(5px) rotate(45deg); }
-.menu-btn[aria-expanded="true"] .l2 { opacity: 0; }
-.menu-btn[aria-expanded="true"] .l3 { transform: translateY(-5px) rotate(-45deg); }
-
-nav ul {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  flex-direction: column;
-  list-style: none;
-  padding: var(--space-2) max(var(--gutter), env(safe-area-inset-right, 0px)) var(--space-4) max(var(--gutter), env(safe-area-inset-left, 0px));
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
-  box-shadow: var(--shadow-menu);
-  max-height: calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px));
-  overflow-y: auto;
-}
-nav ul.open { display: flex; }
-nav ul a {
-  display: flex;
-  align-items: center;
-  min-height: var(--tap);
-  padding: var(--space-2) var(--space-1);
-  text-decoration: none;
-  color: var(--muted);
-  font-size: 1.05rem;
-}
-nav ul li:last-child { margin-top: var(--space-2); }
-nav ul li:last-child a { justify-content: center; }
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
+/* ===== Buttons ===== */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--tap);
-  padding: .65rem 1.5rem;
-  background: var(--btn);
-  color: var(--on-btn);
-  font: 600 1rem/1.2 var(--font);
-  text-decoration: none;
-  text-align: center;
-  border: 2px solid var(--btn);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background var(--ease), border-color var(--ease);
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--tap); padding: .6rem 1.5rem;
+  background: var(--btn); color: var(--on-btn);
+  font: 600 var(--fs-body)/1.2 var(--font); letter-spacing: inherit; text-align: center; text-decoration: none;
+  border: 0; border-radius: var(--r-pill); cursor: pointer;
+  transition: background var(--ease), transform var(--ease), opacity var(--ease);
 }
-.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
-nav ul li:last-child a.btn { color: var(--on-btn); }
+.btn:active { transform: scale(.97); opacity: .85; }
+.btn-sm { min-height: 2.25rem; padding: .4rem 1rem; font-size: var(--fs-sub); }
+.btn.ghost { background: var(--fill); color: var(--label); }
+.btn-mini {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 1.875rem; padding: .25rem .85rem;
+  background: var(--tint-soft); color: var(--tint);
+  font: 600 var(--fs-foot)/1.2 var(--font); letter-spacing: inherit; white-space: nowrap;
+  border: 0; border-radius: var(--r-pill); cursor: pointer;
+  transition: background var(--ease), transform var(--ease);
+}
+.btn-mini:active { transform: scale(.96); }
 
-/* =========================================================
-   MAIN
-   ========================================================= */
-main { padding-block: var(--space-6) var(--space-8); }
+/* ===== Layout ===== */
+main { padding-block: var(--s3) var(--s6); }
+section { margin-bottom: var(--s4); }
 
-/* ---- Greeting ---- */
-.hello h1 {
-  font-size: var(--fs-h1);
-  line-height: var(--lh-tight);
-  letter-spacing: -.02em;
-  font-weight: 800;
-}
-.hello p {
-  margin: var(--space-3) 0 var(--space-5);
-  color: var(--muted);
-  font-size: var(--fs-lead);
-  max-width: 60ch;
-}
-.name {
-  background: none;
-  border: 0;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  border-bottom: 2px dashed var(--pencil);
-}
-.name:hover { border-bottom-style: solid; }
+/* Large title */
+.hello { padding-block: var(--s3) var(--s2); }
+.hello h1 { font-size: var(--fs-title); font-weight: 700; line-height: 1.1; letter-spacing: -.026em; }
+.hello .line { margin-top: var(--s2); color: var(--label-2); font-size: var(--fs-body); max-width: 60ch; }
+.name { background: none; border: 0; padding: 0; font: inherit; letter-spacing: inherit; color: var(--tint); cursor: pointer; }
 
-/* ---- Start practice CTA (matches .final banner) ---- */
+/* Start practice */
 .hero-cta {
-  background: var(--final-bg);
-  color: var(--on-final);
-  border-radius: var(--radius-xl);
-  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
-  margin-bottom: var(--space-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  display: flex; flex-direction: column; gap: var(--s4);
+  padding: clamp(1.25rem, 1rem + 2vw, 1.75rem);
+  background: var(--hero-bg); color: #fff;
+  border-radius: 1.5rem;
 }
-.hero-cta h2 {
-  color: var(--on-final);
-  font-size: var(--fs-h3);
-  margin-bottom: var(--space-1);
-}
-.hero-cta p { opacity: .92; max-width: 46ch; }
-.hero-cta .act {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
+.hero-cta h2 { font-size: 1.375rem; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; margin-bottom: var(--s1); }
+.hero-cta .intro { max-width: 46ch; font-size: var(--fs-sub); opacity: .88; }
+.hero-cta .act { display: flex; flex-direction: column; gap: var(--s2); }
 .hero-cta select {
-  background: transparent;
-  color: inherit;
-  font: 600 1rem/1.2 var(--font);
-  border: 1.5px solid currentColor;
-  border-radius: var(--radius-sm);
-  padding: .65rem 1.1rem;
-  min-height: var(--tap);
-  cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  min-height: var(--tap); padding: .6rem 2.5rem .6rem 1.1rem;
+  background: rgba(255, 255, 255, .18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 1rem center;
+  color: #fff; font: 500 var(--fs-body)/1.2 var(--font); letter-spacing: inherit;
+  border: 0; border-radius: var(--r-pill); cursor: pointer;
 }
-.hero-cta select option {
-  color: var(--ink);
-  background: var(--sheet);
-}
-.hero-cta .btn {
-  background: var(--pencil);
-  border-color: var(--pencil);
-  color: var(--on-pencil);
-}
+.hero-cta select option { color: var(--label); background: var(--surface); }
+.btn-cta { background: #fff; color: var(--hero-bg); }
+.hero-cta .hint { font-size: var(--fs-foot); opacity: .88; }
+.hero-cta .hint a { font-weight: 600; text-underline-offset: 3px; }
 
-/* ---- Stats strip ---- */
+/* Stats: one grouped surface, hairline dividers */
 .stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin-bottom: var(--space-5);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5px;
+  background: var(--sep); border-radius: var(--r-card); overflow: hidden;
 }
-.stats div {
-  background: var(--sheet);
-  padding: var(--space-5) var(--space-3);
-  text-align: center;
-}
-.stats b {
-  display: block;
-  font-size: var(--fs-stat);
-  font-weight: 800;
-  color: var(--green);
-  line-height: 1.2;
-}
-.stats span { font-size: var(--fs-sm); color: var(--muted); }
+.stat { padding: var(--s4); background: var(--surface); }
+.stat-icon { display: inline-flex; width: 1.15rem; height: 1.15rem; margin-bottom: var(--s2); color: var(--tint); }
+.stat-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.stat-value { display: block; font-size: 1.75rem; font-weight: 700; line-height: 1.1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat-label { display: block; margin-top: 2px; font-size: var(--fs-sub); font-weight: 500; }
+.stat-hint { display: block; margin-top: 2px; font-size: var(--fs-foot); color: var(--label-2); }
 
-/* ---- Grid of cards ---- */
-.grid {
-  display: grid;
-  gap: var(--space-4);
-  grid-template-columns: minmax(0, 1fr);
-}
-.card {
-  background: var(--sheet);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  box-shadow: var(--shadow-card);
-}
-.card h2 {
-  font-size: 1.25rem;
-  margin-bottom: var(--space-4);
-}
+/* Cards */
+.grid { display: grid; gap: var(--s4); grid-template-columns: minmax(0, 1fr); }
+.grid > section { margin-bottom: 0; }
+.card { padding: var(--s4) var(--s4) var(--s5); background: var(--surface); border-radius: var(--r-card); }
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s4); }
+.card-head h2 { font-size: 1.375rem; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; }
+.card-hint { margin-top: 2px; font-size: var(--fs-foot); color: var(--label-2); }
 
-/* ---- Projected score ---- */
-.big {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-5);
-}
-.big b {
-  font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1;
-  color: var(--green);
-}
-.big span { color: var(--muted); font-weight: 600; }
+/* Projected score */
+.big { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s5); }
+.big b { font-size: clamp(2.75rem, 2.2rem + 2.4vw, 3.75rem); font-weight: 700; line-height: 1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.big span { font-size: var(--fs-sub); font-weight: 500; color: var(--label-2); }
 
-/* ---- Subject score rows ---- */
-.sub { margin-bottom: var(--space-4); }
-.sub:last-child { margin-bottom: 0; }
-.sub .m {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-2);
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.sub .m span { color: var(--muted); font-weight: 600; }
-.track {
-  height: 10px;
-  background: var(--line);
-  border-radius: var(--radius-pill);
-  overflow: hidden;
-}
-.track i {
-  display: block;
-  height: 100%;
-  background: var(--green);
-  border-radius: var(--radius-pill);
-  transition: width .5s ease;
-}
+/* Subject rows */
+.sub { padding-block: var(--s3); border-top: .5px solid var(--sep); }
+.sub:first-child { padding-top: 0; border-top: 0; }
+.sub:last-child { padding-bottom: 0; }
+.sub-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s2); }
+.subj-name { min-width: 0; font-size: var(--fs-body); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sub-actions { display: flex; align-items: center; gap: var(--s3); flex: none; }
+.sub-pct { min-width: 2.5ch; text-align: right; font-size: var(--fs-sub); font-weight: 600; color: var(--label-2); font-variant-numeric: tabular-nums; }
+.sub-pct.none { font-size: var(--fs-foot); font-weight: 400; }
+.track { height: 6px; background: var(--fill); border-radius: var(--r-pill); overflow: hidden; }
+.track i { display: block; height: 100%; background: var(--tint); border-radius: var(--r-pill); transition: width .6s cubic-bezier(.2, .8, .2, 1); }
 .track i.good { background: var(--ok); }
 .track i.bad { background: var(--bad); }
 
-/* ---- Recent practice list ---- */
-ul { list-style: none; padding: 0; }
-.res {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-top: 1px solid var(--line);
-}
-.res:first-child { border-top: 0; padding-top: 0; }
-.res div { flex: 1; min-width: 0; }
-.res small {
-  display: block;
-  color: var(--muted);
-  font-size: var(--fs-xs);
-}
-.res b {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--ink);
-}
-.res b.good { color: var(--ok); }
-.res b.bad { color: var(--bad); }
-.empty { color: var(--muted); margin: 0; }
+/* Recent practice (inset list) */
+.res { display: flex; align-items: center; gap: var(--s3); padding-block: var(--s3); }
+.res + .res { border-top: .5px solid var(--sep); }
+.res:first-child { padding-top: 0; }
+.res:last-child { padding-bottom: 0; }
+.subj-icon { display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; font-size: 1.2rem; line-height: 1; background: var(--tint-soft); border-radius: .65rem; }
+.res-info { flex: 1; min-width: 0; }
+.res-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); }
+.res-head b { min-width: 0; font-size: var(--fs-body); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.score { flex: none; font-size: var(--fs-body); font-weight: 600; font-variant-numeric: tabular-nums; }
+.score.good, .trend.up { color: var(--ok); }
+.score.bad, .trend.down { color: var(--bad); }
+.res small { display: block; margin-top: 1px; font-size: var(--fs-foot); color: var(--label-2); }
+.trend { font-weight: 600; }
+.empty { font-size: var(--fs-sub); line-height: 1.5; color: var(--label-2); }
 
-/* =========================================================
-   HOVER (only on devices that can hover)
-   ========================================================= */
+/* Dialog (alert style) */
+dialog {
+  width: min(20rem, calc(100% - 2rem)); padding: var(--s5) var(--s4) var(--s4);
+  background: var(--surface); color: var(--label);
+  border: 0; border-radius: 1.1rem; box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+}
+dialog::backdrop { background: rgba(0, 0, 0, .4); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+dialog h2 { font-size: var(--fs-body); font-weight: 600; text-align: center; margin-bottom: var(--s1); }
+dialog label { display: block; margin-bottom: var(--s3); font-size: var(--fs-foot); color: var(--label-2); text-align: center; }
+dialog input { width: 100%; min-height: var(--tap); padding: .5rem .85rem; background: var(--fill); color: inherit; font: inherit; letter-spacing: inherit; border: 0; border-radius: .7rem; }
+.dlg-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-top: var(--s4); }
+
+/* ===== Hover (pointer devices only) ===== */
 @media (hover: hover) {
-  .btn:hover { background: var(--btn-hover); border-color: var(--btn-hover); }
-  .btn.ghost:hover { background: transparent; border-color: var(--ink); }
-  .hero-cta .btn:hover { background: var(--pencil-hover); border-color: var(--pencil-hover); }
-  nav ul a:hover { color: var(--ink); }
-  .name:hover { color: var(--green-d); }
+  .btn:hover { background: var(--btn-hover); }
+  .btn.ghost:hover { background: var(--sep); }
+  .btn-cta:hover { background: rgba(255, 255, 255, .9); }
+  .btn-mini:hover { background: color-mix(in srgb, var(--tint) 22%, transparent); }
+  .nav-list a:hover { color: var(--label); }
+  .nav-list li:last-child a:hover { color: var(--on-btn); background: var(--btn-hover); }
+  .name:hover { opacity: .7; }
+  .hero-cta select:hover { background-color: rgba(255, 255, 255, .26); }
 }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* ===== Responsive ===== */
 @media (min-width: 600px) {
+  :root { --gutter: max(1.5rem, env(safe-area-inset-left, 0px)); }
   .hero-cta .act { flex-direction: row; align-items: center; }
-  .hero-cta .act select { flex: 1; min-width: 0; }
-  .hero-cta .act .btn { flex: 0 0 auto; }
-
+  .hero-cta select { flex: 1; min-width: 0; }
   .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .stats div { padding-block: calc(var(--space-5) + var(--space-1)); }
+  .card { padding: var(--s5); }
 }
-
 @media (min-width: 860px) {
-  .menu-btn { display: none; }
-
-  nav ul {
-    display: flex;
-    position: static;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--space-5);
-    padding: 0;
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    max-height: none;
-    overflow: visible;
-  }
-  nav ul a { min-height: 0; padding: 0; font-size: .95rem; }
-  nav ul li:last-child { margin-top: 0; }
-  nav ul li:last-child a.btn { min-height: 2.5rem; padding: var(--space-2) var(--space-4); }
-
-  .hero-cta {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-6);
-  }
-  .hero-cta > div:first-child { flex: 1; min-width: 0; }
-  .hero-cta .act { flex: 0 0 auto; flex-direction: row; align-items: center; }
+  :root { --bar-h: 3.5rem; }
+  body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .tabbar { display: none; }
+  .nav-list { display: flex; }
+  .hero-cta { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s5); }
+  .hero-cta .intro-wrap { flex: 1 1 300px; min-width: 0; }
+  .hero-cta .act { flex: 1 1 380px; justify-content: flex-end; }
   .hero-cta select { min-width: 14rem; }
-
-  .grid { grid-template-columns: 1fr 1fr; }
-  .card { padding: calc(var(--space-5) + var(--space-1)); }
+  .hero-cta .hint { flex-basis: 100%; }
+  .grid { grid-template-columns: 1fr 1fr; align-items: start; }
 }
+@media (max-height: 480px) and (orientation: landscape) { :root { --bar-h: 2.75rem; } }
 
-@media (max-height: 480px) and (orientation: landscape) {
-  :root { --header-h: 3rem; --logo-size: 2rem; }
-  main { padding-block: var(--space-4) var(--space-6); }
-}
-
-/* =========================================================
-   MOTION
-   ========================================================= */
-.js .fade-in {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity var(--ease-slow), transform var(--ease-slow);
-}
+/* ===== Motion (one quiet fade on load; respects reduced motion) ===== */
+.js .fade-in { opacity: 0; transform: translateY(8px); transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
 .js .fade-in.in { opacity: 1; transform: none; }
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    transition: none !important;
-    animation: none !important;
-  }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
   .js .fade-in { opacity: 1; transform: none; }
 }
 </style>
 </head>
 
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+
 <header id="mainHeader">
   <div class="wrap">
     <nav aria-label="Main">
-      <a class="logo" href="#top">
+      <a class="logo" href="#main">
         <img src="./img/icon-192.png" width="44" height="44" alt="">
         JAMB PQ
       </a>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navList">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-          <path class="l1" d="M4 7h16" />
-          <path class="l2" d="M4 12h16" />
-          <path class="l3" d="M4 17h16" />
-        </svg>
-      </button>
-      <ul id="navList">
-        <li><a href="#top">Overview</a></li>
+      <ul class="nav-list" id="navList">
+        <li><a href="#main">Dashboard</a></li>
         <li><a href="#start">Start practice</a></li>
         <li><a href="#scores">Your scores</a></li>
         <li><a href="#recent">Recent practice</a></li>
@@ -571,7 +327,7 @@ ul { list-style: none; padding: 0; }
   </div>
 </header>
 
-<main id="top">
+<main id="main">
   <div class="wrap">
 
     <section class="hello fade-in" aria-labelledby="hi">
@@ -579,39 +335,72 @@ ul { list-style: none; padding: 0; }
         <span id="hiGreet">Hello</span>,
         <button class="name" id="name" type="button" title="Change your name">Candidate</button>
       </h1>
-      <p id="line"></p>
+      <p class="line" id="line"></p>
     </section>
 
-    <section class="hero-cta fade-in" id="start" aria-label="Start practice">
-      <div>
-        <h2>Ready for a session?</h2>
-        <p id="goHint">Pick a subject and answer real JAMB past questions.</p>
+    <section class="hero-cta fade-in" id="start" aria-labelledby="startHeading">
+      <div class="intro-wrap">
+        <h2 id="startHeading">Start a practice session</h2>
+        <p class="intro" id="goHint">Pick a subject and start answering real JAMB past questions.</p>
       </div>
       <div class="act">
-        <select id="pSub" aria-label="Subject"></select>
-        <button class="btn" id="pGo" type="button">Start practice</button>
+        <label class="sr-only" for="pSub">Choose a subject</label>
+        <select id="pSub"></select>
+        <button class="btn btn-cta" id="pGo" type="button">Start practice</button>
       </div>
+      <p class="hint">Want exam conditions? <a href="practice.html?mode=cbt">Take a full CBT mock</a></p>
     </section>
 
     <section class="stats fade-in" aria-label="Recent activity">
-      <div><b id="sToday">0</b><span>Questions today</span></div>
-      <div><b id="sWeek">0</b><span>Questions this week</span></div>
-      <div><b id="sAcc">0%</b><span>Accuracy this week</span></div>
-      <div><b id="sStreak">0</b><span>Day streak</span></div>
+      <div class="stat">
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <b class="stat-value" id="sToday">0</b>
+        <span class="stat-label">Questions today</span>
+        <small class="stat-hint" id="sTodayHint">No practice yet</small>
+      </div>
+      <div class="stat">
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg></span>
+        <b class="stat-value" id="sWeek">0</b>
+        <span class="stat-label">This week</span>
+        <small class="stat-hint" id="sWeekHint">Practise to see your average</small>
+      </div>
+      <div class="stat">
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg></span>
+        <b class="stat-value" id="sAcc">0%</b>
+        <span class="stat-label">Accuracy</span>
+        <small class="stat-hint" id="sAccHint">This week</small>
+      </div>
+      <div class="stat">
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3s5 4.5 5 9.5a5 5 0 0 1-10 0c0-2 1-3.5 1-3.5s.5 2.5 2 3c-.5-2.5 2-9 2-9Z"/></svg></span>
+        <b class="stat-value" id="sStreak">0</b>
+        <span class="stat-label">Day streak</span>
+        <small class="stat-hint" id="sStreakHint">Start today</small>
+      </div>
     </section>
 
     <div class="grid">
       <section class="card fade-in" id="scores" aria-labelledby="scoresTitle">
-        <h2 id="scoresTitle">Your scores</h2>
-        <div class="big">
+        <div class="card-head">
+          <div>
+            <h2 id="scoresTitle">Your scores</h2>
+            <p class="card-hint" id="scoresHint">Average across practised subjects</p>
+          </div>
+          <button class="btn btn-sm" id="startCbt" type="button">Start CBT</button>
+        </div>
+        <div class="big" title="Average across your practised subjects, scaled to 400 points">
           <b id="proj">0</b>
-          <span>/ 400 projected UTME score</span>
+          <span>/ 400 projected UTME</span>
         </div>
         <div id="subs"></div>
       </section>
 
       <section class="card fade-in" id="recent" aria-labelledby="recentTitle">
-        <h2 id="recentTitle">Recent practice</h2>
+        <div class="card-head">
+          <div>
+            <h2 id="recentTitle">Recent practice</h2>
+            <p class="card-hint">Jump back into any subject</p>
+          </div>
+        </div>
         <ul id="rList"></ul>
       </section>
     </div>
@@ -619,232 +408,317 @@ ul { list-style: none; padding: 0; }
   </div>
 </main>
 
+<nav class="tabbar" aria-label="Sections">
+  <a href="#main"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+  <a href="#start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Practise</a>
+  <a href="#scores"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"/></svg>Scores</a>
+  <a href="#recent"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Recent</a>
+</nav>
+
+<dialog id="nameDlg" aria-labelledby="nameDlgTitle">
+  <form method="dialog">
+    <h2 id="nameDlgTitle">Your name</h2>
+    <label for="nameInput">What should we call you?</label>
+    <input id="nameInput" type="text" maxlength="24" autocomplete="given-name">
+    <div class="dlg-actions">
+      <button class="btn btn-sm ghost" value="cancel">Cancel</button>
+      <button class="btn btn-sm" value="save">Save</button>
+    </div>
+  </form>
+</dialog>
+
 <script>
-/* =========================================================
-   CONFIG
-   ========================================================= */
-const PRACTICE_URL = 'practice.html';   // gets ?subject=&mode=practice
-const STORE = 'jambpq-dashboard-v1';
+'use strict';
 
-/* =========================================================
-   Helpers
-   ========================================================= */
-const $   = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const keyOf = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const daysAgo = n => { const d = new Date(); d.setDate(d.getDate()-n); return d; };
-const pct = (c,n) => n ? Math.round(c/n*100) : 0;
+/* ---------- Config ---------- */
+const PRACTICE_URL = 'practice.html';           // receives ?subject=&mode=practice|cbt
+const STORE_KEY = 'jambpq-dashboard-v1';
+const DEFAULT_COMBO = ['Mathematics', 'Physics', 'Chemistry'];
+const DAY_MS = 864e5;
 
-/* =========================================================
-   State (localStorage)
-   ========================================================= */
-function defaults(){
-  // Sample history so the page isn't empty on first run.
-  const mk = (ago, s, c, n, y) => ({t: daysAgo(ago).getTime(), s, c, n, y});
+const SUBJECT_ICONS = {
+  'Use of English': '📖', 'Mathematics': '📐', 'Physics': '⚛️', 'Chemistry': '🧪',
+  'Biology': '🧬', 'Economics': '📊', 'Government': '🏛️', 'Literature in English': '📚',
+  'Commerce': '💼', 'Accounting': '📒', 'Geography': '🌍', 'CRK': '✝️', 'IRK': '☪️'
+};
+
+/* ---------- Helpers ---------- */
+const $ = id => document.getElementById(id);
+const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const esc = s => String(s).replace(/[&<>"']/g, c => ESC_MAP[c]);
+const pad = n => String(n).padStart(2, '0');
+const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const daysAgo = n => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
+const dayNumber = d => Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS);
+const percent = (correct, total) => total ? Math.round(correct / total * 100) : 0;
+const sum = (list, key) => list.reduce((a, x) => a + x[key], 0);
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const practiceUrl = subject =>
+  `${PRACTICE_URL}?subject=${encodeURIComponent(subject)}&mode=practice`;
+
+/* ---------- State ---------- */
+/* Demo mode: open the page with ?demo to preview sample data (never saved) */
+const DEMO = new URLSearchParams(location.search).has('demo');
+
+function demoState() {
+  const mk = (ago, s, c, n, y) => ({ t: daysAgo(ago).getTime(), s, c, n, y });
   return {
-    name: '',
-    combo: ['Mathematics','Physics','Chemistry'],
-    date: keyOf(daysAgo(-175)),
+    name: 'Ada',
+    combo: DEFAULT_COMBO,
+    examDate: dayKey(daysAgo(-175)),
     results: [
-      mk(6,'Use of English',38,60,2019), mk(5,'Mathematics',22,40,2018),
-      mk(4,'Physics',25,40,2020),       mk(4,'Chemistry',27,40,2017),
-      mk(3,'Use of English',42,60,2021),mk(2,'Mathematics',27,40,2019),
-      mk(1,'Physics',29,40,2021),       mk(1,'Chemistry',31,40,2020),
-      mk(0,'Use of English',45,60,2022),mk(0,'Mathematics',30,40,2022)
+      mk(6, 'Use of English', 38, 60, 2019), mk(5, 'Mathematics', 22, 40, 2018),
+      mk(4, 'Physics', 25, 40, 2020),        mk(4, 'Chemistry', 27, 40, 2017),
+      mk(3, 'Use of English', 42, 60, 2021), mk(2, 'Mathematics', 27, 40, 2019),
+      mk(1, 'Physics', 29, 40, 2021),        mk(1, 'Chemistry', 31, 40, 2020),
+      mk(0, 'Use of English', 45, 60, 2022), mk(0, 'Mathematics', 30, 40, 2022)
     ]
   };
 }
-let S;
-try { S = JSON.parse(localStorage.getItem(STORE)) || defaults(); } catch (e) { S = defaults(); }
-const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
-const subjects = () => ['Use of English', ...S.combo];
 
-/* A practice page can record a finished session with:
-   const s = JSON.parse(localStorage.getItem('jambpq-dashboard-v1'));
-   s.results.push({t:Date.now(), s:'Physics', c:30, n:40, y:2021});
-   localStorage.setItem('jambpq-dashboard-v1', JSON.stringify(s));
-*/
+function loadState() {
+  if (DEMO) return demoState();
+  const fresh = { name: '', combo: DEFAULT_COMBO, examDate: '', results: [] };
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+    if (!saved || typeof saved !== 'object') return fresh;
+    return {
+      name: typeof saved.name === 'string' ? saved.name : '',
+      combo: Array.isArray(saved.combo) && saved.combo.length ? saved.combo : DEFAULT_COMBO,
+      examDate: typeof saved.examDate === 'string' ? saved.examDate : (typeof saved.date === 'string' ? saved.date : ''),
+      results: Array.isArray(saved.results)
+        ? saved.results.filter(r => r && r.s && r.n > 0 && Number.isFinite(r.t))
+        : []
+    };
+  } catch (e) {
+    return fresh;
+  }
+}
+const state = loadState();
+const saveState = () => { if (DEMO) return; try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ } };
+const subjects = () => ['Use of English', ...state.combo];
 
-/* =========================================================
-   Greeting
-   ========================================================= */
-function streak(){
-  const days = new Set(S.results.map(x => keyOf(new Date(x.t))));
-  let n = 0, i = days.has(keyOf(new Date())) ? 0 : 1;
-  while (days.has(keyOf(daysAgo(i)))) { n++; i++; }
-  return n;
+/* ---------- Streaks and daily counts ---------- */
+const practiceDays = () => new Set(state.results.map(r => dayKey(new Date(r.t))));
+
+function currentStreak() {
+  const days = practiceDays();
+  let count = 0;
+  let i = days.has(dayKey(new Date())) ? 0 : 1;   // a streak stays alive until the day ends
+  while (days.has(dayKey(daysAgo(i)))) { count++; i++; }
+  return count;
 }
 
-function renderGreeting(){
+function bestStreak() {
+  const nums = [...practiceDays()].map(k => dayNumber(new Date(k + 'T00:00:00'))).sort((a, b) => a - b);
+  let best = 0, run = 0, prev = null;
+  for (const n of nums) {
+    run = prev !== null && n - prev === 1 ? run + 1 : 1;
+    best = Math.max(best, run);
+    prev = n;
+  }
+  return best;
+}
+
+const questionsOn = ago => {
+  const key = dayKey(daysAgo(ago));
+  return sum(state.results.filter(r => dayKey(new Date(r.t)) === key), 'n');
+};
+
+/* ---------- Greeting ---------- */
+function renderGreeting() {
   const h = new Date().getHours();
   $('hiGreet').textContent =
-    h < 5 ? 'Still up' :
-    h < 12 ? 'Good morning' :
-    h < 17 ? 'Good afternoon' :
-    h < 22 ? 'Good evening' : 'Good night';
+    h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : h < 22 ? 'Good evening' : 'Good night';
+  $('name').textContent = state.name || 'Candidate';
 
-  $('name').textContent = S.name || 'Candidate';
+  const parts = [];
+  if (state.examDate) {
+    const left = dayNumber(new Date(state.examDate + 'T00:00:00')) - dayNumber(new Date());
+    if (left > 0) parts.push(`${plural(left, 'day')} to UTME`);
+  }
+  const streak = currentStreak();
+  parts.push(streak ? `${streak}-day streak` : 'start a new streak today');
 
-  const left = Math.round(
-    (new Date(S.date+'T00:00:00') - new Date(keyOf(new Date())+'T00:00:00')) / 864e5
-  );
-  const st = streak();
-  const todayQ = S.results
-    .filter(x => keyOf(new Date(x.t)) === keyOf(new Date()))
-    .reduce((a,x) => a + x.n, 0);
-
-  const bits = [];
-  if (left > 0) bits.push(`${left} days to UTME`);
-  bits.push(st ? `${st}-day streak` : 'start a new streak today');
-
-  $('line').textContent =
-    (todayQ ? 'Nice work today. ' : 'Every question you practise counts. ') +
-    bits.join(' · ').replace(/^./, c => c.toUpperCase()) + '.';
+  const today = questionsOn(0);
+  if (today) parts.push('practised today');
+  $('line').textContent = (today ? 'Nice work today. ' : 'Every question you practise counts. ') + parts.join(' · ');
 }
 
+const nameDlg = $('nameDlg');
 $('name').addEventListener('click', () => {
-  const n = (window.prompt('What should we call you?', S.name || '') || '').trim();
-  if (n) { S.name = n.slice(0,24); save(); renderGreeting(); }
+  $('nameInput').value = state.name;
+  if (typeof nameDlg.showModal === 'function') nameDlg.showModal();
+});
+nameDlg.addEventListener('close', () => {
+  if (nameDlg.returnValue !== 'save') return;
+  const name = $('nameInput').value.trim().slice(0, 24);
+  if (!name) return;
+  state.name = name;
+  saveState();
+  renderGreeting();
 });
 
-/* =========================================================
-   Activity stats
-   ========================================================= */
-function renderStats(){
-  const inWeek = S.results.filter(x => x.t >= daysAgo(6).setHours(0,0,0,0));
-  const today  = S.results.filter(x => keyOf(new Date(x.t)) === keyOf(new Date()));
-  const q = r => r.reduce((a,x) => a + x.n, 0);
-  const c = r => r.reduce((a,x) => a + x.c, 0);
+/* ---------- Stats ---------- */
+function renderStats() {
+  const cutoff = startOfDay(daysAgo(6)).getTime();
+  const week = state.results.filter(r => r.t >= cutoff);
+  const todayKey = dayKey(new Date());
+  const today = state.results.filter(r => dayKey(new Date(r.t)) === todayKey);
 
-  $('sToday').textContent  = q(today).toLocaleString();
-  $('sWeek').textContent   = q(inWeek).toLocaleString();
-  $('sAcc').textContent    = pct(c(inWeek), q(inWeek)) + '%';
-  $('sStreak').textContent = streak();
+  const todayQ = sum(today, 'n');
+  const weekQ = sum(week, 'n');
+  const accuracy = percent(sum(week, 'c'), weekQ);
+  const streak = currentStreak();
+  const best = bestStreak();
+  const yesterdayQ = questionsOn(1);
+  const diff = todayQ - yesterdayQ;
+
+  $('sToday').textContent = todayQ.toLocaleString();
+  $('sWeek').textContent = weekQ.toLocaleString();
+  $('sAcc').textContent = accuracy + '%';
+  $('sStreak').textContent = streak;
+
+  $('sTodayHint').textContent =
+    !todayQ ? 'No practice yet' :
+    !yesterdayQ ? 'First session today' :
+    diff > 0 ? `↑ ${diff} vs yesterday` :
+    diff < 0 ? `↓ ${Math.abs(diff)} vs yesterday` : 'Same as yesterday';
+  $('sWeekHint').textContent = weekQ ? `Avg ${Math.round(weekQ / 7)} per day` : 'Practise to see your average';
+  $('sAccHint').textContent = !weekQ ? 'This week' :
+    accuracy >= 70 ? 'Solid, keep going' : accuracy >= 50 ? 'Room to improve' : 'Focus on weak subjects';
+  $('sStreakHint').textContent = best ? `Best: ${plural(best, 'day')}` : 'Start today';
 }
 
-/* =========================================================
-   Scores
-   ========================================================= */
-function renderScores(){
-  const rows = subjects().map(name => {
-    const r = S.results.filter(x => x.s === name);
-    const c = r.reduce((a,x) => a + x.c, 0);
-    const n = r.reduce((a,x) => a + x.n, 0);
-    return { name, n, has: r.length > 0, avg: pct(c, n) };
+/* ---------- Scores ---------- */
+function subjectAverages() {
+  return subjects().map(name => {
+    const rows = state.results.filter(r => r.s === name);
+    return { name, has: rows.length > 0, avg: percent(sum(rows, 'c'), sum(rows, 'n')) };
   });
+}
 
-  const withData = rows.filter(x => x.has);
-  $('proj').textContent = withData.length
-    ? Math.round(withData.reduce((a,x) => a + x.avg, 0) / withData.length * 4)
+function renderScores() {
+  const rows = subjectAverages();
+  const practised = rows.filter(r => r.has);
+
+  $('proj').textContent = practised.length
+    ? Math.round(sum(practised, 'avg') / practised.length * 4)
     : 0;
+  $('scoresHint').textContent = practised.length
+    ? `Average across ${plural(practised.length, 'practised subject')}`
+    : 'No practice yet. Start a session.';
 
-  $('subs').innerHTML = rows.map(x => {
-    const cls = x.avg >= 70 ? 'good' : (x.has && x.avg < 50) ? 'bad' : '';
+  $('subs').innerHTML = rows.map(r => {
+    const tone = r.avg >= 70 ? 'good' : r.has && r.avg < 50 ? 'bad' : '';
     return `
       <div class="sub">
-        <div class="m">${esc(x.name)}<span>${x.has ? x.avg + '%' : 'No practice yet'}</span></div>
-        <div class="track"><i class="${cls}" style="width:${x.avg}%"></i></div>
+        <div class="sub-row">
+          <span class="subj-name" title="${esc(r.name)}">${esc(r.name)}</span>
+          <span class="sub-actions">
+            <span class="sub-pct${r.has ? '' : ' none'}">${r.has ? r.avg + '%' : 'No practice'}</span>
+            <button class="btn-mini" type="button" data-subject="${esc(r.name)}" aria-label="Practise ${esc(r.name)}">Practise</button>
+          </span>
+        </div>
+        <div class="track" aria-hidden="true"><i class="${tone}" style="width:${r.avg}%"></i></div>
       </div>`;
   }).join('');
 }
 
-/* =========================================================
-   Recent practice
-   ========================================================= */
-function renderRecent(){
+/* ---------- Recent practice ---------- */
+function renderRecent() {
+  const todayStart = dayNumber(new Date());
   const when = t => {
-    const d = Math.round(
-      (new Date(keyOf(new Date())+'T00:00:00') -
-       new Date(keyOf(new Date(t))+'T00:00:00')) / 864e5
-    );
-    return d === 0 ? 'Today' : d === 1 ? 'Yesterday' : d + ' days ago';
+    const d = todayStart - dayNumber(new Date(t));
+    return d <= 0 ? 'Today' : d === 1 ? 'Yesterday' : `${d} days ago`;
   };
 
-  const r = S.results.slice().sort((a,b) => b.t - a.t).slice(0, 5);
+  // Compare each result with the previous attempt in the same subject
+  const oldestFirst = state.results.slice().sort((a, b) => a.t - b.t);
+  const lastPct = {};
+  const trends = new Map();
+  oldestFirst.forEach(r => {
+    const p = percent(r.c, r.n);
+    if (r.s in lastPct) trends.set(r, p - lastPct[r.s]);
+    lastPct[r.s] = p;
+  });
 
-  $('rList').innerHTML = r.length
-    ? r.map(x => {
-        const p = pct(x.c, x.n);
-        const cls = p >= 70 ? 'good' : p < 50 ? 'bad' : '';
-        return `<li class="res">
-          <div>${esc(x.s)}<small>${when(x.t)} · ${x.c}/${x.n}${x.y ? ' · ' + x.y : ''}</small></div>
-          <b class="${cls}">${p}%</b>
-        </li>`;
-      }).join('')
-    : '<li class="empty">No practice yet. Tap Start practice to begin.</li>';
+  const recent = oldestFirst.slice().reverse().slice(0, 5);
+  if (!recent.length) {
+    $('rList').innerHTML = `<li class="empty">No practice yet. Pick a subject above and select <strong>Start practice</strong> to log your first session.</li>`;
+    return;
+  }
+
+  $('rList').innerHTML = recent.map(r => {
+    const p = percent(r.c, r.n);
+    const tone = p >= 70 ? 'good' : p < 50 ? 'bad' : '';
+    const trend = trends.get(r);
+    const trendHtml =
+      trend === undefined ? '' :
+      trend > 0 ? ` · <span class="trend up">↑ ${trend}%</span>` :
+      trend < 0 ? ` · <span class="trend down">↓ ${Math.abs(trend)}%</span>` :
+      ' · <span class="trend">no change</span>';
+    const icon = SUBJECT_ICONS[r.s] || '📝';
+
+    return `
+      <li class="res">
+        <span class="subj-icon" aria-hidden="true">${icon}</span>
+        <div class="res-info">
+          <div class="res-head">
+            <b title="${esc(r.s)}">${esc(r.s)}</b>
+            <span class="score ${tone}">${p}%</span>
+          </div>
+          <small>${when(r.t)} · ${r.c}/${r.n}${r.y ? ' · ' + esc(r.y) : ''}${trendHtml}</small>
+        </div>
+        <button class="btn-mini" type="button" data-subject="${esc(r.s)}" aria-label="Continue practice in ${esc(r.s)}">Continue</button>
+      </li>`;
+  }).join('');
 }
 
-/* =========================================================
-   Start practice
-   ========================================================= */
-function renderPicker(){
-  const keep = $('pSub').value;
-  $('pSub').innerHTML = subjects()
-    .map(n => `<option>${esc(n)}</option>`).join('');
-  if (subjects().includes(keep)) $('pSub').value = keep;
+/* ---------- Start practice ---------- */
+function renderPicker() {
+  const select = $('pSub');
+  const previous = select.value;
+  select.innerHTML = subjects().map(n => `<option>${esc(n)}</option>`).join('');
+  if (subjects().includes(previous)) select.value = previous;
+  if (previous) return;
 
-  // Suggest the weakest subject as the default pick
-  const w = subjects().map(n => {
-    const r = S.results.filter(x => x.s === n);
-    return { n, p: pct(r.reduce((a,x) => a + x.c, 0), r.reduce((a,x) => a + x.n, 0)), has: r.length > 0 };
-  }).filter(x => x.has).sort((a,b) => a.p - b.p)[0];
-
-  if (w && !keep) {
-    $('pSub').value = w.n;
-    $('goHint').textContent =
-      `${w.n} is your lowest score right now. A session there will lift your total fastest.`;
+  const weakest = subjectAverages().filter(r => r.has).sort((a, b) => a.avg - b.avg)[0];
+  if (weakest) {
+    select.value = weakest.name;
+    $('goHint').textContent = `${weakest.name} is your lowest score right now. A session there will lift your total fastest.`;
   }
 }
 
-$('pGo').addEventListener('click', () => {
-  location.href = `${PRACTICE_URL}?subject=${encodeURIComponent($('pSub').value)}&mode=practice`;
-});
-
-/* =========================================================
-   Header: mobile menu, scroll shadow, fade-in
-   ========================================================= */
-const menuBtn = $('menuBtn');
-const navList = $('navList');
-function setMenu(open){
-  navList.classList.toggle('open', open);
-  menuBtn.setAttribute('aria-expanded', open);
-  menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+/* ---------- Navigation actions (event delegation) ---------- */
+function goToSubject(e) {
+  const btn = e.target.closest('button[data-subject]');
+  if (btn) location.href = practiceUrl(btn.dataset.subject);
 }
-menuBtn.addEventListener('click', e => { e.stopPropagation(); setMenu(!navList.classList.contains('open')); });
-navList.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
-document.addEventListener('click', e => { if (!navList.contains(e.target) && !menuBtn.contains(e.target)) setMenu(false); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+$('subs').addEventListener('click', goToSubject);
+$('rList').addEventListener('click', goToSubject);
+$('pGo').addEventListener('click', () => { location.href = practiceUrl($('pSub').value); });
+$('startCbt').addEventListener('click', () => { location.href = `${PRACTICE_URL}?mode=cbt`; });
 
-if (window.matchMedia) {
-  const mq = window.matchMedia('(min-width: 860px)');
-  const onChange = e => { if (e.matches) setMenu(false); };
-  if (mq.addEventListener) mq.addEventListener('change', onChange);
-  else if (mq.addListener) mq.addListener(onChange);
-}
-
+/* ---------- Header: hairline on scroll ---------- */
 const header = $('mainHeader');
-window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 50);
-}, { passive: true });
+window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 50), { passive: true });
 
-const items = document.querySelectorAll('.fade-in');
+/* ---------- Reveal on scroll ---------- */
+const reveals = document.querySelectorAll('.fade-in');
 if ('IntersectionObserver' in window) {
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(en => {
-      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); }
     });
   }, { threshold: 0.1 });
-  items.forEach((el, i) => {
-    el.style.transitionDelay = (i % 4) * 70 + 'ms';
-    io.observe(el);
-  });
+  reveals.forEach(el => observer.observe(el));
 } else {
-  items.forEach(el => el.classList.add('in'));
+  reveals.forEach(el => el.classList.add('in'));
 }
 
-/* =========================================================
-   Boot
-   ========================================================= */
+/* ---------- Boot ---------- */
 renderGreeting();
 renderPicker();
 renderStats();
