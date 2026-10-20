@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0d5c3a" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1a13" media="(prefers-color-scheme: dark)">
+<meta name="format-detection" content="telephone=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JAMB PQ">
+
+<title>Dashboard · JAMB PQ</title>
+<meta name="description" content="Your JAMB PQ dashboard — recent practice, scores and a fresh session in one tap.">
+
+<link rel="icon" href="./img/icon.png">
+<link rel="apple-touch-icon" href="./img/icon.png">
+<link rel="manifest" href="./manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   TOKENS — mirrored from the landing pages
+   ========================================================= */
+:root {
+  --ink: #10221a;
+  --muted: #52645a;
+  --paper: #fbfaf5;
+  --sheet: #ffffff;
+  --line: #dfe5df;
+  --green: #0d5c3a;
+  --green-d: #08402a;
+  --pencil: #f4c430;
+  --ok: #0d7a44;
+  --bad: #b3261e;
+
+  --btn: #0d5c3a;
+  --btn-hover: #08402a;
+  --on-btn: #ffffff;
+  --final-bg: #0d5c3a;
+  --on-final: #ffffff;
+  --on-pencil: #10221a;
+  --pencil-hover: #ffd75a;
+
+  --ok-tint: rgba(13, 122, 68, .1);
+  --bad-tint: rgba(179, 38, 30, .08);
+  --header-bg: color-mix(in srgb, var(--paper) 94%, transparent);
+
+  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-base: clamp(1rem, .96rem + .2vw, 1.0625rem);
+  --fs-sm: .9rem;
+  --fs-xs: .85rem;
+  --fs-lead: clamp(1.05rem, 1rem + .3vw, 1.2rem);
+  --fs-h1: clamp(2rem, 1.25rem + 3.6vw, 3.6rem);
+  --fs-h2: clamp(1.5rem, 1.15rem + 1.8vw, 2.2rem);
+  --fs-h3: clamp(1.15rem, 1.05rem + .5vw, 1.35rem);
+  --fs-stat: clamp(1.3rem, 1.1rem + 1vw, 1.6rem);
+  --lh-body: 1.6;
+  --lh-tight: 1.1;
+
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --gutter: clamp(1rem, .6rem + 2vw, 1.5rem);
+
+  --container: 1080px;
+  --header-h: 3.5rem;
+  --logo-size: 2.5rem;
+  --tap: 2.75rem;
+
+  --radius-sm: .5rem;
+  --radius-md: .75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 18px 40px -24px rgba(8, 64, 42, .45);
+  --shadow-header: 0 6px 20px -12px rgba(8, 64, 42, .5);
+  --shadow-menu: 0 14px 24px -14px rgba(8, 64, 42, .4);
+  --ease: .15s ease;
+  --ease-slow: .5s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #eef3ee;
+    --muted: #a3b3a9;
+    --paper: #0d1a13;
+    --sheet: #14261c;
+    --line: #26402f;
+    --green: #2fa36b;
+    --green-d: #53c78e;
+    --btn: #1f8a58;
+    --btn-hover: #2fa36b;
+    --final-bg: #14573a;
+    --ok: #3fbf83;
+    --bad: #ff8a80;
+    --ok-tint: rgba(63, 191, 131, .14);
+    --bad-tint: rgba(255, 138, 128, .12);
+    --shadow-card: 0 18px 40px -24px rgba(0, 0, 0, .8);
+    --shadow-header: 0 6px 20px -12px rgba(0, 0, 0, .8);
+    --shadow-menu: 0 14px 24px -14px rgba(0, 0, 0, .8);
+  }
+}
+
+@media (min-width: 1200px) {
+  :root { --container: 1160px; --header-h: 4rem; --logo-size: 2.75rem; }
+}
+@media (min-width: 860px) {
+  :root { --header-h: 4rem; --logo-size: 2.75rem; }
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + var(--space-2));
+}
+
+body {
+  font-family: var(--font);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: var(--lh-body);
+  font-size: var(--fs-base);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+p { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.15; font-weight: 800; }
+
+:focus-visible {
+  outline: 3px solid var(--pencil);
+  outline-offset: 3px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline:
+    max(var(--gutter), env(safe-area-inset-left, 0px))
+    max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+/* =========================================================
+   HEADER + NAV
+   ========================================================= */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  background: var(--header-bg);
+  transition: box-shadow var(--ease);
+}
+header.scrolled {
+  box-shadow: var(--shadow-header);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  gap: var(--space-4);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-decoration: none;
+  min-height: var(--tap);
+}
+.logo img {
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border-radius: 50%;
+  background: var(--green);
+  object-fit: cover;
+  flex: none;
+}
+
+.menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  cursor: pointer;
+}
+.menu-btn svg { width: 1.4rem; height: 1.4rem; }
+.menu-btn path {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform var(--ease), opacity var(--ease);
+}
+.menu-btn[aria-expanded="true"] .l1 { transform: translateY(5px) rotate(45deg); }
+.menu-btn[aria-expanded="true"] .l2 { opacity: 0; }
+.menu-btn[aria-expanded="true"] .l3 { transform: translateY(-5px) rotate(-45deg); }
+
+nav ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  list-style: none;
+  padding: var(--space-2) max(var(--gutter), env(safe-area-inset-right, 0px)) var(--space-4) max(var(--gutter), env(safe-area-inset-left, 0px));
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-menu);
+  max-height: calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px));
+  overflow-y: auto;
+}
+nav ul.open { display: flex; }
+nav ul a {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: var(--space-2) var(--space-1);
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+nav ul li:last-child { margin-top: var(--space-2); }
+nav ul li:last-child a { justify-content: center; }
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: .65rem 1.5rem;
+  background: var(--btn);
+  color: var(--on-btn);
+  font: 600 1rem/1.2 var(--font);
+  text-decoration: none;
+  text-align: center;
+  border: 2px solid var(--btn);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease);
+}
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+nav ul li:last-child a.btn { color: var(--on-btn); }
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+main { padding-block: var(--space-6) var(--space-8); }
+
+/* ---- Greeting ---- */
+.hello h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: -.02em;
+  font-weight: 800;
+}
+.hello p {
+  margin: var(--space-3) 0 var(--space-5);
+  color: var(--muted);
+  font-size: var(--fs-lead);
+  max-width: 60ch;
+}
+.name {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-bottom: 2px dashed var(--pencil);
+}
+.name:hover { border-bottom-style: solid; }
+
+/* ---- Start practice CTA (matches .final banner) ---- */
+.hero-cta {
+  background: var(--final-bg);
+  color: var(--on-final);
+  border-radius: var(--radius-xl);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  margin-bottom: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.hero-cta h2 {
+  color: var(--on-final);
+  font-size: var(--fs-h3);
+  margin-bottom: var(--space-1);
+}
+.hero-cta p { opacity: .92; max-width: 46ch; }
+.hero-cta .act {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.hero-cta select {
+  background: transparent;
+  color: inherit;
+  font: 600 1rem/1.2 var(--font);
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-sm);
+  padding: .65rem 1.1rem;
+  min-height: var(--tap);
+  cursor: pointer;
+}
+.hero-cta select option {
+  color: var(--ink);
+  background: var(--sheet);
+}
+.hero-cta .btn {
+  background: var(--pencil);
+  border-color: var(--pencil);
+  color: var(--on-pencil);
+}
+
+/* ---- Stats strip ---- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-5);
+}
+.stats div {
+  background: var(--sheet);
+  padding: var(--space-5) var(--space-3);
+  text-align: center;
+}
+.stats b {
+  display: block;
+  font-size: var(--fs-stat);
+  font-weight: 800;
+  color: var(--green);
+  line-height: 1.2;
+}
+.stats span { font-size: var(--fs-sm); color: var(--muted); }
+
+/* ---- Grid of cards ---- */
+.grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+.card {
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+.card h2 {
+  font-size: 1.25rem;
+  margin-bottom: var(--space-4);
+}
+
+/* ---- Projected score ---- */
+.big {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+}
+.big b {
+  font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--green);
+}
+.big span { color: var(--muted); font-weight: 600; }
+
+/* ---- Subject score rows ---- */
+.sub { margin-bottom: var(--space-4); }
+.sub:last-child { margin-bottom: 0; }
+.sub .m {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.sub .m span { color: var(--muted); font-weight: 600; }
+.track {
+  height: 10px;
+  background: var(--line);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.track i {
+  display: block;
+  height: 100%;
+  background: var(--green);
+  border-radius: var(--radius-pill);
+  transition: width .5s ease;
+}
+.track i.good { background: var(--ok); }
+.track i.bad { background: var(--bad); }
+
+/* ---- Recent practice list ---- */
+ul { list-style: none; padding: 0; }
+.res {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--line);
+}
+.res:first-child { border-top: 0; padding-top: 0; }
+.res div { flex: 1; min-width: 0; }
+.res small {
+  display: block;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+.res b {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.res b.good { color: var(--ok); }
+.res b.bad { color: var(--bad); }
+.empty { color: var(--muted); margin: 0; }
+
+/* =========================================================
+   HOVER (only on devices that can hover)
+   ========================================================= */
+@media (hover: hover) {
+  .btn:hover { background: var(--btn-hover); border-color: var(--btn-hover); }
+  .btn.ghost:hover { background: transparent; border-color: var(--ink); }
+  .hero-cta .btn:hover { background: var(--pencil-hover); border-color: var(--pencil-hover); }
+  nav ul a:hover { color: var(--ink); }
+  .name:hover { color: var(--green-d); }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (min-width: 600px) {
+  .hero-cta .act { flex-direction: row; align-items: center; }
+  .hero-cta .act select { flex: 1; min-width: 0; }
+  .hero-cta .act .btn { flex: 0 0 auto; }
+
+  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .stats div { padding-block: calc(var(--space-5) + var(--space-1)); }
+}
+
+@media (min-width: 860px) {
+  .menu-btn { display: none; }
+
+  nav ul {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-5);
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    max-height: none;
+    overflow: visible;
+  }
+  nav ul a { min-height: 0; padding: 0; font-size: .95rem; }
+  nav ul li:last-child { margin-top: 0; }
+  nav ul li:last-child a.btn { min-height: 2.5rem; padding: var(--space-2) var(--space-4); }
+
+  .hero-cta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+  .hero-cta > div:first-child { flex: 1; min-width: 0; }
+  .hero-cta .act { flex: 0 0 auto; flex-direction: row; align-items: center; }
+  .hero-cta select { min-width: 14rem; }
+
+  .grid { grid-template-columns: 1fr 1fr; }
+  .card { padding: calc(var(--space-5) + var(--space-1)); }
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+  :root { --header-h: 3rem; --logo-size: 2rem; }
+  main { padding-block: var(--space-4) var(--space-6); }
+}
+
+/* =========================================================
+   MOTION
+   ========================================================= */
+.js .fade-in {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--ease-slow), transform var(--ease-slow);
+}
+.js .fade-in.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  .js .fade-in { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+<header id="mainHeader">
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="logo" href="#top">
+        <img src="./img/icon-192.png" width="44" height="44" alt="">
+        JAMB PQ
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navList">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path class="l1" d="M4 7h16" />
+          <path class="l2" d="M4 12h16" />
+          <path class="l3" d="M4 17h16" />
+        </svg>
+      </button>
+      <ul id="navList">
+        <li><a href="#top">Overview</a></li>
+        <li><a href="#start">Start practice</a></li>
+        <li><a href="#scores">Your scores</a></li>
+        <li><a href="#recent">Recent practice</a></li>
+        <li><a class="btn" href="#start">Start practising</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+
+    <section class="hello fade-in" aria-labelledby="hi">
+      <h1 id="hi">
+        <span id="hiGreet">Hello</span>,
+        <button class="name" id="name" type="button" title="Change your name">Candidate</button>
+      </h1>
+      <p id="line"></p>
+    </section>
+
+    <section class="hero-cta fade-in" id="start" aria-label="Start practice">
+      <div>
+        <h2>Ready for a session?</h2>
+        <p id="goHint">Pick a subject and answer real JAMB past questions.</p>
+      </div>
+      <div class="act">
+        <select id="pSub" aria-label="Subject"></select>
+        <button class="btn" id="pGo" type="button">Start practice</button>
+      </div>
+    </section>
+
+    <section class="stats fade-in" aria-label="Recent activity">
+      <div><b id="sToday">0</b><span>Questions today</span></div>
+      <div><b id="sWeek">0</b><span>Questions this week</span></div>
+      <div><b id="sAcc">0%</b><span>Accuracy this week</span></div>
+      <div><b id="sStreak">0</b><span>Day streak</span></div>
+    </section>
+
+    <div class="grid">
+      <section class="card fade-in" id="scores" aria-labelledby="scoresTitle">
+        <h2 id="scoresTitle">Your scores</h2>
+        <div class="big">
+          <b id="proj">0</b>
+          <span>/ 400 projected UTME score</span>
+        </div>
+        <div id="subs"></div>
+      </section>
+
+      <section class="card fade-in" id="recent" aria-labelledby="recentTitle">
+        <h2 id="recentTitle">Recent practice</h2>
+        <ul id="rList"></ul>
+      </section>
+    </div>
+
+  </div>
+</main>
+
+<script>
+/* =========================================================
+   CONFIG
+   ========================================================= */
+const PRACTICE_URL = 'practice.html';   // gets ?subject=&mode=practice
+const STORE = 'jambpq-dashboard-v1';
+
+/* =========================================================
+   Helpers
+   ========================================================= */
+const $   = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const keyOf = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const daysAgo = n => { const d = new Date(); d.setDate(d.getDate()-n); return d; };
+const pct = (c,n) => n ? Math.round(c/n*100) : 0;
+
+/* =========================================================
+   State (localStorage)
+   ========================================================= */
+function defaults(){
+  // Sample history so the page isn't empty on first run.
+  const mk = (ago, s, c, n, y) => ({t: daysAgo(ago).getTime(), s, c, n, y});
+  return {
+    name: '',
+    combo: ['Mathematics','Physics','Chemistry'],
+    date: keyOf(daysAgo(-175)),
+    results: [
+      mk(6,'Use of English',38,60,2019), mk(5,'Mathematics',22,40,2018),
+      mk(4,'Physics',25,40,2020),       mk(4,'Chemistry',27,40,2017),
+      mk(3,'Use of English',42,60,2021),mk(2,'Mathematics',27,40,2019),
+      mk(1,'Physics',29,40,2021),       mk(1,'Chemistry',31,40,2020),
+      mk(0,'Use of English',45,60,2022),mk(0,'Mathematics',30,40,2022)
+    ]
+  };
+}
+let S;
+try { S = JSON.parse(localStorage.getItem(STORE)) || defaults(); } catch (e) { S = defaults(); }
+const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
+const subjects = () => ['Use of English', ...S.combo];
+
+/* A practice page can record a finished session with:
+   const s = JSON.parse(localStorage.getItem('jambpq-dashboard-v1'));
+   s.results.push({t:Date.now(), s:'Physics', c:30, n:40, y:2021});
+   localStorage.setItem('jambpq-dashboard-v1', JSON.stringify(s));
+*/
+
+/* =========================================================
+   Greeting
+   ========================================================= */
+function streak(){
+  const days = new Set(S.results.map(x => keyOf(new Date(x.t))));
+  let n = 0, i = days.has(keyOf(new Date())) ? 0 : 1;
+  while (days.has(keyOf(daysAgo(i)))) { n++; i++; }
+  return n;
+}
+
+function renderGreeting(){
+  const h = new Date().getHours();
+  $('hiGreet').textContent =
+    h < 5 ? 'Still up' :
+    h < 12 ? 'Good morning' :
+    h < 17 ? 'Good afternoon' :
+    h < 22 ? 'Good evening' : 'Good night';
+
+  $('name').textContent = S.name || 'Candidate';
+
+  const left = Math.round(
+    (new Date(S.date+'T00:00:00') - new Date(keyOf(new Date())+'T00:00:00')) / 864e5
+  );
+  const st = streak();
+  const todayQ = S.results
+    .filter(x => keyOf(new Date(x.t)) === keyOf(new Date()))
+    .reduce((a,x) => a + x.n, 0);
+
+  const bits = [];
+  if (left > 0) bits.push(`${left} days to UTME`);
+  bits.push(st ? `${st}-day streak` : 'start a new streak today');
+
+  $('line').textContent =
+    (todayQ ? 'Nice work today. ' : 'Every question you practise counts. ') +
+    bits.join(' · ').replace(/^./, c => c.toUpperCase()) + '.';
+}
+
+$('name').addEventListener('click', () => {
+  const n = (window.prompt('What should we call you?', S.name || '') || '').trim();
+  if (n) { S.name = n.slice(0,24); save(); renderGreeting(); }
+});
+
+/* =========================================================
+   Activity stats
+   ========================================================= */
+function renderStats(){
+  const inWeek = S.results.filter(x => x.t >= daysAgo(6).setHours(0,0,0,0));
+  const today  = S.results.filter(x => keyOf(new Date(x.t)) === keyOf(new Date()));
+  const q = r => r.reduce((a,x) => a + x.n, 0);
+  const c = r => r.reduce((a,x) => a + x.c, 0);
+
+  $('sToday').textContent  = q(today).toLocaleString();
+  $('sWeek').textContent   = q(inWeek).toLocaleString();
+  $('sAcc').textContent    = pct(c(inWeek), q(inWeek)) + '%';
+  $('sStreak').textContent = streak();
+}
+
+/* =========================================================
+   Scores
+   ========================================================= */
+function renderScores(){
+  const rows = subjects().map(name => {
+    const r = S.results.filter(x => x.s === name);
+    const c = r.reduce((a,x) => a + x.c, 0);
+    const n = r.reduce((a,x) => a + x.n, 0);
+    return { name, n, has: r.length > 0, avg: pct(c, n) };
+  });
+
+  const withData = rows.filter(x => x.has);
+  $('proj').textContent = withData.length
+    ? Math.round(withData.reduce((a,x) => a + x.avg, 0) / withData.length * 4)
+    : 0;
+
+  $('subs').innerHTML = rows.map(x => {
+    const cls = x.avg >= 70 ? 'good' : (x.has && x.avg < 50) ? 'bad' : '';
+    return `
+      <div class="sub">
+        <div class="m">${esc(x.name)}<span>${x.has ? x.avg + '%' : 'No practice yet'}</span></div>
+        <div class="track"><i class="${cls}" style="width:${x.avg}%"></i></div>
+      </div>`;
+  }).join('');
+}
+
+/* =========================================================
+   Recent practice
+   ========================================================= */
+function renderRecent(){
+  const when = t => {
+    const d = Math.round(
+      (new Date(keyOf(new Date())+'T00:00:00') -
+       new Date(keyOf(new Date(t))+'T00:00:00')) / 864e5
+    );
+    return d === 0 ? 'Today' : d === 1 ? 'Yesterday' : d + ' days ago';
+  };
+
+  const r = S.results.slice().sort((a,b) => b.t - a.t).slice(0, 5);
+
+  $('rList').innerHTML = r.length
+    ? r.map(x => {
+        const p = pct(x.c, x.n);
+        const cls = p >= 70 ? 'good' : p < 50 ? 'bad' : '';
+        return `<li class="res">
+          <div>${esc(x.s)}<small>${when(x.t)} · ${x.c}/${x.n}${x.y ? ' · ' + x.y : ''}</small></div>
+          <b class="${cls}">${p}%</b>
+        </li>`;
+      }).join('')
+    : '<li class="empty">No practice yet. Tap Start practice to begin.</li>';
+}
+
+/* =========================================================
+   Start practice
+   ========================================================= */
+function renderPicker(){
+  const keep = $('pSub').value;
+  $('pSub').innerHTML = subjects()
+    .map(n => `<option>${esc(n)}</option>`).join('');
+  if (subjects().includes(keep)) $('pSub').value = keep;
+
+  // Suggest the weakest subject as the default pick
+  const w = subjects().map(n => {
+    const r = S.results.filter(x => x.s === n);
+    return { n, p: pct(r.reduce((a,x) => a + x.c, 0), r.reduce((a,x) => a + x.n, 0)), has: r.length > 0 };
+  }).filter(x => x.has).sort((a,b) => a.p - b.p)[0];
+
+  if (w && !keep) {
+    $('pSub').value = w.n;
+    $('goHint').textContent =
+      `${w.n} is your lowest score right now. A session there will lift your total fastest.`;
+  }
+}
+
+$('pGo').addEventListener('click', () => {
+  location.href = `${PRACTICE_URL}?subject=${encodeURIComponent($('pSub').value)}&mode=practice`;
+});
+
+/* =========================================================
+   Header: mobile menu, scroll shadow, fade-in
+   ========================================================= */
+const menuBtn = $('menuBtn');
+const navList = $('navList');
+function setMenu(open){
+  navList.classList.toggle('open', open);
+  menuBtn.setAttribute('aria-expanded', open);
+  menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+}
+menuBtn.addEventListener('click', e => { e.stopPropagation(); setMenu(!navList.classList.contains('open')); });
+navList.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+document.addEventListener('click', e => { if (!navList.contains(e.target) && !menuBtn.contains(e.target)) setMenu(false); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+
+if (window.matchMedia) {
+  const mq = window.matchMedia('(min-width: 860px)');
+  const onChange = e => { if (e.matches) setMenu(false); };
+  if (mq.addEventListener) mq.addEventListener('change', onChange);
+  else if (mq.addListener) mq.addListener(onChange);
+}
+
+const header = $('mainHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+const items = document.querySelectorAll('.fade-in');
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.1 });
+  items.forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+    io.observe(el);
+  });
+} else {
+  items.forEach(el => el.classList.add('in'));
+}
+
+/* =========================================================
+   Boot
+   ========================================================= */
+renderGreeting();
+renderPicker();
+renderStats();
+renderScores();
+renderRecent();
+</script>
+</body>
+</html>
