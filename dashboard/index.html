@@ -12,389 +12,223 @@
 <meta name="apple-mobile-web-app-title" content="JAMB PQ">
 <title>Dashboard · JAMB PQ</title>
 <meta name="description" content="Your JAMB PQ dashboard: recent practice, scores, quick practice and full CBT mocks in one place.">
-
 <link rel="icon" href="./img/icon.png">
 <link rel="apple-touch-icon" href="./img/icon.png">
 <link rel="manifest" href="./manifest.json">
-
 <script>document.documentElement.classList.add('js');</script>
-
 <style>
-/* =====================================================================
-   FOUNDATIONS: tokens, type scale, grid
-   Base unit 8px (4px half-step). 12-column grid. Breakpoints 600/768/1024/1280.
-   ===================================================================== */
-:root {
-  /* Colour: neutrals carry a hint of the brand green; semantic colours are separate */
-  --bg: #f1f4f2;
-  --surface: #ffffff;
-  --label: #14201a;
-  --label-2: #5b6a62;
-  --sep: rgba(20, 50, 35, .14);
-  --fill: rgba(60, 90, 72, .14);
-  --primary: #0a6e44;
-  --primary-hover: #085a38;
-  --primary-soft: rgba(10, 110, 68, .12);
-  --on-primary: #ffffff;
-  --hero-bg: #0b6b43;
-  --ok: #1e7a34;
-  --warn: #9a5b00;
-  --bad: #d70015;
-  --bar-bg: color-mix(in srgb, var(--bg) 78%, transparent);
-
-  /* Type scale: display / heading / body / caption */
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --fs-display: clamp(2rem, 1.5rem + 2vw, 2.5rem);
-  --fs-heading: 1.5rem;
-  --fs-body: 1rem;
-  --fs-small: .875rem;
-  --fs-caption: .8125rem;
-  --lh-body: 1.5;
-
-  /* Spacing (multiples of 8) */
-  --s1: .25rem; --s2: .5rem; --s3: 1rem; --s4: 1.5rem; --s5: 2rem; --s6: 3rem;
-
-  /* Grid: 12 columns; margins and gutters are multiples of 8 */
-  --margin: 1rem;
-  --gutter: 1rem;
-  --container: 1040px;
-
-  --bar-h: 3.5rem;
-  --tab-h: 3.5rem;
-  --tap: 3rem;
-  --r-card: 1.5rem;
-  --r-icon: .75rem;
-  --r-pill: 999px;
-  --ease: .2s ease;
+/* ===== Tokens (8px base, 12-column grid) ===== */
+:root{
+  --bg:#f1f4f2;--surface:#fff;--label:#14201a;--label-2:#5b6a62;--sep:rgba(20,50,35,.14);--fill:rgba(60,90,72,.14);
+  --primary:#0a6e44;--primary-hover:#085a38;--primary-soft:rgba(10,110,68,.12);--on-primary:#fff;--hero-bg:#0b6b43;
+  --ok:#1e7a34;--warn:#9a5b00;--bad:#d70015;--bar-bg:color-mix(in srgb,var(--bg) 78%,transparent);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --fs-display:clamp(2rem,1.5rem + 2vw,2.5rem);--fs-heading:1.5rem;--fs-small:.875rem;--fs-caption:.8125rem;
+  --s1:.25rem;--s2:.5rem;--s3:1rem;--s4:1.5rem;--s5:2rem;
+  --margin:1rem;--gutter:1rem;--container:1040px;--bar-h:3.5rem;--tab-h:3.5rem;--tap:3rem;
+  --r-card:1.5rem;--r-icon:.75rem;--r-pill:999px;--ease:.2s ease;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #08110c;
-    --surface: #121f18;
-    --label: #f2f7f4;
-    --label-2: #9db0a5;
-    --sep: rgba(120, 160, 135, .24);
-    --fill: rgba(120, 150, 130, .3);
-    --primary: #30d158;
-    --primary-hover: #0e6f40;
-    --primary-soft: rgba(48, 209, 88, .16);
-    --hero-bg: #14573a;
-    --ok: #30d158;
-    --warn: #ffd60a;
-    --bad: #ff453a;
-  }
+@media (prefers-color-scheme:dark){:root{
+  --bg:#08110c;--surface:#121f18;--label:#f2f7f4;--label-2:#9db0a5;--sep:rgba(120,160,135,.24);--fill:rgba(120,150,130,.3);
+  /* FIX: bright green buttons need dark text and a lighter (not darker) hover */
+  --primary:#30d158;--primary-hover:#5be07c;--primary-soft:rgba(48,209,88,.16);--on-primary:#04170c;--hero-bg:#14573a;
+  --ok:#30d158;--warn:#ffd60a;--bad:#ff453a}}
+@media (min-width:600px){:root{--margin:1.5rem;--gutter:1.5rem}}
+@media (min-width:1024px){:root{--margin:2rem}}
+@media (min-width:1280px){:root{--container:1120px}}
+
+/* ===== Base ===== */
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:calc(var(--bar-h) + env(safe-area-inset-top,0px) + var(--s3))}
+body{font:1rem/1.5 var(--font);letter-spacing:-.011em;background:var(--bg);color:var(--label);overflow-x:hidden;-webkit-font-smoothing:antialiased;padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px))}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}ul{list-style:none;padding:0}p{text-wrap:pretty}h1,h2{text-wrap:balance}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.hero-cta :focus-visible{outline-color:#fff}
+main:focus{outline:none}
+.wrap{width:100%;max-width:var(--container);margin-inline:auto;padding-inline:max(var(--margin),env(safe-area-inset-left,0px)) max(var(--margin),env(safe-area-inset-right,0px))}
+.row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gutter);row-gap:var(--s4)}
+.row>*{grid-column:1/-1}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:var(--s3);top:-4rem;z-index:40;padding:var(--s2) var(--s3);background:var(--surface);color:var(--primary);font-weight:600;border-radius:var(--r-pill)}
+.skip-link:focus{top:var(--s2)}
+
+/* ===== Components ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);min-height:var(--tap);padding:var(--s2) var(--s4);background:var(--primary);color:var(--on-primary);font:600 1rem/1.25 var(--font);letter-spacing:inherit;text-align:center;text-decoration:none;border:0;border-radius:var(--r-pill);cursor:pointer;transition:background var(--ease),transform var(--ease),opacity var(--ease)}
+.btn:active{transform:scale(.97);opacity:.85}
+.btn-sm{min-height:2.5rem;padding:var(--s2) var(--s3);font-size:var(--fs-small)}
+.btn.ghost{background:var(--fill);color:var(--label)}
+.btn-mini{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:2rem;padding:var(--s1) var(--s3);background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.25 var(--font);letter-spacing:inherit;white-space:nowrap;border:0;border-radius:var(--r-pill);cursor:pointer;transition:background var(--ease),transform var(--ease)}
+.btn-mini::after{content:"";position:absolute;inset:-.5rem -.25rem}
+.btn-mini:active{transform:scale(.96)}
+.card{padding:var(--s4);background:var(--surface);border-radius:var(--r-card)}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s3);margin-bottom:var(--s3)}
+.card-head h2{font-size:var(--fs-heading);font-weight:700;line-height:1.25;letter-spacing:-.02em}
+.card-hint{margin-top:var(--s1);font-size:var(--fs-caption);color:var(--label-2)}
+.track{height:.375rem;background:var(--fill);border-radius:var(--r-pill);overflow:hidden}
+.track i{display:block;height:100%;background:var(--primary);border-radius:var(--r-pill);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.track i.good{background:var(--ok)}.track i.mid{background:var(--warn)}.track i.bad{background:var(--bad)}
+.ic{width:1.125rem;height:1.125rem;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.empty{font-size:var(--fs-small);color:var(--label-2)}
+.notice{padding:var(--s3);background:var(--surface);border:.5px solid var(--sep);border-left:4px solid var(--warn);border-radius:var(--r-icon);font-size:var(--fs-small)}
+
+/* ===== Header and tab bar ===== */
+header{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:var(--bar-bg);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid transparent;transition:border-color var(--ease)}
+header.scrolled{border-bottom-color:var(--sep)}
+nav{display:flex;align-items:center;justify-content:space-between;height:var(--bar-h);gap:var(--s3)}
+.logo{display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);font-weight:600;text-decoration:none}
+.logo img{width:2rem;height:2rem;border-radius:var(--r-icon);background:var(--primary);object-fit:cover;flex:none}
+.nav-list{display:none;align-items:center;gap:var(--s4)}
+.nav-list a{font-size:var(--fs-small);color:var(--label-2);text-decoration:none;transition:color var(--ease)}
+.nav-list li:last-child a{padding:var(--s2) var(--s3);background:var(--primary);color:var(--on-primary);font-weight:600;border-radius:var(--r-pill)}
+.nav-list a[aria-current="true"]{color:var(--label);font-weight:600}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:space-around;padding:0 var(--margin) env(safe-area-inset-bottom,0px);background:var(--bar-bg);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--sep)}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--tab-h);color:var(--label-2);font-size:.6875rem;font-weight:500;text-decoration:none}
+.tabbar svg{width:1.5rem;height:1.5rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar a[aria-current="true"],.tabbar a:active{color:var(--primary)}
+
+/* ===== Page sections ===== */
+main{padding-block:var(--s3) var(--s5)}
+.hello{padding-top:var(--s2)}
+.hello h1{font-size:var(--fs-display);font-weight:700;line-height:1.15;letter-spacing:-.026em}
+.hello .line{margin-top:var(--s2);max-width:60ch;color:var(--label-2)}
+.name,.linkbtn{background:none;border:0;padding:0;font:inherit;letter-spacing:inherit;color:var(--primary);cursor:pointer;text-decoration:underline dotted;text-underline-offset:.2em;text-decoration-thickness:2px}
+.linkbtn{font-weight:600;text-decoration-style:solid;text-decoration-thickness:1px}
+
+.hero-cta{display:flex;flex-direction:column;gap:var(--s3);padding:var(--s4);background:var(--hero-bg);color:#fff;border-radius:var(--r-card)}
+.hero-cta h2{margin-bottom:var(--s1);font-size:var(--fs-heading);font-weight:700;line-height:1.25;letter-spacing:-.02em}
+.hero-cta .intro{max-width:48ch;font-size:var(--fs-small)}
+.hero-cta .act{display:flex;flex-direction:column;gap:var(--s2)}
+.btn-cta{background:#fff;color:var(--hero-bg)}
+.hero-cta .hint{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s2);font-size:var(--fs-caption)}
+.hero-cta .hint a{display:inline-flex;align-items:center;gap:var(--s1);font-weight:600;text-underline-offset:3px}
+
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5px;background:var(--sep);border-radius:var(--r-card);overflow:hidden}
+.stat{padding:var(--s3);background:var(--surface)}
+.stat-icon{display:inline-flex;width:1.25rem;height:1.25rem;margin-bottom:var(--s2);color:var(--primary)}
+.stat-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stat-value{display:block;font-size:2rem;font-weight:700;line-height:1.25;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat-label{display:block;font-size:var(--fs-small);font-weight:500}
+.stat-hint{display:block;margin-top:var(--s1);font-size:var(--fs-caption);line-height:1.4;color:var(--label-2)}
+
+/* FIX: cards are direct children of the 12-column grid, so the spans below work */
+.big{display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--s2);margin-bottom:var(--s4)}
+.big b{font-size:clamp(3rem,2.4rem + 2.4vw,4rem);font-weight:700;line-height:1;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.big span{font-size:var(--fs-small);font-weight:500;color:var(--label-2)}
+.sub{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--s3);align-items:center;padding-block:var(--s3);border-top:.5px solid var(--sep)}
+.sub:first-child{padding-top:0;border-top:0}.sub:last-child{padding-bottom:0}
+.subj-name{grid-column:1;font-weight:600;line-height:1.3}
+.sub-pct{grid-column:1;font-size:var(--fs-caption);color:var(--label-2);font-variant-numeric:tabular-nums}
+.sub .btn-mini{grid-column:2;grid-row:1/span 2}
+.sub .track{grid-column:1/-1;margin-top:var(--s2)}
+
+.res{display:flex;align-items:center;gap:var(--s3);padding-block:var(--s3)}
+.res+.res{border-top:.5px solid var(--sep)}.res:first-child{padding-top:0}.res:last-child{padding-bottom:0}
+.subj-icon{display:grid;place-items:center;flex:none;width:2.5rem;height:2.5rem;font-size:1.25rem;line-height:1;background:var(--primary-soft);border-radius:var(--r-icon)}
+.res-info{flex:1;min-width:0}
+.res-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s2)}
+.res-head b{min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.score{flex:none;font-weight:600;font-variant-numeric:tabular-nums}
+.score.good,.trend.up{color:var(--ok)}.score.mid{color:var(--warn)}.score.bad,.trend.down{color:var(--bad)}
+.res small{display:block;margin-top:2px;font-size:var(--fs-caption);line-height:1.4;color:var(--label-2)}
+.trend{font-weight:600}
+.go-ic{display:none}
+
+/* ===== Subject picker ===== */
+.picker{position:relative}
+.picker-btn{display:flex;align-items:center;gap:var(--s2);width:100%;min-height:var(--tap);padding:var(--s2) var(--s3);background:rgba(255,255,255,.14);color:#fff;font:500 1rem/1.25 var(--font);letter-spacing:inherit;text-align:left;border:0;border-radius:var(--r-pill);cursor:pointer;transition:background var(--ease)}
+.picker-icon{flex:none;font-size:1.25rem;line-height:1}
+.picker-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.picker-btn svg{width:.75rem;height:.5rem;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--ease)}
+.picker-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.picker-menu{position:absolute;left:0;right:0;top:calc(100% + var(--s2));z-index:30;max-height:18rem;overflow-y:auto;padding:var(--s1);background:var(--surface);color:var(--label);border:.5px solid var(--sep);border-radius:1rem;box-shadow:0 16px 40px rgba(0,0,0,.25)}
+.picker.up .picker-menu{top:auto;bottom:calc(100% + var(--s2))}
+.picker-opt{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:var(--s1) var(--s3) var(--s1) var(--s2);border-radius:.75rem;cursor:pointer}
+.picker-opt.active{background:var(--fill)}
+.picker-opt[aria-selected="true"]{background:var(--primary-soft)}
+.opt-icon{display:grid;place-items:center;flex:none;width:2rem;height:2rem;font-size:1.1rem;line-height:1;background:var(--primary-soft);border-radius:.5rem}
+.opt-name{flex:1;min-width:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.picker-opt[aria-selected="true"] .opt-name{font-weight:600}
+.opt-meta{flex:none;font-size:var(--fs-caption);color:var(--label-2);font-variant-numeric:tabular-nums}
+
+/* ===== Details dialog ===== */
+dialog{width:min(24rem,calc(100% - 2rem));max-height:calc(100dvh - 2rem);overflow-y:auto;padding:var(--s4);background:var(--surface);color:var(--label);border:0;border-radius:var(--r-card);box-shadow:0 24px 64px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+dialog h2{margin-bottom:var(--s3);font-size:var(--fs-heading);font-weight:700;letter-spacing:-.02em}
+.field{display:block;margin-bottom:var(--s3);font-size:var(--fs-caption);font-weight:600;color:var(--label-2)}
+.field>*{margin-top:var(--s1)}
+dialog input,dialog select{display:block;width:100%;min-height:var(--tap);padding:var(--s2) var(--s3);background:var(--fill);color:var(--label);font:400 1rem/1.25 var(--font);letter-spacing:inherit;border:0;border-radius:var(--r-icon)}
+.dlg-note{margin-bottom:var(--s3);font-size:var(--fs-caption);color:var(--label-2)}
+.dlg-error{margin-bottom:var(--s3);font-size:var(--fs-small);font-weight:600;color:var(--bad)}
+/* Save comes first in the DOM so Enter saves; row-reverse shows Cancel on the left */
+.dlg-actions{display:flex;flex-direction:row-reverse;gap:var(--s2)}
+.dlg-actions .btn{flex:1}
+
+/* ===== Phones ===== */
+@media (max-width:599px){.card{padding:var(--s3)}.card-head h2{font-size:1.25rem}.big{margin-bottom:var(--s3)}}
+@media (max-width:479px){
+  .btn-go{width:2rem;padding:0}.btn-go::after{inset:-.5rem}
+  .btn-go .go-text{display:none}.btn-go .go-ic{display:block}
+  .res{gap:var(--s2)}
 }
-@media (min-width: 600px)  { :root { --margin: 1.5rem; --gutter: 1.5rem; } }
-@media (min-width: 1024px) { :root { --margin: 2rem; } }
-
-/* Base */
-*, *::before, *::after { box-sizing: border-box; }
-* { margin: 0; }
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + var(--s3));
-}
-body {
-  font-family: var(--font);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  letter-spacing: -.011em;
-  background: var(--bg);
-  color: var(--label);
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
-}
-img { max-width: 100%; height: auto; display: block; }
-a { color: inherit; }
-ul { list-style: none; padding: 0; }
-p { text-wrap: pretty; }
-h1, h2 { text-wrap: balance; }
-:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
-.hero-cta :focus-visible { outline-color: #fff; }
-
-.wrap {
-  width: 100%; max-width: var(--container); margin-inline: auto;
-  padding-inline: max(var(--margin), env(safe-area-inset-left, 0px)) max(var(--margin), env(safe-area-inset-right, 0px));
-}
-/* 12-column grid: every block spans all columns on phones, then splits */
-.row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--s4); }
-.row > *, .grid { grid-column: 1 / -1; }
-.grid { display: contents; }
-.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.skip-link { position: absolute; left: var(--s3); top: -4rem; z-index: 40; padding: var(--s2) var(--s3); background: var(--surface); color: var(--primary); font-weight: 600; border-radius: var(--r-pill); }
-.skip-link:focus { top: var(--s2); }
-
-/* =====================================================================
-   COMPONENTS: button, tinted button, card, list row, progress, stat, dialog
-   ===================================================================== */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: var(--s2);
-  min-height: var(--tap); padding: var(--s2) var(--s4);
-  background: var(--primary); color: var(--on-primary);
-  font: 600 var(--fs-body)/1.25 var(--font); letter-spacing: inherit; text-align: center; text-decoration: none;
-  border: 0; border-radius: var(--r-pill); cursor: pointer;
-  transition: background var(--ease), transform var(--ease), opacity var(--ease);
-}
-.btn:active { transform: scale(.97); opacity: .85; }
-.btn-sm { min-height: 2.5rem; padding: var(--s2) var(--s3); font-size: var(--fs-small); }
-.btn.ghost { background: var(--fill); color: var(--label); }
-.btn-mini {
-  position: relative;
-  display: inline-flex; align-items: center; justify-content: center;
-  min-height: 2rem; padding: var(--s1) var(--s3);
-  background: var(--primary-soft); color: var(--primary);
-  font: 600 var(--fs-caption)/1.25 var(--font); letter-spacing: inherit; white-space: nowrap;
-  border: 0; border-radius: var(--r-pill); cursor: pointer;
-  transition: background var(--ease), transform var(--ease);
-}
-.btn-mini::after { content: ""; position: absolute; inset: -.5rem -.25rem; }   /* 48px touch target */
-.btn-mini:active { transform: scale(.96); }
-
-.card { padding: var(--s4); background: var(--surface); border-radius: var(--r-card); }
-.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s3); }
-.card-head h2 { font-size: var(--fs-heading); font-weight: 700; line-height: 1.25; letter-spacing: -.02em; }
-.card-hint { margin-top: var(--s1); font-size: var(--fs-caption); color: var(--label-2); }
-
-.track { height: .375rem; background: var(--fill); border-radius: var(--r-pill); overflow: hidden; }
-.track i { display: block; height: 100%; background: var(--primary); border-radius: var(--r-pill); transition: width .6s cubic-bezier(.2, .8, .2, 1); }
-.track i.good { background: var(--ok); }
-.track i.mid  { background: var(--warn); }
-.track i.bad  { background: var(--bad); }
-
-.stat { padding: var(--s3); background: var(--surface); }
-.stat-icon { display: inline-flex; width: 1.25rem; height: 1.25rem; margin-bottom: var(--s2); color: var(--primary); }
-.stat-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.stat-value { display: block; font-size: 2rem; font-weight: 700; line-height: 1.25; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.stat-label { display: block; font-size: var(--fs-small); font-weight: 500; }
-.stat-hint { display: block; margin-top: var(--s1); font-size: var(--fs-caption); line-height: 1.4; color: var(--label-2); }
-
-dialog {
-  width: min(20rem, calc(100% - 2rem)); padding: var(--s4) var(--s3) var(--s3);
-  background: var(--surface); color: var(--label);
-  border: 0; border-radius: var(--r-card); box-shadow: 0 24px 64px rgba(0, 0, 0, .3);
-}
-dialog::backdrop { background: rgba(0, 0, 0, .4); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-dialog h2 { margin-bottom: var(--s1); font-size: var(--fs-body); font-weight: 600; text-align: center; }
-dialog label { display: block; margin-bottom: var(--s3); font-size: var(--fs-caption); color: var(--label-2); text-align: center; }
-dialog input { width: 100%; min-height: var(--tap); padding: var(--s2) var(--s3); background: var(--fill); color: inherit; font: inherit; letter-spacing: inherit; border: 0; border-radius: var(--r-icon); }
-.dlg-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-top: var(--s3); }
-
-/* =====================================================================
-   RECIPES: header, tab bar, greeting, hero, stats, scores, recent
-   ===================================================================== */
-header {
-  position: sticky; top: 0; z-index: 20;
-  padding-top: env(safe-area-inset-top, 0px);
-  background: var(--bar-bg);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: .5px solid transparent;
-  transition: border-color var(--ease);
-}
-header.scrolled { border-bottom-color: var(--sep); }
-nav { display: flex; align-items: center; justify-content: space-between; height: var(--bar-h); gap: var(--s3); }
-.logo { display: flex; align-items: center; gap: var(--s2); min-height: var(--tap); font-weight: 600; text-decoration: none; }
-.logo img { width: 2rem; height: 2rem; border-radius: var(--r-icon); background: var(--primary); object-fit: cover; flex: none; }
-.nav-list { display: none; align-items: center; gap: var(--s4); }
-.nav-list a { font-size: var(--fs-small); color: var(--label-2); text-decoration: none; transition: color var(--ease); }
-.nav-list li:last-child a { padding: var(--s2) var(--s3); background: var(--primary); color: var(--on-primary); font-weight: 600; border-radius: var(--r-pill); }
-
-.tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
-  display: flex; justify-content: space-around;
-  padding: 0 var(--margin) env(safe-area-inset-bottom, 0px);
-  background: var(--bar-bg);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-top: .5px solid var(--sep);
-}
-.tabbar a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: var(--tab-h); color: var(--label-2); font-size: .6875rem; font-weight: 500; text-decoration: none; }
-.tabbar svg { width: 1.5rem; height: 1.5rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.tabbar a:active { color: var(--primary); }
-
-main { padding-block: var(--s3) var(--s5); }
-
-.hello { padding-top: var(--s2); }
-.hello h1 { font-size: var(--fs-display); font-weight: 700; line-height: 1.15; letter-spacing: -.026em; }
-.hello .line { margin-top: var(--s2); max-width: 60ch; color: var(--label-2); }
-.name { background: none; border: 0; padding: 0; font: inherit; letter-spacing: inherit; color: var(--primary); cursor: pointer; }
-
-.hero-cta {
-  display: flex; flex-direction: column; gap: var(--s3);
-  padding: var(--s4);
-  background: var(--hero-bg); color: #fff; border-radius: var(--r-card);
-}
-.hero-cta h2 { margin-bottom: var(--s1); font-size: var(--fs-heading); font-weight: 700; line-height: 1.25; letter-spacing: -.02em; }
-.hero-cta .intro { max-width: 48ch; font-size: var(--fs-small); }
-.hero-cta .act { display: flex; flex-direction: column; gap: var(--s2); }
-.btn-cta { background: #fff; color: var(--hero-bg); }
-.hero-cta .hint { font-size: var(--fs-caption); }
-.hero-cta .hint a { font-weight: 600; text-underline-offset: 3px; }
-
-.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5px; background: var(--sep); border-radius: var(--r-card); overflow: hidden; }
-
-.big { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s4); }
-.big b { font-size: clamp(3rem, 2.4rem + 2.4vw, 4rem); font-weight: 700; line-height: 1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
-.big span { font-size: var(--fs-small); font-weight: 500; color: var(--label-2); }
-
-.sub { padding-block: var(--s3); border-top: .5px solid var(--sep); }
-.sub:first-child { padding-top: 0; border-top: 0; }
-.sub:last-child { padding-bottom: 0; }
-.sub-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s2); }
-.subj-name { min-width: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sub-actions { display: flex; align-items: center; gap: var(--s3); flex: none; }
-.sub-pct { min-width: 2.5ch; text-align: right; font-size: var(--fs-small); font-weight: 600; color: var(--label-2); font-variant-numeric: tabular-nums; }
-.sub-pct.none { font-size: var(--fs-caption); font-weight: 400; }
-
-.res { display: flex; align-items: center; gap: var(--s3); padding-block: var(--s3); }
-.res + .res { border-top: .5px solid var(--sep); }
-.res:first-child { padding-top: 0; }
-.res:last-child { padding-bottom: 0; }
-.subj-icon { display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; font-size: 1.25rem; line-height: 1; background: var(--primary-soft); border-radius: var(--r-icon); }
-.res-info { flex: 1; min-width: 0; }
-.res-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); }
-.res-head b { min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.score { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
-.score.good, .trend.up { color: var(--ok); }
-.score.bad, .trend.down { color: var(--bad); }
-.res small { display: block; margin-top: 2px; font-size: var(--fs-caption); color: var(--label-2); }
-.trend { font-weight: 600; }
-.empty { font-size: var(--fs-small); color: var(--label-2); }
-
-.notice { padding: var(--s3); background: var(--surface); border: .5px solid var(--sep); border-left: 4px solid var(--warn); border-radius: var(--r-icon); font-size: var(--fs-small); }
-.notice[hidden] { display: none; }
-.tabbar a[aria-current="true"] { color: var(--primary); }
-.nav-list a[aria-current="true"] { color: var(--label); font-weight: 600; }
-
-.ic { width: 1.125rem; height: 1.125rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.hero-cta .hint { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); }
-.hero-cta .hint a { display: inline-flex; align-items: center; gap: var(--s1); }
-.nav-start { display: inline-flex; }
-
-/* Custom subject picker */
-.picker { position: relative; }
-.picker-btn {
-  display: flex; align-items: center; gap: var(--s2); width: 100%;
-  min-height: var(--tap); padding: var(--s2) var(--s3);
-  background: rgba(255, 255, 255, .14); color: #fff;
-  font: 500 var(--fs-body)/1.25 var(--font); letter-spacing: inherit; text-align: left;
-  border: 0; border-radius: var(--r-pill); cursor: pointer;
-  transition: background var(--ease);
-}
-.picker-icon { flex: none; font-size: 1.25rem; line-height: 1; }
-.picker-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.picker-btn svg { width: .75rem; height: .5rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--ease); }
-.picker-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
-.picker-menu {
-  position: absolute; left: 0; right: 0; top: calc(100% + var(--s2)); z-index: 30;
-  max-height: 18rem; overflow-y: auto; padding: var(--s1);
-  background: var(--surface); color: var(--label);
-  border: .5px solid var(--sep); border-radius: 1rem;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, .25);
-}
-.picker-menu[hidden] { display: none; }
-.picker.up .picker-menu { top: auto; bottom: calc(100% + var(--s2)); }
-.picker-opt { display: flex; align-items: center; gap: var(--s3); min-height: var(--tap); padding: var(--s1) var(--s3) var(--s1) var(--s2); border-radius: .75rem; cursor: pointer; }
-.picker-opt.active { background: var(--fill); }
-.picker-opt[aria-selected="true"] { background: var(--primary-soft); }
-.opt-icon { display: grid; place-items: center; flex: none; width: 2rem; height: 2rem; font-size: 1.1rem; line-height: 1; background: var(--primary-soft); border-radius: .5rem; }
-.opt-name { flex: 1; min-width: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.picker-opt[aria-selected="true"] .opt-name { font-weight: 600; }
-.opt-meta { flex: none; font-size: var(--fs-caption); color: var(--label-2); font-variant-numeric: tabular-nums; }
-
-/* Subject rows: name and accuracy on the left, action on the right, bar beneath */
-.sub { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--s3); align-items: center; }
-.sub-row, .sub-actions { display: contents; }
-.subj-name { grid-column: 1; grid-row: 1; white-space: normal; overflow: visible; font-weight: 600; line-height: 1.3; }
-.sub-pct { grid-column: 1; grid-row: 2; min-width: 0; text-align: left; font-size: var(--fs-caption); font-weight: 500; }
-.sub-pct.none { font-weight: 400; }
-.sub .btn-mini { grid-column: 2; grid-row: 1 / span 2; }
-.sub .track { grid-column: 1 / -1; grid-row: 3; margin-top: var(--s2); }
-
-/* Recent rows: text button on wider screens, round icon button on phones */
-.go-ic { display: none; }
-.res small { line-height: 1.4; }
-@media (max-width: 479px) {
-  .btn-go { width: 2rem; padding: 0; }
-  .btn-go::after { inset: -.5rem; }
-  .btn-go .go-text { display: none; }
-  .btn-go .go-ic { display: block; }
-  .res { gap: var(--s2); }
-}
-@media (max-width: 599px) {
-  .card { padding: var(--s3); }
-  .card-head h2 { font-size: 1.25rem; }
-  .big { margin-bottom: var(--s3); }
-}
+.nav-start{display:inline-flex}
 
 /* ===== Hover (pointer devices only) ===== */
-@media (hover: hover) {
-  .btn:hover { background: var(--primary-hover); }
-  .btn.ghost:hover { background: var(--sep); }
-  .btn-cta:hover { background: rgba(255, 255, 255, .9); }
-  .btn-mini:hover { background: color-mix(in srgb, var(--primary) 22%, transparent); }
-  .nav-list a:hover { color: var(--label); }
-  .nav-list li:last-child a:hover { color: var(--on-primary); background: var(--primary-hover); }
-  .name:hover { opacity: .7; }
-  .picker-btn:hover { background: rgba(255, 255, 255, .2); }
-  .picker-opt:hover { background: var(--fill); }
+@media (hover:hover){
+  .btn:hover,.nav-list li:last-child a:hover{background:var(--primary-hover);color:var(--on-primary)}
+  .btn.ghost:hover{background:var(--sep);color:var(--label)}
+  .btn-cta:hover{background:rgba(255,255,255,.9);color:var(--hero-bg)}
+  .btn-mini:hover{background:color-mix(in srgb,var(--primary) 22%,transparent)}
+  .nav-list a:hover{color:var(--label)}.name:hover,.linkbtn:hover{opacity:.7}
+  .picker-btn:hover{background:rgba(255,255,255,.2)}.picker-opt:hover{background:var(--fill)}
 }
 
-/* ===== Breakpoints: small 600, medium 768, large 1024, extra-large 1280 ===== */
-@media (min-width: 600px) {
-  .hero-cta { padding: var(--s5); }
-  .hero-cta .act { flex-direction: row; align-items: center; }
-  .picker { flex: 1; min-width: 0; }
-  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .stat { padding: var(--s4) var(--s3); }
-  .card { padding: var(--s5); }
+/* ===== Breakpoints ===== */
+@media (min-width:600px){
+  .hero-cta{padding:var(--s5)}
+  .hero-cta .act{flex-direction:row;align-items:center}
+  .picker{flex:1;min-width:0}
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .stat{padding:var(--s4) var(--s3)}
+  .card{padding:var(--s5)}
 }
-@media (min-width: 768px) {
-  body { padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .tabbar { display: none; }
-  .nav-list { display: flex; }
-  .hero-cta { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s4); }
-  .hero-cta .intro-wrap { flex: 1 1 304px; min-width: 0; }
-  .hero-cta .act { flex: 1 1 384px; justify-content: flex-end; }
-  .picker { min-width: 14rem; }
-  .nav-start { display: none; }
-  .hero-cta .hint { flex-basis: 100%; }
-  #scores, #recent { grid-column: span 6; align-self: start; }
+@media (min-width:768px){
+  body{padding-bottom:env(safe-area-inset-bottom,0px)}
+  .tabbar,.nav-start{display:none}
+  .nav-list{display:flex}
+  .hero-cta{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s4)}
+  .hero-cta .intro-wrap{flex:1 1 304px;min-width:0}
+  .hero-cta .act{flex:1 1 384px;justify-content:flex-end}
+  .picker{min-width:14rem}
+  .hero-cta .hint{flex-basis:100%}
+  #scores,#recent{grid-column:span 6}
 }
-@media (min-width: 1024px) {
-  #scores { grid-column: span 7; }
-  #recent { grid-column: span 5; }
-}
-@media (min-width: 1280px) { :root { --container: 1120px; } }
-@media (max-height: 480px) and (orientation: landscape) { :root { --bar-h: 3rem; } }
+@media (min-width:1024px){#scores{grid-column:span 7}#recent{grid-column:span 5}}
+@media (max-height:480px) and (orientation:landscape){:root{--bar-h:3rem}}
 
 /* ===== Motion ===== */
-.js .fade-in { opacity: 0; transform: translateY(8px); transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
-.js .fade-in.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { transition: none !important; animation: none !important; }
-  .js .fade-in { opacity: 1; transform: none; }
+.js .fade-in{opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+.js .fade-in.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  .js .fade-in{opacity:1;transform:none}
 }
 </style>
 </head>
-
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-cbt" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M9.5 10l2 2 3.5-4"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-cbt" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M9.5 10l2 2 3.5-4"/></symbol>
+</svg>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header id="mainHeader">
   <div class="wrap">
     <nav aria-label="Main">
-      <a class="logo" href="#main">
-        <img src="./img/icon-192.png" width="44" height="44" alt="">
-        JAMB PQ
-      </a>
-      <ul class="nav-list" id="navList">
+      <a class="logo" href="#main"><img src="./img/icon-192.png" width="44" height="44" alt="" onerror="this.remove()">JAMB PQ</a>
+      <ul class="nav-list">
         <li><a href="#main">Dashboard</a></li>
         <li><a href="#start">Start practice</a></li>
         <li><a href="#scores">Your scores</a></li>
@@ -406,16 +240,13 @@ main { padding-block: var(--s3) var(--s5); }
   </div>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
   <div class="wrap row">
-    <p class="notice" id="storageNote" role="status" hidden>Your progress can't be saved in this browser. Turn off private browsing or allow site data, then reload to keep your scores.</p>
+    <p class="notice" id="storageNote" role="status" hidden>Your progress can’t be saved in this browser. Turn off private browsing or allow site data, then reload to keep your scores.</p>
 
     <section class="hello fade-in" aria-labelledby="hi">
-      <h1 id="hi">
-        <span id="hiGreet">Hello</span>,
-        <button class="name" id="name" type="button" title="Change your name">Candidate</button>
-      </h1>
-      <p class="line" id="line"></p>
+      <h1 id="hi"><span id="hiGreet">Hello</span>, <button class="name" id="name" type="button" title="Change your details">Candidate</button></h1>
+      <p class="line"><span id="lineText"></span> <button class="linkbtn" id="setDate" type="button" hidden>Set your UTME date</button></p>
     </section>
 
     <section class="hero-cta fade-in" id="start" aria-labelledby="startHeading">
@@ -441,57 +272,35 @@ main { padding-block: var(--s3) var(--s5); }
     <section class="stats fade-in" aria-label="Recent activity">
       <div class="stat">
         <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-        <b class="stat-value" id="sToday">0</b>
-        <span class="stat-label">Questions today</span>
-        <small class="stat-hint" id="sTodayHint">No practice yet</small>
+        <b class="stat-value" id="sToday">0</b><span class="stat-label">Questions today</span><small class="stat-hint" id="sTodayHint">No practice yet</small>
       </div>
       <div class="stat">
         <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg></span>
-        <b class="stat-value" id="sWeek">0</b>
-        <span class="stat-label">This week</span>
-        <small class="stat-hint" id="sWeekHint">Practise to see your average</small>
+        <b class="stat-value" id="sWeek">0</b><span class="stat-label">This week</span><small class="stat-hint" id="sWeekHint">Practise to see your average</small>
       </div>
       <div class="stat">
         <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg></span>
-        <b class="stat-value" id="sAcc">0%</b>
-        <span class="stat-label">Accuracy</span>
-        <small class="stat-hint" id="sAccHint">This week</small>
+        <b class="stat-value" id="sAcc">0%</b><span class="stat-label">Accuracy</span><small class="stat-hint" id="sAccHint">This week</small>
       </div>
       <div class="stat">
         <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3s5 4.5 5 9.5a5 5 0 0 1-10 0c0-2 1-3.5 1-3.5s.5 2.5 2 3c-.5-2.5 2-9 2-9Z"/></svg></span>
-        <b class="stat-value" id="sStreak">0</b>
-        <span class="stat-label">Day streak</span>
-        <small class="stat-hint" id="sStreakHint">Start today</small>
+        <b class="stat-value" id="sStreak">0</b><span class="stat-label">Day streak</span><small class="stat-hint" id="sStreakHint">Start today</small>
       </div>
     </section>
 
-    <div class="grid">
-      <section class="card fade-in" id="scores" aria-labelledby="scoresTitle">
-        <div class="card-head">
-          <div>
-            <h2 id="scoresTitle">Your scores</h2>
-            <p class="card-hint" id="scoresHint">Average across practised subjects</p>
-          </div>
-          <button class="btn btn-sm" id="startCbt" type="button"><svg class="ic" aria-hidden="true"><use href="#i-cbt"/></svg>Start CBT</button>
-        </div>
-        <div class="big" title="Average across your practised subjects, scaled to 400 points">
-          <b id="proj">0</b>
-          <span>/ 400 projected UTME</span>
-        </div>
-        <div id="subs"></div>
-      </section>
+    <section class="card fade-in" id="scores" aria-labelledby="scoresTitle">
+      <div class="card-head">
+        <div><h2 id="scoresTitle">Your scores</h2><p class="card-hint" id="scoresHint">Average across practised subjects</p></div>
+        <button class="btn btn-sm" id="startCbt" type="button"><svg class="ic" aria-hidden="true"><use href="#i-cbt"/></svg>Start CBT</button>
+      </div>
+      <div class="big"><b id="proj">0</b><span>/ 400 projected UTME</span></div>
+      <div id="subs"></div>
+    </section>
 
-      <section class="card fade-in" id="recent" aria-labelledby="recentTitle">
-        <div class="card-head">
-          <div>
-            <h2 id="recentTitle">Recent practice</h2>
-            <p class="card-hint">Jump back into any subject</p>
-          </div>
-        </div>
-        <ul id="rList"></ul>
-      </section>
-    </div>
-
+    <section class="card fade-in" id="recent" aria-labelledby="recentTitle">
+      <div class="card-head"><div><h2 id="recentTitle">Recent practice</h2><p class="card-hint">Jump back into any subject</p></div></div>
+      <ul id="rList"></ul>
+    </section>
   </div>
 </main>
 
@@ -502,14 +311,17 @@ main { padding-block: var(--s3) var(--s5); }
   <a href="#recent"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Recent</a>
 </nav>
 
-<dialog id="nameDlg" aria-labelledby="nameDlgTitle">
-  <form method="dialog">
-    <h2 id="nameDlgTitle">Your name</h2>
-    <label for="nameInput">What should we call you?</label>
-    <input id="nameInput" type="text" maxlength="24" autocomplete="given-name">
+<dialog id="detailsDlg" aria-labelledby="dlgTitle">
+  <form method="dialog" id="detailsForm">
+    <h2 id="dlgTitle">Your details</h2>
+    <label class="field">Name<input id="nameInput" type="text" maxlength="24" autocomplete="given-name"></label>
+    <label class="field">UTME date<input id="dateInput" type="date"></label>
+    <p class="dlg-note">Use of English is compulsory. Choose your other three subjects.</p>
+    <div id="comboFields"></div>
+    <p class="dlg-error" id="dlgError" role="alert" hidden></p>
     <div class="dlg-actions">
-      <button class="btn btn-sm ghost" value="cancel">Cancel</button>
       <button class="btn btn-sm" value="save">Save</button>
+      <button class="btn btn-sm ghost" value="cancel">Cancel</button>
     </div>
   </form>
 </dialog>
@@ -518,170 +330,165 @@ main { padding-block: var(--s3) var(--s5); }
 'use strict';
 
 /* ---------- Config ---------- */
-const PRACTICE_URL = 'practice.html';           // receives ?subject=&mode=practice|cbt
+const PRACTICE_URL = 'practice.html';            // receives ?subject=&mode=practice|cbt
 const STORE_KEY = 'jambpq-dashboard-v1';
+const ENGLISH = 'Use of English';
 const DEFAULT_COMBO = ['Mathematics', 'Physics', 'Chemistry'];
 const DAY_MS = 864e5;
-
 const SUBJECT_ICONS = {
-  'Use of English': '📖', 'Mathematics': '📐', 'Physics': '⚛️', 'Chemistry': '🧪',
-  'Biology': '🧬', 'Economics': '📊', 'Government': '🏛️', 'Literature in English': '📚',
-  'Commerce': '💼', 'Accounting': '📒', 'Geography': '🌍', 'CRK': '✝️', 'IRK': '☪️'
+  'Use of English':'📖','Mathematics':'📐','Physics':'⚛️','Chemistry':'🧪','Biology':'🧬','Economics':'📊',
+  'Government':'🏛️','Literature in English':'📚','Commerce':'💼','Financial Accounting':'📒','Geography':'🌍',
+  'CRK':'✝️','IRK':'☪️','Agricultural Science':'🌾','Accounting':'📒'
 };
+const ELECTIVES = Object.keys(SUBJECT_ICONS).filter(s => s !== ENGLISH && s !== 'Accounting');
 
 /* ---------- Helpers ---------- */
 const $ = id => document.getElementById(id);
-const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-const esc = s => String(s).replace(/[&<>"']/g, c => ESC_MAP[c]);
+const ESC = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+const esc = s => String(s).replace(/[&<>"']/g, c => ESC[c]);
 const pad = n => String(n).padStart(2, '0');
 const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 const daysAgo = n => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
 const dayNumber = d => Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS);
-const percent = (correct, total) => total ? Math.round(correct / total * 100) : 0;
+const percent = (c, n) => n ? Math.round(c / n * 100) : 0;
 const sum = (list, key) => list.reduce((a, x) => a + x[key], 0);
-const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
-const practiceUrl = subject =>
-  `${PRACTICE_URL}?subject=${encodeURIComponent(subject)}&mode=practice`;
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const iconFor = name => SUBJECT_ICONS[name] || '📝';
+const practiceUrl = subject => `${PRACTICE_URL}?subject=${encodeURIComponent(subject)}&mode=practice`;
+const validDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : '';
 
 /* ---------- State ---------- */
-/* Demo mode: open the page with ?demo to preview sample data (never saved) */
+/* Open the page with ?demo to preview sample data (never saved) */
 const DEMO = new URLSearchParams(location.search).has('demo');
 
 function demoState() {
   const mk = (ago, s, c, n, y) => ({ t: daysAgo(ago).getTime(), s, c, n, y });
-  return {
-    name: 'Ada',
-    combo: DEFAULT_COMBO,
-    examDate: dayKey(daysAgo(-175)),
-    results: [
-      mk(6, 'Use of English', 38, 60, 2019), mk(5, 'Mathematics', 22, 40, 2018),
-      mk(4, 'Physics', 25, 40, 2020),        mk(4, 'Chemistry', 27, 40, 2017),
-      mk(3, 'Use of English', 42, 60, 2021), mk(2, 'Mathematics', 27, 40, 2019),
-      mk(1, 'Physics', 29, 40, 2021),        mk(1, 'Chemistry', 31, 40, 2020),
-      mk(0, 'Use of English', 45, 60, 2022), mk(0, 'Mathematics', 30, 40, 2022)
-    ]
-  };
+  return { name:'Ada', combo:DEFAULT_COMBO, examDate:dayKey(daysAgo(-175)), results:[
+    mk(6,ENGLISH,38,60,2019), mk(5,'Mathematics',22,40,2018), mk(4,'Physics',25,40,2020), mk(4,'Chemistry',27,40,2017),
+    mk(3,ENGLISH,42,60,2021), mk(2,'Mathematics',27,40,2019), mk(1,'Physics',29,40,2021), mk(1,'Chemistry',31,40,2020),
+    mk(0,ENGLISH,45,60,2022), mk(0,'Mathematics',30,40,2022)] };
+}
+
+function readStore() {
+  try { const v = JSON.parse(localStorage.getItem(STORE_KEY)); return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
+  catch (e) { return {}; }
+}
+
+/* Always three unique electives, never English twice */
+function normalizeCombo(list) {
+  const seen = new Set([ENGLISH]), out = [];
+  (Array.isArray(list) ? list : []).forEach(s => { if (typeof s === 'string' && s && !seen.has(s)) { seen.add(s); out.push(s); } });
+  DEFAULT_COMBO.forEach(s => { if (out.length < 3 && !seen.has(s)) { seen.add(s); out.push(s); } });
+  return out.slice(0, 3);
 }
 
 function loadState() {
   if (DEMO) return demoState();
-  const fresh = { name: '', combo: DEFAULT_COMBO, examDate: '', results: [] };
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORE_KEY));
-    if (!saved || typeof saved !== 'object') return fresh;
-    return {
-      name: typeof saved.name === 'string' ? saved.name : '',
-      combo: Array.isArray(saved.combo) && saved.combo.length ? saved.combo : DEFAULT_COMBO,
-      examDate: typeof saved.examDate === 'string' ? saved.examDate : (typeof saved.date === 'string' ? saved.date : ''),
-      results: Array.isArray(saved.results)
-        ? saved.results.filter(r => r && r.s && r.n > 0 && Number.isFinite(r.t))
-        : []
-    };
-  } catch (e) {
-    return fresh;
-  }
+  const s = readStore();
+  const results = (Array.isArray(s.results) ? s.results : [])
+    .filter(r => r && typeof r.s === 'string' && r.s && +r.n > 0 && Number.isFinite(+r.t))
+    .map(r => ({ ...r, t:+r.t, n:+r.n, c:Math.min(Math.max(+r.c || 0, 0), +r.n) }));   // clamp bad scores
+  return { name: typeof s.name === 'string' ? s.name : '', combo: normalizeCombo(s.combo), examDate: validDate(s.examDate || s.date), results };
 }
-const state = loadState();
+
+let state = loadState();
 const showStorageNote = () => { $('storageNote').hidden = false; };
-const saveState = () => {
+
+/* Only writes the fields this page owns, merged into the latest stored data,
+   so results saved by the practice page (even in another tab) are never overwritten */
+function saveState() {
   if (DEMO) return;
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { showStorageNote(); }
-};
-if (!DEMO) {
-  try { localStorage.setItem('jambpq-probe', '1'); localStorage.removeItem('jambpq-probe'); } catch (e) { showStorageNote(); }
+  try {
+    const latest = readStore();
+    latest.name = state.name; latest.combo = state.combo; latest.examDate = state.examDate;
+    delete latest.date;
+    localStorage.setItem(STORE_KEY, JSON.stringify(latest));
+  } catch (e) { showStorageNote(); }
 }
-const subjects = () => ['Use of English', ...state.combo];
+if (!DEMO) { try { localStorage.setItem('jambpq-probe', '1'); localStorage.removeItem('jambpq-probe'); } catch (e) { showStorageNote(); } }
+
+const subjects = () => [ENGLISH, ...state.combo];
 
 /* ---------- Streaks and daily counts ---------- */
 const practiceDays = () => new Set(state.results.map(r => dayKey(new Date(r.t))));
-
 function currentStreak() {
   const days = practiceDays();
-  let count = 0;
-  let i = days.has(dayKey(new Date())) ? 0 : 1;   // a streak stays alive until the day ends
+  let count = 0, i = days.has(dayKey(new Date())) ? 0 : 1;   // a streak stays alive until the day ends
   while (days.has(dayKey(daysAgo(i)))) { count++; i++; }
   return count;
 }
-
 function bestStreak() {
   const nums = [...practiceDays()].map(k => dayNumber(new Date(k + 'T00:00:00'))).sort((a, b) => a - b);
   let best = 0, run = 0, prev = null;
-  for (const n of nums) {
-    run = prev !== null && n - prev === 1 ? run + 1 : 1;
-    best = Math.max(best, run);
-    prev = n;
-  }
+  for (const n of nums) { run = prev !== null && n - prev === 1 ? run + 1 : 1; best = Math.max(best, run); prev = n; }
   return best;
 }
-
-const questionsOn = ago => {
-  const key = dayKey(daysAgo(ago));
-  return sum(state.results.filter(r => dayKey(new Date(r.t)) === key), 'n');
-};
+const questionsOn = ago => { const k = dayKey(daysAgo(ago)); return sum(state.results.filter(r => dayKey(new Date(r.t)) === k), 'n'); };
 
 /* ---------- Greeting ---------- */
 function renderGreeting() {
   const h = new Date().getHours();
-  $('hiGreet').textContent =
-    h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : h < 22 ? 'Good evening' : 'Good night';
+  $('hiGreet').textContent = h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : h < 22 ? 'Good evening' : 'Good night';
   $('name').textContent = state.name || 'Candidate';
 
-  const parts = [];
+  const streak = currentStreak(), parts = [streak ? `${streak}-day streak` : 'Start a new streak today'];
   if (state.examDate) {
     const left = dayNumber(new Date(state.examDate + 'T00:00:00')) - dayNumber(new Date());
     if (left > 0) parts.push(`${plural(left, 'day')} to UTME`);
+    else if (left === 0) parts.push('UTME is today. Good luck!');
   }
-  const streak = currentStreak();
-  parts.push(streak ? `${streak}-day streak` : 'start a new streak today');
-
-  const today = questionsOn(0);
-  if (today) parts.push('practised today');
-  $('line').textContent = (today ? 'Nice work today. ' : 'Every question you practise counts. ') + parts.join(' · ');
+  $('lineText').textContent = (questionsOn(0) ? 'Nice work today. ' : 'Every question you practise counts. ') + parts.join(' · ') + '.';
+  $('setDate').hidden = !!state.examDate;
 }
 
-const nameDlg = $('nameDlg');
-$('name').addEventListener('click', () => {
+/* ---------- Details dialog (name, UTME date, subject combination) ---------- */
+const dlg = $('detailsDlg'), form = $('detailsForm');
+function openDetails(focusId) {
+  if (typeof dlg.showModal !== 'function') return;
   $('nameInput').value = state.name;
-  if (typeof nameDlg.showModal === 'function') nameDlg.showModal();
-});
-nameDlg.addEventListener('close', () => {
-  if (nameDlg.returnValue !== 'save') return;
-  const name = $('nameInput').value.trim().slice(0, 24);
-  if (!name) return;
-  state.name = name;
+  $('dateInput').value = state.examDate;
+  $('dlgError').hidden = true;
+  $('comboFields').innerHTML = state.combo.map((cur, i) => {
+    const list = ELECTIVES.includes(cur) ? ELECTIVES : [cur, ...ELECTIVES];
+    return `<label class="field">Subject ${i + 2}<select>${list.map(s => `<option${s === cur ? ' selected' : ''}>${esc(s)}</option>`).join('')}</select></label>`;
+  }).join('');
+  dlg.showModal();
+  $(focusId).focus();
+}
+form.addEventListener('submit', e => {
+  if (!e.submitter || e.submitter.value !== 'save') return;   // Cancel just closes
+  const picks = [...document.querySelectorAll('#comboFields select')].map(s => s.value);
+  if (new Set(picks).size < picks.length) {
+    e.preventDefault();
+    $('dlgError').textContent = 'Choose three different subjects.';
+    $('dlgError').hidden = false;
+    return;
+  }
+  state.name = $('nameInput').value.trim().slice(0, 24);
+  state.examDate = validDate($('dateInput').value);
+  state.combo = picks;
   saveState();
-  renderGreeting();
+  renderAll();
 });
+$('name').addEventListener('click', () => openDetails('nameInput'));
+$('setDate').addEventListener('click', () => openDetails('dateInput'));
 
 /* ---------- Stats ---------- */
 function renderStats() {
   const cutoff = startOfDay(daysAgo(6)).getTime();
   const week = state.results.filter(r => r.t >= cutoff);
-  const todayKey = dayKey(new Date());
-  const today = state.results.filter(r => dayKey(new Date(r.t)) === todayKey);
-
-  const todayQ = sum(today, 'n');
-  const weekQ = sum(week, 'n');
-  const accuracy = percent(sum(week, 'c'), weekQ);
-  const streak = currentStreak();
-  const best = bestStreak();
-  const yesterdayQ = questionsOn(1);
-  const diff = todayQ - yesterdayQ;
+  const todayQ = questionsOn(0), yesterdayQ = questionsOn(1), weekQ = sum(week, 'n');
+  const accuracy = percent(sum(week, 'c'), weekQ), best = bestStreak(), diff = todayQ - yesterdayQ;
 
   $('sToday').textContent = todayQ.toLocaleString();
   $('sWeek').textContent = weekQ.toLocaleString();
   $('sAcc').textContent = accuracy + '%';
-  $('sStreak').textContent = streak;
-
-  $('sTodayHint').textContent =
-    !todayQ ? 'No practice yet' :
-    !yesterdayQ ? 'First session today' :
-    diff > 0 ? `↑ ${diff} vs yesterday` :
-    diff < 0 ? `↓ ${Math.abs(diff)} vs yesterday` : 'Same as yesterday';
+  $('sStreak').textContent = currentStreak();
+  $('sTodayHint').textContent = !todayQ ? 'No practice yet' : !yesterdayQ ? 'First session today'
+    : diff > 0 ? `↑ ${diff} vs yesterday` : diff < 0 ? `↓ ${Math.abs(diff)} vs yesterday` : 'Same as yesterday';
   $('sWeekHint').textContent = weekQ ? `Avg ${Math.round(weekQ / 7)} per day` : 'Practise to see your average';
-  $('sAccHint').textContent = !weekQ ? 'This week' :
-    accuracy >= 70 ? 'Solid, keep going' : accuracy >= 50 ? 'Room to improve' : 'Focus on weak subjects';
+  $('sAccHint').textContent = !weekQ ? 'This week' : accuracy >= 70 ? 'Solid, keep going' : accuracy >= 50 ? 'Room to improve' : 'Focus on weak subjects';
   $('sStreakHint').textContent = best ? `Best: ${plural(best, 'day')}` : 'Start today';
 }
 
@@ -692,142 +499,92 @@ function subjectAverages() {
     return { name, has: rows.length > 0, avg: percent(sum(rows, 'c'), sum(rows, 'n')) };
   });
 }
+const tone = (p, has = true) => !has ? '' : p >= 70 ? 'good' : p < 50 ? 'bad' : 'mid';
 
 function renderScores() {
-  const rows = subjectAverages();
-  const practised = rows.filter(r => r.has);
-
-  $('proj').textContent = practised.length
-    ? Math.round(sum(practised, 'avg') / practised.length * 4)
-    : 0;
+  const rows = subjectAverages(), practised = rows.filter(r => r.has);
+  $('proj').textContent = practised.length ? Math.round(sum(practised, 'avg') / practised.length * 4) : 0;
   $('scoresHint').textContent = practised.length
-    ? `Average across ${plural(practised.length, 'practised subject')}`
-    : 'No practice yet. Start a session.';
-
-  $('subs').innerHTML = rows.map(r => {
-    const tone = !r.has ? '' : r.avg >= 70 ? 'good' : r.avg < 50 ? 'bad' : 'mid';
-    return `
-      <div class="sub">
-        <div class="sub-row">
-          <span class="subj-name" title="${esc(r.name)}">${esc(r.name)}</span>
-          <span class="sub-actions">
-            <span class="sub-pct${r.has ? '' : ' none'}">${r.has ? r.avg + '% accuracy' : 'No practice yet'}</span>
-            <button class="btn-mini" type="button" data-subject="${esc(r.name)}" aria-label="Practise ${esc(r.name)}">Practise</button>
-          </span>
-        </div>
-        <div class="track"${r.has ? ` role="progressbar" aria-label="${esc(r.name)} accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${r.avg}"` : ' aria-hidden="true"'}><i class="${tone}" style="width:${r.avg}%"></i></div>
-      </div>`;
-  }).join('');
+    ? `Average across ${plural(practised.length, 'practised subject')} of 4` : 'No practice yet. Start a session.';
+  $('subs').innerHTML = rows.map(r => `
+    <div class="sub">
+      <span class="subj-name">${esc(r.name)}</span>
+      <span class="sub-pct">${r.has ? r.avg + '% accuracy' : 'No practice yet'}</span>
+      <button class="btn-mini" type="button" data-subject="${esc(r.name)}" aria-label="Practise ${esc(r.name)}">Practise</button>
+      <div class="track"${r.has ? ` role="progressbar" aria-label="${esc(r.name)} accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${r.avg}"` : ' aria-hidden="true"'}><i class="${tone(r.avg, r.has)}" style="width:${r.avg}%"></i></div>
+    </div>`).join('');
 }
 
 /* ---------- Recent practice ---------- */
 function renderRecent() {
-  const todayStart = dayNumber(new Date());
-  const when = t => {
-    const d = todayStart - dayNumber(new Date(t));
-    return d <= 0 ? 'Today' : d === 1 ? 'Yesterday' : `${d} days ago`;
-  };
+  const today = dayNumber(new Date());
+  const when = t => { const d = today - dayNumber(new Date(t)); return d <= 0 ? 'Today' : d === 1 ? 'Yesterday' : `${d} days ago`; };
 
   // Compare each result with the previous attempt in the same subject
-  const oldestFirst = state.results.slice().sort((a, b) => a.t - b.t);
-  const lastPct = {};
-  const trends = new Map();
-  oldestFirst.forEach(r => {
-    const p = percent(r.c, r.n);
-    if (r.s in lastPct) trends.set(r, p - lastPct[r.s]);
-    lastPct[r.s] = p;
-  });
+  const oldestFirst = state.results.slice().sort((a, b) => a.t - b.t), last = {}, trends = new Map();
+  oldestFirst.forEach(r => { const p = percent(r.c, r.n); if (r.s in last) trends.set(r, p - last[r.s]); last[r.s] = p; });
 
-  const recent = oldestFirst.slice().reverse().slice(0, 5);
-  if (!recent.length) {
-    $('rList').innerHTML = `<li class="empty">No practice yet. Pick a subject above and select <strong>Start practice</strong> to log your first session.</li>`;
-    return;
-  }
+  const recent = oldestFirst.reverse().slice(0, 5);
+  if (!recent.length) { $('rList').innerHTML = '<li class="empty">No practice yet. Pick a subject above and select <strong>Start practice</strong> to log your first session.</li>'; return; }
 
   $('rList').innerHTML = recent.map(r => {
-    const p = percent(r.c, r.n);
-    const tone = p >= 70 ? 'good' : p < 50 ? 'bad' : '';
-    const trend = trends.get(r);
-    const trendHtml =
-      trend === undefined ? '' :
-      trend > 0 ? ` · <span class="trend up">↑ ${trend}%</span>` :
-      trend < 0 ? ` · <span class="trend down">↓ ${Math.abs(trend)}%</span>` :
-      ' · <span class="trend">no change</span>';
-    const icon = SUBJECT_ICONS[r.s] || '📝';
-
+    const p = percent(r.c, r.n), tr = trends.get(r);
+    const trendHtml = tr === undefined ? '' : tr > 0 ? ` · <span class="trend up">↑ ${tr}%</span>` : tr < 0 ? ` · <span class="trend down">↓ ${Math.abs(tr)}%</span>` : ' · <span class="trend">no change</span>';
     return `
-      <li class="res">
-        <span class="subj-icon" aria-hidden="true">${icon}</span>
-        <div class="res-info">
-          <div class="res-head">
-            <b title="${esc(r.s)}">${esc(r.s)}</b>
-            <span class="score ${tone}">${p}%</span>
-          </div>
-          <small>${when(r.t)} · ${r.c}/${r.n}${r.y ? ' · ' + esc(r.y) : ''}${trendHtml}</small>
-        </div>
-        <button class="btn-mini btn-go" type="button" data-subject="${esc(r.s)}" aria-label="Continue practice in ${esc(r.s)}"><span class="go-text">Continue</span><svg class="ic go-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-      </li>`;
+    <li class="res">
+      <span class="subj-icon" aria-hidden="true">${iconFor(r.s)}</span>
+      <div class="res-info">
+        <div class="res-head"><b title="${esc(r.s)}">${esc(r.s)}</b><span class="score ${tone(p)}">${p}%</span></div>
+        <small>${when(r.t)} · ${r.c}/${r.n}${r.y ? ' · ' + esc(r.y) : ''}${trendHtml}</small>
+      </div>
+      <button class="btn-mini btn-go" type="button" data-subject="${esc(r.s)}" aria-label="Continue practice in ${esc(r.s)}"><span class="go-text">Continue</span><svg class="ic go-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    </li>`;
   }).join('');
 }
 
 /* ---------- Start practice: custom subject picker ---------- */
-const picker = $('picker');
-const pBtn = $('pBtn');
-const pMenu = $('pMenu');
-let pickerValue = '';
-let activeIndex = -1;
-const iconFor = name => SUBJECT_ICONS[name] || '📝';
+const picker = $('picker'), pBtn = $('pBtn'), pMenu = $('pMenu');
+let pickerValue = '', activeIndex = -1;
 const isOpen = () => !pMenu.hidden;
 
+/* Suggest a subject never practised, otherwise the weakest one */
+function suggestion() {
+  const rows = subjectAverages(), fresh = rows.find(r => !r.has), practised = rows.filter(r => r.has);
+  if (!practised.length) return null;
+  if (fresh) return { name: fresh.name, text: `You haven’t practised ${fresh.name} yet. Start there to see your full score.` };
+  const w = practised.sort((a, b) => a.avg - b.avg)[0];
+  return { name: w.name, text: `${w.name} is your lowest score at ${w.avg}%. A session there lifts your total fastest.` };
+}
+
 function renderPicker() {
-  const list = subjects();
-  const stats = new Map(subjectAverages().map(r => [r.name, r]));
-
-  if (!list.includes(pickerValue)) {
-    const weakest = [...stats.values()].filter(r => r.has).sort((a, b) => a.avg - b.avg)[0];
-    pickerValue = weakest ? weakest.name : list[0];
-    if (weakest) $('goHint').textContent = `${weakest.name} is your lowest score right now. A session there will lift your total fastest.`;
-  }
-
+  const list = subjects(), stats = new Map(subjectAverages().map(r => [r.name, r])), tip = suggestion();
+  if (!list.includes(pickerValue)) pickerValue = tip ? tip.name : list[0];
+  $('goHint').textContent = tip ? tip.text : 'Pick a subject and start answering real JAMB past questions.';
   pMenu.innerHTML = list.map((name, i) => {
     const r = stats.get(name);
-    return `<li class="picker-opt" role="option" id="opt-${i}" aria-selected="${name === pickerValue}">
-      <span class="opt-icon" aria-hidden="true">${iconFor(name)}</span>
-      <span class="opt-name">${esc(name)}</span>
-      <span class="opt-meta">${r && r.has ? r.avg + '%' : 'New'}</span>
-    </li>`;
+    return `<li class="picker-opt" role="option" id="opt-${i}" aria-selected="${name === pickerValue}"><span class="opt-icon" aria-hidden="true">${iconFor(name)}</span><span class="opt-name">${esc(name)}</span><span class="opt-meta">${r.has ? r.avg + '%' : 'New'}</span></li>`;
   }).join('');
   updatePickerButton();
 }
-
-function updatePickerButton() {
-  $('pIcon').textContent = iconFor(pickerValue);
-  $('pText').textContent = pickerValue;
-}
+function updatePickerButton() { $('pIcon').textContent = iconFor(pickerValue); $('pText').textContent = pickerValue; }
 
 function setActive(i) {
   const opts = [...pMenu.children];
   activeIndex = (i + opts.length) % opts.length;
   opts.forEach((o, k) => o.classList.toggle('active', k === activeIndex));
   pBtn.setAttribute('aria-activedescendant', opts[activeIndex].id);
-  opts[activeIndex].scrollIntoView({ block: 'nearest' });
+  const o = opts[activeIndex];   // scroll the menu only, never the page
+  if (o.offsetTop < pMenu.scrollTop) pMenu.scrollTop = o.offsetTop - 4;
+  else if (o.offsetTop + o.offsetHeight > pMenu.scrollTop + pMenu.clientHeight) pMenu.scrollTop = o.offsetTop + o.offsetHeight - pMenu.clientHeight + 4;
 }
-
 function openPicker() {
   pMenu.hidden = false;
   pBtn.setAttribute('aria-expanded', 'true');
-  const rect = pBtn.getBoundingClientRect();
-  const below = window.innerHeight - rect.bottom - 80;   // leave room for the tab bar
+  const rect = pBtn.getBoundingClientRect(), below = window.innerHeight - rect.bottom - 80;   // room for the tab bar
   picker.classList.toggle('up', below < Math.min(pMenu.scrollHeight, 288) && rect.top > below);
   setActive(subjects().indexOf(pickerValue));
 }
-
-function closePicker() {
-  pMenu.hidden = true;
-  pBtn.setAttribute('aria-expanded', 'false');
-  pBtn.removeAttribute('aria-activedescendant');
-}
-
+function closePicker() { pMenu.hidden = true; pBtn.setAttribute('aria-expanded', 'false'); pBtn.removeAttribute('aria-activedescendant'); }
 function choose(i) {
   pickerValue = subjects()[i];
   [...pMenu.children].forEach((o, k) => o.setAttribute('aria-selected', String(k === i)));
@@ -835,32 +592,26 @@ function choose(i) {
   closePicker();
 }
 
-pBtn.addEventListener('click', () => (isOpen() ? closePicker() : openPicker()));
+pBtn.addEventListener('click', () => isOpen() ? closePicker() : openPicker());
 pBtn.addEventListener('keydown', e => {
   const open = isOpen();
   switch (e.key) {
     case 'ArrowDown': e.preventDefault(); open ? setActive(activeIndex + 1) : openPicker(); break;
-    case 'ArrowUp':   e.preventDefault(); open ? setActive(activeIndex - 1) : openPicker(); break;
-    case 'Home':      if (open) { e.preventDefault(); setActive(0); } break;
-    case 'End':       if (open) { e.preventDefault(); setActive(subjects().length - 1); } break;
-    case 'Enter':
-    case ' ':         e.preventDefault(); open ? choose(activeIndex) : openPicker(); break;
-    case 'Escape':    if (open) { e.preventDefault(); closePicker(); } break;
-    case 'Tab':       if (open) closePicker(); break;
+    case 'ArrowUp': e.preventDefault(); open ? setActive(activeIndex - 1) : openPicker(); break;
+    case 'Home': if (open) { e.preventDefault(); setActive(0); } break;
+    case 'End': if (open) { e.preventDefault(); setActive(subjects().length - 1); } break;
+    case 'Enter': case ' ': e.preventDefault(); open ? choose(activeIndex) : openPicker(); break;
+    case 'Escape': if (open) { e.preventDefault(); closePicker(); } break;
+    case 'Tab': if (open) closePicker(); break;
   }
 });
 pMenu.addEventListener('mousedown', e => e.preventDefault());   // keep focus on the button
-pMenu.addEventListener('click', e => {
-  const opt = e.target.closest('.picker-opt');
-  if (opt) choose([...pMenu.children].indexOf(opt));
-});
+pMenu.addEventListener('click', e => { const o = e.target.closest('.picker-opt'); if (o) choose([...pMenu.children].indexOf(o)); });
 document.addEventListener('click', e => { if (isOpen() && !picker.contains(e.target)) closePicker(); });
+picker.addEventListener('focusout', e => { if (isOpen() && !picker.contains(e.relatedTarget)) closePicker(); });
 
-/* ---------- Navigation actions (event delegation) ---------- */
-function goToSubject(e) {
-  const btn = e.target.closest('button[data-subject]');
-  if (btn) location.href = practiceUrl(btn.dataset.subject);
-}
+/* ---------- Navigation actions ---------- */
+const goToSubject = e => { const b = e.target.closest('button[data-subject]'); if (b) location.href = practiceUrl(b.dataset.subject); };
 $('subs').addEventListener('click', goToSubject);
 $('rList').addEventListener('click', goToSubject);
 const startSelected = () => { location.href = practiceUrl(pickerValue); };
@@ -868,49 +619,37 @@ $('pGo').addEventListener('click', startSelected);
 $('navStart').addEventListener('click', startSelected);
 $('startCbt').addEventListener('click', () => { location.href = `${PRACTICE_URL}?mode=cbt`; });
 
-/* ---------- Header: hairline on scroll ---------- */
-const header = $('mainHeader');
-const navLinks = document.querySelectorAll('.tabbar a, .nav-list li:not(:last-child) a');
-const sectionIds = ['start', 'scores', 'recent'];
+/* ---------- Header hairline and active section ---------- */
+const header = $('mainHeader'), navLinks = document.querySelectorAll('.tabbar a, .nav-list li:not(:last-child) a');
 let ticking = false;
-
 function updateScrollState() {
   ticking = false;
   header.classList.toggle('scrolled', window.scrollY > 50);
-
-  const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-  let active = '#main';
-  sectionIds.forEach(id => { if ($(id).getBoundingClientRect().top <= 120) active = '#' + id; });
-  if (atBottom) active = '#recent';
-  navLinks.forEach(a => {
-    if (a.getAttribute('href') === active) a.setAttribute('aria-current', 'true');
-    else a.removeAttribute('aria-current');
-  });
+  // Pick the section nearest the top; ties (side-by-side cards) keep the first one
+  let active = '#main', best = -Infinity;
+  ['start', 'scores', 'recent'].forEach(id => { const top = $(id).getBoundingClientRect().top; if (top <= 120 && top > best) { best = top; active = '#' + id; } });
+  const stacked = $('recent').getBoundingClientRect().top > $('scores').getBoundingClientRect().top + 1;
+  if (stacked && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = '#recent';
+  navLinks.forEach(a => a.getAttribute('href') === active ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
 }
-window.addEventListener('scroll', () => {
-  if (!ticking) { ticking = true; requestAnimationFrame(updateScrollState); }
-}, { passive: true });
-updateScrollState();
+window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(updateScrollState); } }, { passive: true });
 
 /* ---------- Reveal on scroll ---------- */
 const reveals = document.querySelectorAll('.fade-in');
 if ('IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
-} else {
-  reveals.forEach(el => el.classList.add('in'));
-}
+  const io = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: 0.1 });
+  reveals.forEach(el => io.observe(el));
+} else reveals.forEach(el => el.classList.add('in'));
 
-/* ---------- Boot ---------- */
-renderGreeting();
-renderPicker();
-renderStats();
-renderScores();
-renderRecent();
+/* ---------- Boot and refresh ---------- */
+function renderAll() { renderGreeting(); renderPicker(); renderStats(); renderScores(); renderRecent(); updateScrollState(); }
+function refresh() { if (!DEMO) { state = loadState(); renderAll(); } }
+renderAll();
+
+/* Keep numbers fresh when coming back from the practice page, switching tabs, or after midnight */
+window.addEventListener('pageshow', e => { if (e.persisted) refresh(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+window.addEventListener('storage', e => { if (e.key === STORE_KEY || e.key === null) refresh(); });
 </script>
 </body>
 </html>
