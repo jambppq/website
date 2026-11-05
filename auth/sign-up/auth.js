@@ -71,7 +71,6 @@
       var input = $(t.getAttribute("data-toggle"));
       var show = input.type === "password";
       input.type = show ? "text" : "password";
-      t.textContent = show ? "Hide" : "Show";
       t.setAttribute("aria-pressed", show);
     });
   });

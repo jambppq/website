@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Reset password | JAMB PQ</title>
+  <meta name="description" content="Set a new password for your JAMB PQ account.">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0d5c3a" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1a13" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="./img/icon.png">
+  <link rel="apple-touch-icon" href="./img/icon.png">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap"
+    rel="stylesheet">
+  <style>
+/* ===== base tokens + components (from auth.css) ===== */
+/* =========================================================
+   JAMB PQ · auth pages (sign-up, sign-in, forgot-password)
+   Uses the same tokens as the landing page.
+   Breakpoint note: media queries can't use var(), so
+   --bp-sm is 600px.
+   ========================================================= */
+:root {
+  /* colour */
+  --ink: #10221a;
+  --muted: #52645a;
+  --paper: #fbfaf5;
+  --sheet: #ffffff;
+  --line: #dfe5df;
+  --green: #0d5c3a;
+  --green-d: #08402a;
+  --pencil: #f4c430;
+  --ok: #0d7a44;
+  --bad: #b3261e;
+
+  --btn: #0d5c3a;
+  --btn-hover: #08402a;
+  --on-btn: #ffffff;
+  --ok-tint: rgba(13, 122, 68, .1);
+  --bad-tint: rgba(179, 38, 30, .08);
+  --overlay: rgba(8, 26, 18, .6);
+
+  /* typography */
+  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-base: clamp(1rem, .96rem + .2vw, 1.0625rem);
+  --fs-sm: .9rem;
+  --fs-xs: .85rem;
+  --fs-lead: clamp(1rem, .96rem + .25vw, 1.1rem);
+  --fs-title: clamp(1.6rem, 1.25rem + 1.8vw, 2.1rem);
+  --lh-body: 1.6;
+
+  /* spacing */
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --gutter: clamp(1rem, .6rem + 2vw, 1.5rem);
+
+  /* layout */
+  --container: 1080px;
+  --header-h: 3.5rem;
+  --logo-size: 2.5rem;
+  --tap: 2.75rem;
+  --auth-w: 26rem;
+
+  /* shape + depth + motion */
+  --radius-sm: .5rem;
+  --radius-md: .75rem;
+  --radius-lg: 1rem;
+  --shadow-card: 0 18px 40px -24px rgba(8, 64, 42, .45);
+  --shadow-pop: 0 24px 60px -20px rgba(0, 0, 0, .5);
+  --ease: .15s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #eef3ee;
+    --muted: #a3b3a9;
+    --paper: #0d1a13;
+    --sheet: #14261c;
+    --line: #26402f;
+    --green: #2fa36b;
+    --green-d: #53c78e;
+    --btn: #1f8a58;
+    --btn-hover: #2fa36b;
+    --ok: #3fbf83;
+    --bad: #ff8a80;
+    --ok-tint: rgba(63, 191, 131, .14);
+    --bad-tint: rgba(255, 138, 128, .12);
+    --overlay: rgba(0, 0, 0, .7);
+    --shadow-card: 0 18px 40px -24px rgba(0, 0, 0, .8);
+  }
+}
+
+@media (min-width: 860px) {
+  :root {
+    --header-h: 4rem;
+    --logo-size: 2.75rem;
+  }
+}
+
+/* ---------- base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--pencil);
+  outline-offset: 3px;
+}
+
+.btn,
+.link,
+.pw-toggle {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+/* ---------- header ---------- */
+.top {
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid var(--line);
+}
+
+.top nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  gap: var(--space-4);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.logo img {
+  width: var(--logo-size);
+  height: var(--logo-size);
+  flex: none;
+  object-fit: cover;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--muted);
+  font-size: .95rem;
+  text-decoration: none;
+}
+
+/* ---------- page layout ---------- */
+.auth {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6) max(var(--gutter), env(safe-area-inset-left, 0px)) var(--space-6) max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+.auth-card {
+  width: 100%;
+  max-width: var(--auth-w);
+  padding: var(--space-5) var(--space-4);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.auth-card h1 {
+  font-size: var(--fs-title);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+.auth-card .lead {
+  margin: var(--space-2) 0 var(--space-5);
+  color: var(--muted);
+  font-size: var(--fs-lead);
+  text-wrap: pretty;
+}
+
+/* ---------- form ---------- */
+.field {
+  margin-bottom: var(--space-4);
+}
+
+.field label,
+.label-row label {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;               /* 16px+ so iOS doesn't zoom on focus */
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  transition: border-color var(--ease);
+}
+
+input::placeholder {
+  color: var(--muted);
+  opacity: .7;
+}
+
+input:focus {
+  border-color: var(--green);
+}
+
+.pw {
+  position: relative;
+}
+
+.pw input {
+  padding-right: var(--tap);
+}
+
+.pw-toggle {
+  position: absolute;
+  top: 50%;
+  right: var(--space-1);
+  transform: translateY(-50%);
+  min-width: var(--tap);
+  min-height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--ease);
+}
+
+.pw-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* the slash draws across the eye when the password is visible */
+.pw-toggle .slash {
+  opacity: 0;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset .22s ease, opacity .22s ease;
+}
+
+.pw-toggle[aria-pressed="true"] {
+  color: var(--green);
+}
+
+.pw-toggle[aria-pressed="true"] .slash {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+.link {
+  padding: 0;
+  font: 600 var(--fs-sm) var(--font);
+  color: var(--green);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.msg {
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  border-left: 4px solid var(--muted);
+  border-radius: var(--radius-sm);
+}
+
+.msg:empty {
+  display: none;
+}
+
+.msg.error {
+  color: var(--bad);
+  background: var(--bad-tint);
+  border-left-color: var(--bad);
+}
+
+.msg.success {
+  color: var(--ok);
+  background: var(--ok-tint);
+  border-left-color: var(--ok);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  padding: .65rem 1.5rem;
+  font: 600 1rem/1.2 var(--font);
+  text-align: center;
+  text-decoration: none;
+  color: var(--on-btn);
+  background: var(--btn);
+  border: 2px solid var(--btn);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease);
+}
+
+.btn.block {
+  width: 100%;
+}
+
+.btn.ghost,
+.btn.google {
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--line);
+}
+
+.btn.google {
+  width: 100%;
+  background: var(--paper);
+}
+
+.btn.google svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.switch {
+  margin-top: var(--space-5);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.switch a {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* ---------- forgot-password pop-up ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: max(var(--gutter), env(safe-area-inset-top, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px)) max(var(--gutter), env(safe-area-inset-bottom, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
+  background: var(--overlay);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 24rem;
+  margin: auto;
+  padding: var(--space-5) var(--space-4);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+}
+
+.modal-card h2 {
+  font-size: 1.35rem;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.modal-card p.sub {
+  margin: var(--space-2) 0 var(--space-4);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.modal-actions .btn {
+  flex: 1;
+  padding-inline: var(--space-3);
+}
+
+/* ---------- footer ---------- */
+.auth-foot {
+  padding: var(--space-4) var(--gutter) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+/* ---------- hover (only where hover exists) ---------- */
+@media (hover: hover) {
+  .btn:hover:not(:disabled) {
+    background: var(--btn-hover);
+    border-color: var(--btn-hover);
+  }
+
+  .btn.ghost:hover:not(:disabled),
+  .btn.google:hover:not(:disabled) {
+    background: transparent;
+    border-color: var(--ink);
+  }
+
+  .back:hover {
+    color: var(--ink);
+  }
+
+  .pw-toggle:hover {
+    color: var(--ink);
+  }
+
+  .link:hover,
+  .switch a:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ---------- ≥ 600px ---------- */
+@media (min-width: 600px) {
+  .auth-card {
+    padding: var(--space-6) calc(var(--space-5) + var(--space-1));
+  }
+
+  .modal-card {
+    padding: var(--space-5) calc(var(--space-5) + var(--space-1));
+  }
+}
+
+/* short landscape phones */
+@media (max-height: 480px) and (orientation: landscape) {
+  :root {
+    --header-h: 3rem;
+    --logo-size: 2rem;
+  }
+
+  .auth {
+    place-items: start center;
+    padding-block: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+  </style>
+
+  <style>
+    /* =========================================================
+       Reset-password additions. Everything here builds on the
+       tokens in auth.css (no new colours, no new fonts).
+       ========================================================= */
+    :root {
+      --otp-gap: var(--space-2);
+      --meter-h: .3125rem;
+      --warn: #b7791f;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --warn: var(--pencil);
+      }
+    }
+
+    /* account being reset */
+    .who {
+      margin-bottom: var(--space-5);
+      padding: var(--space-3) var(--space-4);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+    }
+
+    .who small {
+      display: block;
+      color: var(--muted);
+      font-size: var(--fs-xs);
+    }
+
+    .who strong {
+      display: block;
+      font-size: var(--fs-sm);
+      overflow-wrap: anywhere;
+    }
+
+    /* one-time code */
+    .otp-label {
+      display: block;
+      margin-bottom: var(--space-2);
+      font-weight: 600;
+      font-size: var(--fs-sm);
+    }
+
+    .otp {
+      display: flex;
+      gap: var(--otp-gap);
+    }
+
+    input.otp-box {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 3.25rem;
+      padding: 0;
+      text-align: center;
+      font: 800 1.35rem/1 var(--font);
+      font-variant-numeric: tabular-nums;
+      border-width: 2px;
+    }
+
+    input.otp-box.filled {
+      border-color: var(--green);
+      background: var(--ok-tint);
+    }
+
+    input[aria-invalid="true"] {
+      border-color: var(--bad);
+    }
+
+    .hint,
+    .field-error {
+      margin-top: var(--space-2);
+      font-size: var(--fs-xs);
+    }
+
+    .hint {
+      color: var(--muted);
+    }
+
+    .field-error {
+      color: var(--bad);
+    }
+
+    .field-error:empty {
+      display: none;
+    }
+
+    /* strength meter + rules */
+    .meter {
+      height: var(--meter-h);
+      margin-top: var(--space-3);
+      background: var(--line);
+      border-radius: var(--meter-h);
+      overflow: hidden;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--bad);
+      border-radius: inherit;
+      transition: width var(--ease), background var(--ease);
+    }
+
+    .meter[data-level="1"] span { width: 25%; background: var(--bad); }
+    .meter[data-level="2"] span { width: 50%; background: var(--warn); }
+    .meter[data-level="3"] span { width: 75%; background: var(--green); }
+    .meter[data-level="4"] span { width: 100%; background: var(--ok); }
+
+    .strength {
+      min-height: 1.2em;
+      margin-top: var(--space-1);
+      text-align: right;
+      color: var(--muted);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+    }
+
+    .rules {
+      display: grid;
+      gap: var(--space-1) var(--space-4);
+      margin-top: var(--space-2);
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: var(--fs-xs);
+    }
+
+    .rules li {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+    }
+
+    .rules li::before {
+      content: "";
+      flex: none;
+      width: .55rem;
+      height: .55rem;
+      border: 2px solid var(--line);
+      border-radius: 50%;
+      transform: translateY(.05rem);
+    }
+
+    .rules li.met {
+      color: var(--ok);
+    }
+
+    .rules li.met::before {
+      background: var(--ok);
+      border-color: var(--ok);
+    }
+
+    @media (min-width: 600px) {
+      .rules {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* resend */
+    .resend {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-4);
+      color: var(--muted);
+      font-size: var(--fs-sm);
+    }
+
+    .resend .link {
+      min-height: var(--tap);
+    }
+
+    .link:disabled {
+      color: var(--muted);
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+
+    .timer {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top">
+    <div class="wrap">
+      <nav aria-label="Main">
+        <a class="logo" href="/"><img src="./img/icon-192.png" width="44" height="44" alt=""> JAMB PQ</a>
+        <a class="back" href="signin.html">Back to sign in</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth">
+    <div class="auth-card">
+      <h1>Set a new password</h1>
+      <p class="lead">Enter the code from your email, then choose a new password.</p>
+
+      <!-- shown only when the link has no valid gmail -->
+      <div id="badLink" hidden>
+        <p class="msg error" role="alert">This reset link is invalid or incomplete. Request a new one from the sign-in page.</p>
+        <a class="btn block" href="signin.html">Go to sign in</a>
+      </div>
+
+      <form id="resetForm" novalidate hidden>
+        <div class="who">
+          <small>Resetting the password for</small>
+          <strong id="userEmail"></strong>
+        </div>
+
+        <div class="field">
+          <span class="otp-label" id="otpLabel">Verification code</span>
+          <div class="otp" id="otp" role="group" aria-labelledby="otpLabel"></div>
+          <p class="field-error" id="otpError" role="alert"></p>
+          <p class="hint">Enter the 6-digit code we sent to your Gmail.</p>
+        </div>
+
+        <div class="field">
+          <label for="password">New password</label>
+          <div class="pw">
+            <input id="password" type="password" autocomplete="new-password" placeholder="Choose a strong password"
+              aria-describedby="rules" required>
+            <button type="button" class="pw-toggle" data-toggle="password" aria-label="Show password" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" pathLength="1" d="M4 4l16 16"/></svg>
+            </button>
+          </div>
+          <div class="meter" id="meter" data-level="0" aria-hidden="true"><span></span></div>
+          <div class="strength" id="strength" aria-live="polite"></div>
+          <ul class="rules" id="rules">
+            <li data-rule="length">At least 8 characters</li>
+            <li data-rule="upper">One capital letter (A-Z)</li>
+            <li data-rule="lower">One small letter (a-z)</li>
+            <li data-rule="number">One number (0-9)</li>
+            <li data-rule="symbol">One symbol (!@#$%&amp;* etc.)</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <label for="confirm">Confirm new password</label>
+          <div class="pw">
+            <input id="confirm" type="password" autocomplete="new-password" placeholder="Type it again"
+              aria-describedby="confirmError" required>
+            <button type="button" class="pw-toggle" data-toggle="confirm" aria-label="Show password" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" pathLength="1" d="M4 4l16 16"/></svg>
+            </button>
+          </div>
+          <p class="field-error" id="confirmError" role="alert"></p>
+        </div>
+
+        <p class="msg" id="msg" role="status" aria-live="polite"></p>
+        <button class="btn block" id="submitBtn" type="submit">Change password</button>
+
+        <div class="resend">
+          <span>Didn't get a code? <span class="timer" id="timer" aria-hidden="true">01:00</span></span>
+          <button type="button" class="link" id="resendBtn" disabled>Resend code</button>
+        </div>
+        <p class="msg" id="resendMsg" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="switch">Remembered it? <a href="signin.html">Sign in</a></p>
+    </div>
+  </main>
+
+  <footer class="auth-foot">An independent study resource. Not affiliated with JAMB.</footer>
+
+  <script>
+    (function () {
+      /* ---------- config ---------- */
+      var API_URL = "";                                  // empty = same origin, e.g. "https://api.example.com"
+      var CHANGE_PATH = "/auth/change-password";         // POST { gmail, otp, password }  (assumed endpoint)
+      var FORGOT_PATH = "/auth/forgot-password";         // POST { gmail }                 (same as the sign-in pop-up)
+      var AFTER_RESET_URL = "signin.html";
+      var OTP_LENGTH = 6;
+      var RESEND_SECONDS = 60;
+
+      var GENERIC_ERROR = "Something went wrong. Please try again.";
+      var NETWORK_ERROR = "Can't reach the server. Check your connection and try again.";
+
+      var RULES = {
+        length: function (p) { return p.length >= 8; },
+        upper: function (p) { return /[A-Z]/.test(p); },
+        lower: function (p) { return /[a-z]/.test(p); },
+        number: function (p) { return /[0-9]/.test(p); },
+        symbol: function (p) { return /[^A-Za-z0-9]/.test(p); }
+      };
+      var STRENGTH_LABELS = ["", "Weak", "Fair", "Good", "Strong"];
+
+      function $(id) { return document.getElementById(id); }
+
+      function setMsg(el, text, type) {
+        if (!el) return;
+        el.textContent = text || "";
+        el.className = "msg" + (type ? " " + type : "");
+      }
+
+      function post(path, body) {
+        return fetch(API_URL + path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        }).then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (j) {
+            if (!r.ok) throw new Error(j.message || GENERIC_ERROR);
+            return j;
+          });
+        });
+      }
+
+      function errorText(err) {
+        return err instanceof TypeError ? NETWORK_ERROR : (err.message || GENERIC_ERROR);
+      }
+
+      /* ---------- read the link ----------
+         Expected: ?otp=123456&gmail=user@gmail.com
+         A stray second "?" (?otp=123456?gmail=...) is treated as "&" so the link still works. */
+      function readLink() {
+        var qs = window.location.search.replace(/^\?/, "").replace(/\?/g, "&");
+        var params = new URLSearchParams(qs);
+        var gmail = (params.get("gmail") || "").trim();
+        var otp = (params.get("otp") || "").replace(/\D/g, "");
+        return {
+          gmail: /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(gmail) ? gmail : "",
+          otp: otp.length === OTP_LENGTH ? otp : ""
+        };
+      }
+
+      var link = readLink();
+      var form = $("resetForm");
+
+      if (!link.gmail) {
+        $("badLink").hidden = false;
+        return;
+      }
+      form.hidden = false;
+      $("userEmail").textContent = link.gmail;
+
+      /* ---------- OTP boxes ---------- */
+      var otpWrap = $("otp");
+      var boxes = [];
+
+      function otpValue() {
+        return boxes.map(function (b) { return b.value; }).join("");
+      }
+
+      function clearOtpError() {
+        $("otpError").textContent = "";
+        boxes.forEach(function (b) { b.removeAttribute("aria-invalid"); });
+      }
+
+      function fillFrom(start, digits) {
+        for (var k = 0; k < digits.length && start + k < OTP_LENGTH; k++) {
+          boxes[start + k].value = digits[k];
+          boxes[start + k].classList.add("filled");
+        }
+        var next = Math.min(start + digits.length, OTP_LENGTH - 1);
+        boxes[next].focus();
+        clearOtpError();
+      }
+
+      function clearOtp() {
+        boxes.forEach(function (b) { b.value = ""; b.classList.remove("filled"); });
+        boxes[0].focus();
+      }
+
+      function buildOtp() {
+        boxes = [];
+        for (var i = 0; i < OTP_LENGTH; i++) {
+          (function (i) {
+            var b = document.createElement("input");
+            b.type = "text";
+            b.className = "otp-box";
+            b.inputMode = "numeric";
+            b.pattern = "[0-9]*";
+            b.autocomplete = i === 0 ? "one-time-code" : "off";
+            b.setAttribute("aria-label", "Digit " + (i + 1) + " of " + OTP_LENGTH);
+
+            b.addEventListener("focus", function () { b.select(); });
+
+            b.addEventListener("input", function () {
+              var digits = b.value.replace(/\D/g, "");
+              if (!digits) { b.value = ""; b.classList.remove("filled"); return; }
+              if (digits.length > 1) { fillFrom(i, digits); return; }   // autofill / multi-digit input
+              b.value = digits;
+              b.classList.add("filled");
+              clearOtpError();
+              if (i < OTP_LENGTH - 1) boxes[i + 1].focus();
+            });
+
+            b.addEventListener("keydown", function (e) {
+              if (e.key === "Backspace" && !b.value && i > 0) {
+                e.preventDefault();
+                boxes[i - 1].value = "";
+                boxes[i - 1].classList.remove("filled");
+                boxes[i - 1].focus();
+              } else if (e.key === "ArrowLeft" && i > 0) {
+                e.preventDefault(); boxes[i - 1].focus();
+              } else if (e.key === "ArrowRight" && i < OTP_LENGTH - 1) {
+                e.preventDefault(); boxes[i + 1].focus();
+              }
+            });
+
+            b.addEventListener("paste", function (e) {
+              var text = (e.clipboardData || window.clipboardData).getData("text");
+              var digits = (text || "").replace(/\D/g, "");
+              if (!digits) return;
+              e.preventDefault();
+              fillFrom(digits.length >= OTP_LENGTH ? 0 : i, digits.slice(0, OTP_LENGTH));
+            });
+
+            otpWrap.appendChild(b);
+            boxes.push(b);
+          })(i);
+        }
+      }
+
+      buildOtp();
+
+      /* auto-fill from the link, otherwise start on the first box */
+      if (link.otp) {
+        fillFrom(0, link.otp);
+        $("password").focus();
+      } else {
+        boxes[0].focus();
+      }
+
+      
+      /* ---------- show / hide password ---------- */
+      document.querySelectorAll("[data-toggle]").forEach(function (t) {
+        t.addEventListener("click", function () {
+          var input = $(t.getAttribute("data-toggle"));
+          var show = input.type === "password";
+          input.type = show ? "text" : "password";
+          t.setAttribute("aria-pressed", show);
+        });
+      });
+
+      /* ---------- password rules, strength, match ---------- */
+      var pwInput = $("password"), confirmInput = $("confirm");
+      var ruleEls = document.querySelectorAll("[data-rule]");
+
+      function checkRules(p) {
+        var score = 0;
+        ruleEls.forEach(function (li) {
+          var ok = RULES[li.getAttribute("data-rule")](p);
+          li.classList.toggle("met", ok);
+          if (ok) score++;
+        });
+        return score;
+      }
+
+      function updateStrength(p, score) {
+        var level = !p ? 0 : score <= 2 ? 1 : score === 3 ? 2 : score === 4 ? 3 : 4;
+        $("meter").setAttribute("data-level", level);
+        $("strength").textContent = STRENGTH_LABELS[level];
+      }
+
+      function checkMatch() {
+        var mismatch = confirmInput.value && pwInput.value !== confirmInput.value;
+        $("confirmError").textContent = mismatch ? "The two passwords don't match." : "";
+        if (mismatch) confirmInput.setAttribute("aria-invalid", "true");
+        else confirmInput.removeAttribute("aria-invalid");
+        return !mismatch;
+      }
+
+      pwInput.addEventListener("input", function () {
+        var score = checkRules(pwInput.value);
+        updateStrength(pwInput.value, score);
+        pwInput.removeAttribute("aria-invalid");
+        checkMatch();
+      });
+      confirmInput.addEventListener("input", checkMatch);
+
+      /* ---------- resend timer ---------- */
+      var resendBtn = $("resendBtn"), timerEl = $("timer");
+      var timeLeft = 0, timerId = null;
+
+      function drawTimer() {
+        var m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+        timerEl.textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      }
+
+      function startTimer() {
+        clearInterval(timerId);
+        timeLeft = RESEND_SECONDS;
+        resendBtn.disabled = true;
+        timerEl.hidden = false;
+        drawTimer();
+        timerId = setInterval(function () {
+          timeLeft--;
+          if (timeLeft <= 0) {
+            clearInterval(timerId);
+            resendBtn.disabled = false;
+            timerEl.hidden = true;
+            return;
+          }
+          drawTimer();
+        }, 1000);
+      }
+
+      startTimer();
+
+      resendBtn.addEventListener("click", function () {
+        var resendMsg = $("resendMsg");
+        resendBtn.disabled = true;
+        resendBtn.textContent = "Sending…";
+        setMsg(resendMsg, "");
+
+        post(FORGOT_PATH, { gmail: link.gmail }).then(function () {
+          setMsg(resendMsg, "A new code is on its way. Use the newest email.", "success");
+          clearOtp();
+          startTimer();
+        }).catch(function (err) {
+          setMsg(resendMsg, errorText(err), "error");
+          resendBtn.disabled = false;
+        }).then(function () {
+          resendBtn.textContent = "Resend code";
+        });
+      });
+
+      /* ---------- submit ---------- */
+      var msg = $("msg"), submitBtn = $("submitBtn");
+      var submitLabel = submitBtn.textContent;
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        setMsg(msg, "");
+
+        var otp = otpValue();
+        var pw = pwInput.value;
+        var firstBad = null;
+
+        if (!/^\d{6}$/.test(otp)) {
+          $("otpError").textContent = "Enter the full 6-digit code.";
+          boxes.forEach(function (b) { b.setAttribute("aria-invalid", "true"); });
+          firstBad = firstBad || boxes[0];
+        }
+        if (checkRules(pw) < ruleEls.length) {
+          pwInput.setAttribute("aria-invalid", "true");
+          setMsg(msg, "Your password doesn't meet all the requirements yet.", "error");
+          firstBad = firstBad || pwInput;
+        }
+        if (!checkMatch() || (pw && !confirmInput.value)) {
+          if (!confirmInput.value) $("confirmError").textContent = "Type your new password again.";
+          confirmInput.setAttribute("aria-invalid", "true");
+          firstBad = firstBad || confirmInput;
+        }
+        if (firstBad) { firstBad.focus(); return; }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Please wait…";
+
+        post(CHANGE_PATH, { gmail: link.gmail, otp: otp, password: pw }).then(function () {
+          clearInterval(timerId);
+          resendBtn.disabled = true;
+          setMsg(msg, "Password changed. Taking you to sign in…", "success");
+          setTimeout(function () { window.location.href = AFTER_RESET_URL; }, 1200);
+        }).catch(function (err) {
+          setMsg(msg, errorText(err), "error");
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitLabel;
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>

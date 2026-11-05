@@ -38,8 +38,8 @@
       <form id="signinForm">
         <div class="field">
           <label for="gmail">Gmail</label>
-          <input id="gmail" name="gmail" type="email" autocomplete="email" inputmode="email"
-            placeholder="you@gmail.com" required>
+          <input id="gmail" name="gmail" type="email" autocomplete="email" inputmode="email" placeholder="you@gmail.com"
+            required>
         </div>
 
         <div class="field">
@@ -50,7 +50,15 @@
           <div class="pw">
             <input id="password" name="password" type="password" autocomplete="current-password"
               placeholder="Your password" required>
-            <button type="button" class="pw-toggle" data-toggle="password" aria-pressed="false">Show</button>
+            <button type="button" class="pw-toggle" data-toggle="password" aria-label="Show password"
+              aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+                <circle cx="12" cy="12" r="3" />
+                <path class="slash" pathLength="1" d="M4 4l16 16" />
+              </svg>
+            </button>
           </div>
         </div>
 

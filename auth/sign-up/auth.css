@@ -20,28 +20,30 @@
   --btn: #0d5c3a;
   --btn-hover: #08402a;
   --on-btn: #ffffff;
-  --ok-tint: rgba(13, 122, 68, .1);
-  --bad-tint: rgba(179, 38, 30, .08);
-  --overlay: rgba(8, 26, 18, .6);
+  --ok-tint: rgba(13, 122, 68, 0.1);
+  --bad-tint: rgba(179, 38, 30, 0.08);
+  --overlay: rgba(8, 26, 18, 0.6);
 
   /* typography */
-  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --fs-base: clamp(1rem, .96rem + .2vw, 1.0625rem);
-  --fs-sm: .9rem;
-  --fs-xs: .85rem;
-  --fs-lead: clamp(1rem, .96rem + .25vw, 1.1rem);
+  --font:
+    "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --fs-base: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  --fs-sm: 0.9rem;
+  --fs-xs: 0.85rem;
+  --fs-lead: clamp(1rem, 0.96rem + 0.25vw, 1.1rem);
   --fs-title: clamp(1.6rem, 1.25rem + 1.8vw, 2.1rem);
   --lh-body: 1.6;
 
   /* spacing */
-  --space-1: .25rem;
-  --space-2: .5rem;
-  --space-3: .75rem;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
   --space-4: 1rem;
   --space-5: 1.5rem;
   --space-6: 2rem;
   --space-7: 3rem;
-  --gutter: clamp(1rem, .6rem + 2vw, 1.5rem);
+  --gutter: clamp(1rem, 0.6rem + 2vw, 1.5rem);
 
   /* layout */
   --container: 1080px;
@@ -51,12 +53,12 @@
   --auth-w: 26rem;
 
   /* shape + depth + motion */
-  --radius-sm: .5rem;
-  --radius-md: .75rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
   --radius-lg: 1rem;
-  --shadow-card: 0 18px 40px -24px rgba(8, 64, 42, .45);
-  --shadow-pop: 0 24px 60px -20px rgba(0, 0, 0, .5);
-  --ease: .15s ease;
+  --shadow-card: 0 18px 40px -24px rgba(8, 64, 42, 0.45);
+  --shadow-pop: 0 24px 60px -20px rgba(0, 0, 0, 0.5);
+  --ease: 0.15s ease;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -72,10 +74,10 @@
     --btn-hover: #2fa36b;
     --ok: #3fbf83;
     --bad: #ff8a80;
-    --ok-tint: rgba(63, 191, 131, .14);
-    --bad-tint: rgba(255, 138, 128, .12);
-    --overlay: rgba(0, 0, 0, .7);
-    --shadow-card: 0 18px 40px -24px rgba(0, 0, 0, .8);
+    --ok-tint: rgba(63, 191, 131, 0.14);
+    --bad-tint: rgba(255, 138, 128, 0.12);
+    --overlay: rgba(0, 0, 0, 0.7);
+    --shadow-card: 0 18px 40px -24px rgba(0, 0, 0, 0.8);
   }
 }
 
@@ -146,7 +148,8 @@ a {
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px));
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px))
+    max(var(--gutter), env(safe-area-inset-right, 0px));
 }
 
 /* ---------- header ---------- */
@@ -187,7 +190,7 @@ a {
   align-items: center;
   min-height: var(--tap);
   color: var(--muted);
-  font-size: .95rem;
+  font-size: 0.95rem;
   text-decoration: none;
 }
 
@@ -196,7 +199,8 @@ a {
   flex: 1;
   display: grid;
   place-items: center;
-  padding: var(--space-6) max(var(--gutter), env(safe-area-inset-left, 0px)) var(--space-6) max(var(--gutter), env(safe-area-inset-right, 0px));
+  padding: var(--space-6) max(var(--gutter), env(safe-area-inset-left, 0px))
+    var(--space-6) max(var(--gutter), env(safe-area-inset-right, 0px));
 }
 
 .auth-card {
@@ -213,7 +217,7 @@ a {
   font-size: var(--fs-title);
   line-height: 1.12;
   font-weight: 800;
-  letter-spacing: -.02em;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -250,7 +254,7 @@ input[type="text"] {
   width: 100%;
   min-height: var(--tap);
   padding: var(--space-2) var(--space-3);
-  font: inherit;               /* 16px+ so iOS doesn't zoom on focus */
+  font: inherit; /* 16px+ so iOS doesn't zoom on focus */
   color: var(--ink);
   background: var(--paper);
   border: 1px solid var(--line);
@@ -260,7 +264,7 @@ input[type="text"] {
 
 input::placeholder {
   color: var(--muted);
-  opacity: .7;
+  opacity: 0.7;
 }
 
 input:focus {
@@ -280,15 +284,42 @@ input:focus {
   top: 50%;
   right: var(--space-1);
   transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: var(--tap);
   min-height: var(--tap);
-  padding: 0 var(--space-2);
-  font: 600 var(--fs-sm) var(--font);
-  color: var(--green);
+  padding: 0;
+  color: var(--muted);
   background: transparent;
   border: 0;
   border-radius: var(--radius-sm);
   cursor: pointer;
+  transition: color var(--ease);
+}
+
+.pw-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* the slash draws across the eye when the password is visible */
+.pw-toggle .slash {
+  opacity: 0;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition:
+    stroke-dashoffset 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.pw-toggle[aria-pressed="true"] {
+  color: var(--green);
+}
+
+.pw-toggle[aria-pressed="true"] .slash {
+  opacity: 1;
+  stroke-dashoffset: 0;
 }
 
 .link {
@@ -331,7 +362,7 @@ input:focus {
   justify-content: center;
   gap: var(--space-3);
   min-height: var(--tap);
-  padding: .65rem 1.5rem;
+  padding: 0.65rem 1.5rem;
   font: 600 1rem/1.2 var(--font);
   text-align: center;
   text-decoration: none;
@@ -340,7 +371,9 @@ input:focus {
   border: 2px solid var(--btn);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--ease), border-color var(--ease);
+  transition:
+    background var(--ease),
+    border-color var(--ease);
 }
 
 .btn.block {
@@ -366,7 +399,7 @@ input:focus {
 }
 
 .btn:disabled {
-  opacity: .6;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
@@ -407,7 +440,10 @@ input:focus {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: max(var(--gutter), env(safe-area-inset-top, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px)) max(var(--gutter), env(safe-area-inset-bottom, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding: max(var(--gutter), env(safe-area-inset-top, 0px))
+    max(var(--gutter), env(safe-area-inset-right, 0px))
+    max(var(--gutter), env(safe-area-inset-bottom, 0px))
+    max(var(--gutter), env(safe-area-inset-left, 0px));
   background: var(--overlay);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -452,7 +488,8 @@ input:focus {
 
 /* ---------- footer ---------- */
 .auth-foot {
-  padding: var(--space-4) var(--gutter) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  padding: var(--space-4) var(--gutter)
+    calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
   text-align: center;
   color: var(--muted);
   font-size: var(--fs-xs);
@@ -475,8 +512,11 @@ input:focus {
     color: var(--ink);
   }
 
+  .pw-toggle:hover {
+    color: var(--ink);
+  }
+
   .link:hover,
-  .pw-toggle:hover,
   .switch a:hover {
     text-decoration: underline;
   }

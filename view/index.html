@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f1f4f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08110c" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex">
+<title>Practice · JAMB PQ</title>
+<link rel="icon" href="./img/icon.png">
+<style>
+:root{--bg:#f1f4f2;--surface:#fff;--label:#14201a;--label-2:#5b6a62;--sep:rgba(20,50,35,.14);--fill:rgba(60,90,72,.12);--primary:#0a6e44;--primary-hover:#085a38;--soft:rgba(10,110,68,.12);--on-primary:#fff;--ok:#1e7a34;--ok-t:rgba(30,122,52,.13);--bad:#d70015;--bad-t:rgba(215,0,21,.1);--bar:color-mix(in srgb,var(--bg) 80%,transparent);--shadow:0 10px 30px -12px rgba(8,64,42,.35);--font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--s1:.25rem;--s2:.5rem;--s3:1rem;--s4:1.5rem;--s5:2rem;--m:1rem;--read:40rem;--bar-h:3.5rem;--dock-h:4.75rem;--tap:3rem;--r-card:1.5rem;--r-tile:1.125rem;--r-pill:999px;--ease:.2s ease}
+@media (prefers-color-scheme:dark){:root{--bg:#08110c;--surface:#121f18;--label:#f2f7f4;--label-2:#9db0a5;--sep:rgba(120,160,135,.24);--fill:rgba(120,150,130,.24);--primary:#30d158;--primary-hover:#5be07c;--soft:rgba(48,209,88,.16);--on-primary:#04170c;--ok:#30d158;--ok-t:rgba(48,209,88,.16);--bad:#ff453a;--bad-t:rgba(255,69,58,.16);--shadow:0 10px 30px -12px rgba(0,0,0,.7)}}
+@media (min-width:600px){:root{--m:1.5rem}}
+*,*::before,*::after{box-sizing:border-box}*{margin:0}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;font:1rem/1.55 var(--font);letter-spacing:-.011em;background:var(--bg);color:var(--label);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);border:0}
+.w{width:100%;max-width:var(--read);margin-inline:auto;padding-inline:max(var(--m),env(safe-area-inset-left,0px)) max(var(--m),env(safe-area-inset-right,0px))}
+button{font:inherit;letter-spacing:inherit;color:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.bar{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.bar .w{display:flex;align-items:center;gap:var(--s3);height:var(--bar-h)}
+.ib{display:grid;place-items:center;flex:none;width:2.75rem;height:2.75rem;background:var(--fill);border:0;border-radius:50%;cursor:pointer;transition:transform var(--ease),opacity var(--ease)}
+.ib:active:not(:disabled){transform:scale(.92)}.ib:disabled{opacity:.35;cursor:default}
+.ib svg{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.prog{flex:1;height:.5rem;background:var(--fill);border-radius:var(--r-pill);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--primary);border-radius:var(--r-pill);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+main{flex:1;padding-block:var(--s3) calc(var(--dock-h) + var(--s4) + env(safe-area-inset-bottom,0px))}
+.stage{animation:in .3s ease both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.meta{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;margin-bottom:var(--s3);font-size:.8125rem;color:var(--label-2)}
+.meta b{padding:.2rem .65rem;background:var(--soft);color:var(--primary);font-weight:700;border-radius:var(--r-pill)}
+.qtext{margin-bottom:var(--s4);font-size:clamp(1.15rem,1.05rem + .5vw,1.35rem);font-weight:600;line-height:1.4;letter-spacing:-.02em}
+.opts{display:grid;gap:.625rem}
+.o{display:flex;align-items:center;gap:var(--s3);width:100%;min-height:3.5rem;padding:.625rem var(--s3);text-align:left;background:var(--surface);border:0;border-radius:var(--r-tile);box-shadow:inset 0 0 0 1.5px var(--sep);cursor:pointer;transition:box-shadow var(--ease),background var(--ease),transform var(--ease)}
+.o:active:not(:disabled){transform:scale(.985)}.o:disabled{cursor:default}
+.o .b{display:grid;place-items:center;flex:none;width:2rem;height:2rem;font-size:.8125rem;font-weight:700;color:var(--label-2);background:var(--fill);border-radius:50%;transition:background var(--ease),color var(--ease)}
+.o .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.o.sel{background:var(--soft);box-shadow:inset 0 0 0 2px var(--primary)}.o.sel .b{background:var(--primary);color:var(--on-primary)}
+.o.right{background:var(--ok-t);box-shadow:inset 0 0 0 2px var(--ok)}.o.right .b{background:var(--ok);color:var(--bg)}
+.o.wrong{background:var(--bad-t);box-shadow:inset 0 0 0 2px var(--bad)}.o.wrong .b{background:var(--bad);color:var(--bg)}
+.link{margin-top:var(--s3);padding:var(--s2) 0;min-height:2.75rem;background:none;border:0;color:var(--primary);font-weight:600;font-size:.9375rem;cursor:pointer}
+.hint{margin-top:var(--s1);padding:var(--s3);font-size:.9375rem;background:var(--surface);border-left:4px solid #f4c430;border-radius:.75rem}
+.fb{margin-top:var(--s4);padding:var(--s3);background:var(--surface);border-radius:var(--r-card);box-shadow:var(--shadow);animation:in .3s ease both}
+.fb h2{display:flex;align-items:center;gap:var(--s2);font-size:1.125rem;letter-spacing:-.02em}
+.fb.ok h2{color:var(--ok)}.fb.no h2{color:var(--bad)}
+.fb .ans{margin-top:var(--s1);font-size:.9375rem;color:var(--label-2)}
+.fb .ans b{color:var(--label)}
+details{margin-top:var(--s3);border-top:.5px solid var(--sep)}
+summary{display:flex;align-items:center;justify-content:space-between;min-height:var(--tap);font-weight:600;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";width:.55rem;height:.55rem;border:solid var(--label-2);border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform var(--ease)}
+details[open] summary::after{transform:rotate(-135deg)}
+.ex{font-size:.9375rem;padding-bottom:var(--s2)}
+.ex h3{margin:var(--s3) 0 var(--s1);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--label-2)}
+.ex h3:first-child{margin-top:0}.ex dt{font-weight:600}.ex dd{margin:0 0 var(--s2);color:var(--label-2)}
+.ex ol{padding-left:1.25rem}.ex li{margin-bottom:var(--s2)}.ex li>b{display:block}
+.ex .sum{margin-top:var(--s3);padding:var(--s2) var(--s3);background:var(--soft);border-radius:.75rem}
+.rich p{margin:0 0 var(--s2)}.rich>:last-child{margin-bottom:0}.rich img{max-width:100%;height:auto;border-radius:.75rem}
+.rich ul,.rich ol{padding-left:1.25rem}.rich table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse}.rich td,.rich th{padding:.25rem .5rem;border:1px solid var(--sep)}
+.rich .katex-display{overflow-x:auto;overflow-y:hidden}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:var(--s2) 0 calc(var(--s2) + env(safe-area-inset-bottom,0px));background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--sep)}
+.dock .w{display:flex;gap:var(--s2);align-items:center}
+.cta{flex:1;min-height:3.25rem;padding:0 var(--s4);background:var(--primary);color:var(--on-primary);font-weight:700;font-size:1.0625rem;border:0;border-radius:var(--r-pill);cursor:pointer;transition:background var(--ease),transform var(--ease),opacity var(--ease)}
+.cta:active:not(:disabled){transform:scale(.98)}.cta:disabled{background:var(--fill);color:var(--label-2);cursor:not-allowed}
+.cta.alt{background:var(--fill);color:var(--label)}
+.card{padding:var(--s4);background:var(--surface);border-radius:var(--r-card);text-align:center}
+.card h2{font-size:1.125rem;margin-bottom:var(--s1)}.card p{margin:0 auto var(--s3);max-width:42ch;font-size:.875rem;color:var(--label-2)}
+.card.drag{outline:3px dashed var(--primary);outline-offset:-8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);padding:0 var(--s4);background:var(--primary);color:var(--on-primary);font-weight:600;border:0;border-radius:var(--r-pill);cursor:pointer}
+.res{text-align:center;padding-top:var(--s4);animation:in .4s ease both}
+.ring{position:relative;width:11rem;height:11rem;margin:0 auto var(--s3)}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10;stroke-linecap:round}.ring .tr{stroke:var(--fill)}.ring .fg{stroke:var(--primary);transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-content:center;font-size:2.75rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.ring b small{display:block;margin-top:.25rem;font-size:.8125rem;font-weight:500;letter-spacing:0;color:var(--label-2)}
+.res h1{font-size:1.75rem;letter-spacing:-.03em;line-height:1.2}.res>p{margin:var(--s1) 0 var(--s4);color:var(--label-2)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:var(--s4);background:var(--sep);border-radius:var(--r-card);overflow:hidden}
+.stats div{padding:var(--s3) var(--s2);background:var(--surface)}.stats b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}.stats span{font-size:.8125rem;color:var(--label-2)}
+.stats .g b{color:var(--ok)}.stats .r b{color:var(--bad)}
+.acts{display:grid;gap:var(--s2)}
+.sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.panel{width:100%;max-width:var(--read);max-height:75dvh;overflow-y:auto;padding:var(--s4) var(--m) calc(var(--s4) + env(safe-area-inset-bottom,0px));background:var(--surface);border-radius:var(--r-card) var(--r-card) 0 0;animation:up .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(100%)}}
+.panel h2{margin-bottom:var(--s3);font-size:1.125rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(3.25rem,1fr));gap:var(--s2)}
+.dot{min-height:3.25rem;font-weight:700;font-variant-numeric:tabular-nums;background:var(--fill);border:0;border-radius:var(--r-tile);cursor:pointer}
+.dot.ok{background:var(--ok-t);color:var(--ok)}.dot.no{background:var(--bad-t);color:var(--bad)}.dot.pk{background:var(--soft);color:var(--primary)}
+.dot.cur{box-shadow:inset 0 0 0 2px var(--label)}
+.key{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s3);font-size:.8125rem;color:var(--label-2)}
+@media (hover:hover){.o:not(:disabled):hover{background:var(--fill)}.cta:hover:not(:disabled){background:var(--primary-hover)}.cta.alt:hover{background:var(--sep)}.btn:hover{background:var(--primary-hover)}.dot:hover{filter:brightness(.95)}}
+.modebar{display:grid;grid-template-columns:1fr 1fr;padding:.1875rem;margin-bottom:var(--s2);background:var(--fill);border-radius:var(--r-pill)}
+.modebar button{min-height:2.5rem;background:none;border:0;border-radius:var(--r-pill);font-weight:600;font-size:.9375rem;color:var(--label-2);cursor:pointer;transition:background var(--ease),color var(--ease)}
+.modebar button[aria-checked="true"]{background:var(--surface);color:var(--label);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.mode-note{margin-bottom:var(--s4);padding:0 var(--s2);font-size:.8125rem;color:var(--label-2);text-align:center}
+.list{display:grid;gap:var(--s3)}
+.list .q{padding:var(--s3);background:var(--surface);border-radius:var(--r-card);scroll-margin-top:calc(var(--bar-h) + env(safe-area-inset-top,0px) + var(--s2))}
+.list .qtext{font-size:1.125rem}
+.list .o:not(.sel):not(.right):not(.wrong){background:var(--bg)}
+.list .fb{background:var(--bg);box-shadow:none}.list .hint{background:var(--bg)}
+@media (min-width:600px){.list .q{padding:var(--s4)}}
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);margin-bottom:var(--s3)}
+.qhead .meta{flex:1;min-width:0;margin:0}.qhead .meta span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qhead+.hint{margin:0 0 var(--s3)}
+.tools{display:flex;flex:none;gap:.375rem}
+.ib.sm{width:2.5rem;height:2.5rem}.ib[aria-pressed="true"]{background:var(--soft);color:var(--primary)}
+.ic{display:grid;place-items:center}
+.fb.rv h2{color:var(--primary)}
+.qacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2);margin-top:var(--s4);padding-top:var(--s3);border-top:.5px solid var(--sep)}
+.qa{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;min-height:3.75rem;padding:.5rem .25rem;background:var(--fill);color:var(--label);border:0;border-radius:var(--r-tile);font-weight:600;font-size:.75rem;line-height:1.2;text-align:center;text-decoration:none;cursor:pointer;transition:background var(--ease),transform var(--ease)}
+.qa:active{transform:scale(.97)}.qa[aria-expanded="true"]{background:var(--soft);color:var(--primary)}
+.qa svg{width:1.375rem;height:1.375rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.xp{margin-top:var(--s3);padding:var(--s3);background:var(--surface);border-radius:var(--r-card);box-shadow:var(--shadow)}
+.list .xp{background:var(--bg);box-shadow:none}
+textarea{display:block;width:100%;min-height:7rem;padding:var(--s3);background:var(--fill);color:var(--label);font:inherit;letter-spacing:inherit;border:0;border-radius:var(--r-tile);resize:vertical}
+.cq{margin-bottom:var(--s2);font-size:.8125rem;color:var(--label-2)}.cmsg{min-height:1.5rem;margin:var(--s2) 0;font-size:.875rem;color:var(--label-2)}.crow{display:flex;gap:var(--s2)}
+@media (hover:hover){.qa:hover{background:var(--sep)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="bar"><div class="w">
+  <button class="ib" id="exit" aria-label="Exit practice"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" id="prog"><i id="pbar"></i></div>
+  <button class="ib" id="navBtn" aria-label="All questions" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg></button>
+</div></header>
+<input class="sr" id="file" type="file" accept=".json,application/json" tabindex="-1" aria-hidden="true">
+
+<main class="w" id="main">
+  <section class="card" id="status" role="status"><h2 id="sTitle">Loading questions…</h2><p id="sText">Reading the JSON file.</p><button class="btn" id="choose" hidden>Choose a JSON file</button></section>
+  <div class="modebar" id="modebar" role="radiogroup" aria-label="Navigation mode" hidden><button type="button" role="radio" data-mode="click">Click mode</button><button type="button" role="radio" data-mode="scroll">Scroll mode</button></div>
+  <p class="mode-note" id="modeNote" hidden></p>
+  <section class="stage" id="stage" hidden></section>
+  <section class="list" id="list" hidden></section>
+  <section class="res" id="result" hidden>
+    <div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="tr" cx="60" cy="60" r="52"/><circle class="fg" id="fg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg><b id="pct">0%<small id="frac"></small></b></div>
+    <h1 id="rTitle"></h1><p id="rText"></p>
+    <div class="stats"><div class="g"><b id="rOk">0</b><span>Correct</span></div><div class="r"><b id="rNo">0</b><span>Wrong</span></div><div><b id="rSkip">0</b><span>Skipped</span></div></div>
+    <div class="acts"><button class="cta" id="retry">Retry missed</button><button class="cta alt" id="review">Review answers</button><button class="cta alt" id="again">Start over</button><button class="cta alt" id="done">Back to study</button></div>
+  </section>
+</main>
+
+<footer class="dock" id="dock" hidden><div class="w"><button class="ib" id="prev" aria-label="Previous question"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><button class="cta" id="act" disabled>Check answer</button></div></footer>
+
+<div class="sheet" id="sheet" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="shT"><h2 id="shT">Questions</h2><div class="grid" id="grid"></div><div class="key"><span>Blue: answered</span><span>Green: correct</span><span>Red: wrong</span></div></div></div>
+
+<div class="sheet" id="cSheet" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="cT"><h2 id="cT">Drop a comment</h2><p class="cq" id="cQ"></p><label class="sr" for="cText">Your comment</label><textarea id="cText" rows="4" maxlength="500" placeholder="Spotted a mistake or have a better explanation? Tell us."></textarea><p class="cmsg" id="cMsg" role="status"></p><div class="crow"><button class="cta alt" id="cCancel" type="button">Cancel</button><button class="cta" id="cSend" type="button" disabled>Send</button></div></div></div>
+
+<script>
+'use strict';
+/* ---------- Config ---------- */
+const DEFAULT_SRC='view.json', EXIT_URL='study.html', STORE_KEY='jambpq-dashboard-v1', KATEX='0.16.9';
+const SAVE_RESULTS=true;   /* adds one result to the dashboard store when a full session is finished */
+const NAMES={'agricultural-science':'Agricultural Science','use-of-english':'Use of English','literature-in-english':'Literature in English','christian-religious-knowledge':'CRK','islamic-religious-knowledge':'IRK','financial-accounting':'Financial Accounting'};
+const L='ABCDEFGHIJ', $=id=>document.getElementById(id);
+const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+
+/* ---------- Safe HTML from the JSON ---------- */
+const OK=new Set('P BR STRONG B EM I U SUB SUP UL OL LI SPAN DIV TABLE THEAD TBODY TR TH TD IMG CODE SMALL'.split(' ')),NO=new Set('SCRIPT STYLE IFRAME OBJECT EMBED LINK META SVG MATH FORM INPUT BUTTON TEXTAREA SELECT TEMPLATE NOSCRIPT'.split(' '));
+const urlOk=(u,img)=>{try{const p=new URL(u,location.href).protocol;return p==='http:'||p==='https:'||(img&&/^data:image\//i.test(u))}catch(e){return false}};
+function cl(s,d){s.childNodes.forEach(n=>{if(n.nodeType===3)d.append(n.nodeValue);else if(n.nodeType===1&&!NO.has(n.tagName)){if(!OK.has(n.tagName)){cl(n,d);return}const e=document.createElement(n.tagName.toLowerCase());if(n.tagName==='IMG'){const u=n.getAttribute('src');if(!u||!urlOk(u,1))return;e.src=u;e.alt=n.alt||'';e.loading='lazy'}cl(n,e);d.append(e)}})}
+function trim(n,end){const k=end?'lastChild':'firstChild';while(n[k]){const c=n[k];if((c.nodeType===3&&!c.nodeValue.replace(/[\s\u00a0]+/g,''))||c.tagName==='BR'){c.remove();continue}if(c.nodeType===1&&/^(P|DIV|SPAN)$/.test(c.tagName)){trim(c,end);if(!c.childNodes.length){c.remove();continue}}break}const t=n[k];if(t&&t.nodeType===3)t.nodeValue=t.nodeValue.replace(end?/[\s\u00a0]+$/:/^[\s\u00a0]+/,'')}
+const parse=h=>new DOMParser().parseFromString('<!doctype html><body>'+(h==null?'':h),'text/html').body;
+const put=(e,h)=>{const f=document.createDocumentFragment();cl(parse(h),f);trim(f,1);trim(f,0);e.replaceChildren(f);return e};
+const txt=h=>parse(h).textContent.replace(/\s+/g,' ').trim().toLowerCase();
+
+/* ---------- Maths: KaTeX loads only if the file contains it ---------- */
+let math=false,mathP=null;
+function loadMath(){return mathP||(mathP=new Promise(r=>{const b=`https://cdn.jsdelivr.net/npm/katex@${KATEX}/dist/`,c=E('link');c.rel='stylesheet';c.href=b+'katex.min.css';document.head.append(c);const s=E('script');s.src=b+'katex.min.js';s.onload=()=>{const a=E('script');a.src=b+'contrib/auto-render.min.js';a.onload=()=>r(1);a.onerror=()=>r(0);document.head.append(a)};s.onerror=()=>r(0);document.head.append(s)}))}
+const typeset=n=>{if(math)loadMath().then(ok=>ok&&window.renderMathInElement&&renderMathInElement(n,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true},{left:'$$',right:'$$',display:true}],throwOnError:false}))};
+
+/* ---------- Session state ---------- */
+let S=null;   /* {qs, i, pick[], done[], name, label, year, full, saved} */
+const correctOf=q=>{const o=q.Question.options,a=txt(q.Answer&&q.Answer.content);let i=o.findIndex(x=>x&&x.type!=='image'&&txt(x.content)===a);if(i<0&&/^[a-j]$/.test(a))i=L.toLowerCase().indexOf(a);return i};
+const hit=k=>S.pick[k]!=null&&S.pick[k]===S.qs[k]._c;
+const stats=()=>{const n=S.qs.length,ok=S.qs.filter((_,k)=>S.done[k]&&hit(k)).length,no=S.qs.filter((_,k)=>S.done[k]&&S.pick[k]!=null&&!hit(k)).length;return{n,ok,no,skip:n-ok-no}};
+const show=id=>{const q=id==='stage',sc=!!S&&S.mode==='scroll';$('status').hidden=id!=='status';$('result').hidden=id!=='result';$('modebar').hidden=$('modeNote').hidden=!q;$('stage').hidden=!q||sc;$('list').hidden=!q||!sc};
+
+function start(data){
+  if(!Array.isArray(data))throw new Error('Expected a list of questions.');
+  const head=data.find(x=>x&&x.type==='head')||{};
+  const qs=data.filter(x=>x&&x.Question&&Array.isArray(x.Question.options)&&x.Question.options.length>1);
+  if(!qs.length)throw new Error('No multiple-choice questions found in this file.');
+  qs.forEach(q=>q._c=correctOf(q));
+  const subj=head.subject||qs[0].subject||{},slug=subj.slug||'';
+  const name=NAMES[slug]||(slug?slug.replace(/-/g,' ').replace(/\b(?!of\b|in\b|and\b)\w/g,c=>c.toUpperCase()):subj.display_name||'Practice');
+  const j=JSON.stringify(qs);math=j.includes('\\\\(')||j.includes('\\\\[')||j.includes('$$');if(math)loadMath();
+  S={qs,i:0,pick:[],done:[],hint:[],exp:[],name,label:subj.display_name||name,year:head.year||qs[0].year||'',full:true,saved:false,mode:savedMode()};
+  document.title=`${S.label}${S.year?' '+S.year:''} · JAMB PQ`;
+  render();
+}
+
+/* ---------- Question view (one builder, used by click mode and scroll mode) ---------- */
+const MODE_KEY='jambpq-view-mode';
+const savedMode=()=>{try{return localStorage.getItem(MODE_KEY)==='scroll'?'scroll':'click'}catch(e){return'click'}};
+const NOTES={click:'One question at a time. Choose an answer, tap Check, then Next.',scroll:'All questions in one list. Tap an option to check it instantly.'};
+
+const plain=h=>parse(h).textContent.replace(/\s+/g,' ').trim();
+const ICON={bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',speaker:'<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',book:'<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5z"/>',search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',chat:'<path d="M5 4h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8l-5 4v-4H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>'};
+const ico=n=>{const e=E('span','ic');e.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;return e};
+const tool=(act,name,label,pressed)=>{const b=E('button','ib sm');b.type='button';b.dataset.act=act;b.setAttribute('aria-label',label);if(pressed!=null)b.setAttribute('aria-pressed',String(pressed));b.append(ico(name));return b};
+
+/* read aloud (browser speech) */
+const tts='speechSynthesis' in window;let speakingK=-1,curU=null;
+function syncRead(){document.querySelectorAll('[data-act="read"]').forEach(b=>{const on=+b.closest('.q').dataset.k===speakingK;b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',on?'Stop reading':'Read question aloud');b.replaceChildren(ico(on?'stop':'speaker'))})}
+function speak(k){
+  const was=speakingK===k;speechSynthesis.cancel();speakingK=-1;curU=null;
+  if(!was){const q=S.qs[k],u=new SpeechSynthesisUtterance([plain(q.Question.content),...q.Question.options.map((o,i)=>`Option ${L[i]}. ${o&&o.type!=='image'?plain(o.content):'picture'}`)].join('. '));
+    u.lang='en-GB';curU=u;speakingK=k;const end=()=>{if(curU===u){speakingK=-1;curU=null;syncRead()}};u.onend=end;u.onerror=end;speechSynthesis.speak(u)}
+  syncRead();
+}
+if(tts)addEventListener('pagehide',()=>speechSynthesis.cancel());
+
+/* swap one card in place (keeps scroll position) */
+function refresh(k){const old=S.mode==='scroll'?$('list').querySelector(`[data-k="${k}"]`):$('stage').firstElementChild,nv=qView(k);old.replaceWith(nv);typeset(nv);chrome()}
+
+function qView(k){
+  const q=S.qs[k],done=S.done[k],topic=(q.topics||[])[0],a=E('article','q'),hasHint=!!(q.Hint&&q.Hint.content);a.dataset.k=k;
+  /* top: question number, hint bulb, read aloud */
+  const head=E('div','qhead'),m=E('div','meta'),tools=E('div','tools');
+  m.append(E('b',null,`${k+1} / ${S.qs.length}`),E('span',null,[S.label,S.year,topic].filter(Boolean).join(' · ')));
+  const hb=tool('hint','bulb',hasHint?(S.hint[k]?'Hide hint':'Show hint'):'No hint for this question',hasHint?!!S.hint[k]:null);hb.disabled=!hasHint;tools.append(hb);
+  if(tts){const on=speakingK===k;tools.append(tool('read',on?'stop':'speaker',on?'Stop reading':'Read question aloud',on))}
+  head.append(m,tools);a.append(head);
+  if(hasHint&&S.hint[k])a.append(put(E('div','hint rich'),q.Hint.content));
+  const g=E('div','opts');g.setAttribute('role','radiogroup');g.setAttribute('aria-label','Answer options');
+  q.Question.options.forEach((x,i)=>{
+    const b=E('button','o'),right=done&&i===q._c,wrong=done&&S.pick[k]===i&&i!==q._c;
+    b.type='button';b.dataset.i=i;b.setAttribute('role','radio');b.setAttribute('aria-checked',String(S.pick[k]===i));b.disabled=!!done;
+    if(S.pick[k]===i&&!done)b.classList.add('sel');if(right)b.classList.add('right');if(wrong)b.classList.add('wrong');
+    b.append(E('span','b',right?'✓':wrong?'✕':L[i]||i+1));
+    const t=E('span','t rich');
+    if(x&&x.type==='image'&&urlOk(String(x.content),1)){const im=E('img');im.src=x.content;im.alt='Option '+(L[i]||i+1);t.append(im)}else put(t,x&&x.content);
+    b.append(t);g.append(b)});
+  a.append(put(E('div','rich qtext'),q.Question.content),g);
+  if(done)a.append(fbView(k));
+  /* bottom: view explanation, ask Google, drop comment */
+  const acts=E('div','qacts'),qa=(act,name,label)=>{const b=E('button','qa');b.type='button';b.dataset.act=act;b.append(ico(name),E('span',null,label));return b};
+  const ex=qa('exp','book',S.exp[k]?'Hide explanation':'View explanation');ex.setAttribute('aria-expanded',String(!!S.exp[k]));
+  const web=E('a','qa');web.href='https://www.google.com/search?q='+encodeURIComponent(`JAMB ${S.label} ${S.year} ${plain(q.Question.content)}`.replace(/\s+/g,' ').slice(0,280));web.target='_blank';web.rel='noopener noreferrer';web.append(ico('search'),E('span',null,'Ask Google'));
+  acts.append(ex,web,qa('comment','chat','Drop comment'));a.append(acts);
+  if(S.exp[k])a.append(xpView(k));
+  return a;
+}
+
+function xpView(k){const ex=S.qs[k].Explanation,x=E('section','xp ex rich');
+  if(ex&&typeof ex==='object')explain(x,ex);else x.append(E('p',null,'No explanation has been added for this question yet.'));return x}
+
+function fbView(k){
+  const q=S.qs[k],ok=hit(k),rv=S.pick[k]==null,f=E('section','fb '+(ok?'ok':rv?'rv':'no'));
+  f.append(E('h2',null,ok?'✓ Correct':rv?'Answer revealed':'✕ Not quite'));
+  if(!ok){const p=E('p','ans'),b=E('b');p.append('Correct answer: ');put(b,q.Answer&&q.Answer.content);p.append(b);f.append(p)}
+  return f;
+}
+
+function render(){if(tts&&speakingK>=0&&S.mode==='click'&&speakingK!==S.i){speechSynthesis.cancel();speakingK=-1}
+  show('stage');$('dock').hidden=false;$('navBtn').hidden=false;
+  if(S.mode==='scroll'){$('list').replaceChildren(...S.qs.map((_,k)=>qView(k)));typeset($('list'))}
+  else{const st=$('stage');st.replaceChildren(qView(S.i));st.style.animation='none';st.offsetHeight;st.style.animation='';typeset(st)}
+  chrome();
+}
+
+/* progress bar, bottom button and mode switch reflect the current state */
+function chrome(){
+  const n=S.qs.length,k=S.i,answered=S.done.filter(Boolean).length,a=$('act'),sc=S.mode==='scroll';
+  $('prev').hidden=sc;
+  if(sc){a.disabled=false;a.textContent=`Finish · ${answered}/${n} answered`}
+  else{$('prev').disabled=k===0;a.disabled=!S.done[k]&&S.pick[k]==null;a.textContent=S.done[k]?(k===n-1?'Finish':'Next'):'Check answer'}
+  $('pbar').style.width=(answered/n*100)+'%';$('prog').setAttribute('aria-valuenow',Math.round(answered/n*100));
+  document.querySelectorAll('#modebar button').forEach(b=>b.setAttribute('aria-checked',String(b.dataset.mode===S.mode)));
+  $('modeNote').textContent=NOTES[S.mode];
+}
+
+/* the card nearest the top of the screen (scroll mode) */
+function topCard(){const y=document.querySelector('.bar').offsetHeight+48;let best=0;[...$('list').children].forEach((c,k)=>{if(c.getBoundingClientRect().top<=y)best=k});return best}
+
+function setMode(m){
+  if(!S||S.mode===m)return;
+  if(S.mode==='scroll')S.i=topCard();
+  S.mode=m;try{localStorage.setItem(MODE_KEY,m)}catch(e){}
+  render();
+  if(m==='scroll'){const c=$('list').children[S.i];if(c)c.scrollIntoView({block:'start'})}else window.scrollTo(0,0);
+}
+
+function explain(body,ex){
+  const r=(t,h,c)=>put(E(t,c||'rich'),h);
+  if(Array.isArray(ex.key_concepts)&&ex.key_concepts.length){body.append(E('h3',null,'Key ideas'));const dl=E('dl');ex.key_concepts.forEach(c=>c&&dl.append(r('dt',c.term),r('dd',c.definition)));body.append(dl)}
+  if(Array.isArray(ex.steps)&&ex.steps.length){body.append(E('h3',null,'Step by step'));const ol=E('ol');ex.steps.forEach(s=>{if(!s)return;const li=E('li');li.append(r('b',s.title),r('div',s.explanation));ol.append(li)});body.append(ol)}
+  if(ex.summary){const d=E('div','sum');d.append(E('b',null,'In short: '),r('span',ex.summary));body.append(d)}
+}
+
+/* ---------- Actions ---------- */
+function pick(i,k){
+  if(S.done[k])return;
+  S.pick[k]=i;
+  if(S.mode==='scroll'){S.done[k]=true;if(navigator.vibrate)navigator.vibrate(hit(k)?[10]:[20,40,20])}else if(navigator.vibrate)navigator.vibrate(8);
+  refresh(k);
+}
+function act(){
+  const k=S.i;
+  if(S.mode==='scroll')return finish();
+  if(!S.done[k]){if(S.pick[k]==null)return;S.done[k]=true;if(navigator.vibrate)navigator.vibrate(hit(k)?[10]:[20,40,20]);render();const f=document.querySelector('.fb');if(f)f.scrollIntoView({block:'nearest',behavior:'smooth'});return}
+  if(k<S.qs.length-1){S.i++;render();window.scrollTo(0,0)}else finish();
+}
+function finish(){
+  const s=stats(),pct=Math.round(s.ok/s.n*100);
+  show('result');$('dock').hidden=true;$('navBtn').hidden=true;window.scrollTo(0,0);
+  $('rOk').textContent=s.ok;$('rNo').textContent=s.no;$('rSkip').textContent=s.skip;$('frac').textContent=`${s.ok} of ${s.n}`;
+  $('rTitle').textContent=pct>=80?'Outstanding work':pct>=60?'Good progress':pct>=40?'Keep going':'Every attempt counts';
+  $('rText').textContent=pct>=80?'You’re exam ready in this topic area.':pct>=50?'Review what you missed, then try again.':'Study the explanations, then retry the ones you missed.';
+  $('retry').hidden=s.ok===s.n;$('retry').textContent=`Retry ${s.n-s.ok} missed`;
+  $('pct').firstChild.nodeValue=pct+'%';
+  const fg=$('fg');fg.style.strokeDashoffset=326.7;requestAnimationFrame(()=>requestAnimationFrame(()=>fg.style.strokeDashoffset=326.7*(1-pct/100)));
+  if(SAVE_RESULTS&&S.full&&!S.saved){S.saved=true;saveResult(s)}
+}
+function saveResult(s){
+  try{let o={};try{o=JSON.parse(localStorage.getItem(STORE_KEY))}catch(e){}
+    if(!o||typeof o!=='object'||Array.isArray(o))o={};if(!Array.isArray(o.results))o.results=[];
+    o.results.push({t:Date.now(),s:S.name,c:s.ok,n:s.n,y:+S.year||S.year});localStorage.setItem(STORE_KEY,JSON.stringify(o))}catch(e){}
+}
+function reset(qs,full){S.qs=qs;S.i=0;S.pick=[];S.done=[];S.hint=[];S.exp=[];S.full=full;S.saved=!full;render()}
+$('retry').onclick=()=>reset(S.qs.filter((_,k)=>!(S.done[k]&&hit(k))),false);
+$('again').onclick=()=>reset(S.qs.slice(),S.full);
+$('review').onclick=()=>{S.i=0;render()};
+$('done').onclick=()=>{location.href=EXIT_URL};
+$('exit').onclick=()=>{location.href=EXIT_URL};
+$('act').onclick=act;
+$('prev').onclick=()=>{if(S.i>0){S.i--;render();window.scrollTo(0,0)}};
+function onTap(e){
+  const a=e.target.closest('.q');if(!a)return;
+  const k=+a.dataset.k,o=e.target.closest('.o'),x=e.target.closest('[data-act]');
+  if(o){pick(+o.dataset.i,k);return}
+  if(!x)return;
+  const t=x.dataset.act;
+  if(t==='hint'){S.hint[k]=!S.hint[k];refresh(k)}
+  else if(t==='read')speak(k);
+  else if(t==='exp'){S.exp[k]=!S.exp[k];if(S.exp[k]&&!S.done[k])S.done[k]=true;refresh(k)}   /* opening the explanation also reveals the answer */
+  else if(t==='comment')openComment(k);
+}
+$('stage').addEventListener('click',onTap);$('list').addEventListener('click',onTap);
+$('modebar').addEventListener('click',e=>{const b=e.target.closest('button[data-mode]');if(b)setMode(b.dataset.mode)});
+
+/* ---------- Question sheet ---------- */
+function openSheet(){const cur=S.mode==='scroll'?topCard():S.i;
+  $('grid').replaceChildren(...S.qs.map((_,k)=>{const b=E('button','dot',k+1);b.type='button';b.setAttribute('aria-label',`Question ${k+1}${S.done[k]?(hit(k)?', correct':S.pick[k]==null?', answer revealed':', wrong'):S.pick[k]!=null?', answered':''}`);
+    if(S.done[k]){if(hit(k))b.classList.add('ok');else if(S.pick[k]!=null)b.classList.add('no')}else if(S.pick[k]!=null)b.classList.add('pk');if(k===cur)b.classList.add('cur');
+    b.onclick=()=>{closeSheet();if(S.mode==='scroll')$('list').children[k].scrollIntoView({behavior:'smooth',block:'start'});else{S.i=k;render();window.scrollTo(0,0)}};return b}));
+  $('sheet').hidden=false;$('grid').querySelector('.cur').focus();
+}
+const closeSheet=()=>{$('sheet').hidden=true;$('navBtn').focus()};
+$('navBtn').onclick=openSheet;
+$('sheet').addEventListener('pointerdown',e=>{if(e.target===$('sheet'))closeSheet()});
+
+/* ---------- Comments ---------- */
+const COMMENT_API='';   /* e.g. 'https://api.example.com/comments' (POST). Empty keeps comments on this device. */
+let cK=-1;
+function openComment(k){cK=k;$('cQ').textContent=`Question ${k+1} · ${S.label}${S.year?' '+S.year:''}`;$('cText').value='';$('cMsg').textContent='';$('cSend').disabled=true;$('cSend').textContent='Send';$('cSheet').hidden=false;$('cText').focus()}
+const closeComment=()=>{$('cSheet').hidden=true};
+$('cText').oninput=()=>{$('cSend').disabled=!$('cText').value.trim()};
+$('cCancel').onclick=closeComment;
+$('cSheet').addEventListener('pointerdown',e=>{if(e.target===$('cSheet'))closeComment()});
+$('cSend').onclick=async()=>{
+  const body={question_id:S.qs[cK].id||null,subject:S.name,year:S.year,question:cK+1,comment:$('cText').value.trim()};
+  $('cSend').disabled=true;$('cSend').textContent='Sending…';
+  try{
+    if(COMMENT_API){const r=await fetch(COMMENT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw 0}
+    else{let a=[];try{a=JSON.parse(localStorage.getItem('jambpq-comments'))||[]}catch(e){}if(!Array.isArray(a))a=[];a.push({...body,t:Date.now()});localStorage.setItem('jambpq-comments',JSON.stringify(a))}
+    $('cMsg').textContent='Thanks! Your comment was saved.';setTimeout(closeComment,1200);
+  }catch(e){$('cMsg').textContent='Couldn’t send. Check your connection and try again.';$('cSend').disabled=false;$('cSend').textContent='Send'}
+};
+
+/* ---------- Keyboard: A-D choose, Enter checks / continues, arrows move, Esc closes ---------- */
+document.addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  if(!$('cSheet').hidden){if(e.key==='Escape')closeComment();return}
+  if(!$('sheet').hidden){if(e.key==='Escape')closeSheet();return}
+  if($('stage').hidden)return;
+  const k=e.key.toLowerCase(),i=L.toLowerCase().indexOf(k);
+  if(k.length===1&&i>=0&&i<S.qs[S.i].Question.options.length&&!S.done[S.i]){pick(i,S.i);return}
+  if(k==='enter'&&document.activeElement===document.body){e.preventDefault();act()}
+  if(k==='arrowleft'&&S.i>0){S.i--;render()}
+  if(k==='arrowright'&&S.done[S.i]&&S.i<S.qs.length-1){S.i++;render()}
+});
+
+/* ---------- Loading: ?src=, default file, or pick / drop a file ---------- */
+function say(t,x,btn){$('sTitle').textContent=t;$('sText').textContent=x;$('choose').hidden=!btn;show('status');$('dock').hidden=true;$('navBtn').hidden=true}
+function load(text){try{start(JSON.parse(text))}catch(e){say('Couldn’t open the questions',(e instanceof SyntaxError?'That file isn’t valid JSON.':e.message)+' You can choose the JSON file yourself.',1)}}
+(function(){
+  const raw=new URLSearchParams(location.search).get('src')||DEFAULT_SRC;let u;
+  try{u=new URL(raw,location.href)}catch(e){return say('Couldn’t open the questions','That file address isn’t valid.',1)}
+  if(u.origin!==location.origin)return say('Couldn’t open the questions','Only files from this site can be loaded by address.',1);
+  fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(load)
+    .catch(()=>say('Couldn’t load '+raw,'If you opened this page straight from your files, serve the folder over http, or choose the JSON file yourself.',1));
+})();
+$('choose').onclick=()=>$('file').click();
+$('file').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(load);e.target.value=''};
+['dragenter','dragover'].forEach(t=>document.addEventListener(t,e=>{e.preventDefault();$('status').classList.add('drag')}));
+['dragleave','drop'].forEach(t=>document.addEventListener(t,e=>{e.preventDefault();$('status').classList.remove('drag')}));
+document.addEventListener('drop',e=>{const f=e.dataTransfer&&e.dataTransfer.files[0];if(f)f.text().then(load)});
+</script>
+</body>
+</html>
