@@ -1,0 +1,77 @@
+/* ==========================================================================
+   tokens.css — design tokens (colours, type, spacing, radii)
+   Change a value here and it updates everywhere. 8px base spacing scale.
+   ========================================================================== */
+
+:root {
+  /* Colour (light) */
+  --bg: #f1f4f2;
+  --surface: #fff;
+  --label: #14201a;            /* primary text   */
+  --label-2: #5b6a62;          /* secondary text */
+  --sep: rgba(20, 50, 35, .14);
+  --fill: rgba(60, 90, 72, .14);
+  --primary: #0a6e44;
+  --primary-hover: #085a38;
+  --primary-soft: rgba(10, 110, 68, .12);
+  --on-primary: #fff;
+  --hero-bg: #0b6b43;
+  --ok: #1e7a34;
+  --warn: #9a5b00;
+  --bad: #d70015;
+  --bar-bg: color-mix(in srgb, var(--bg) 78%, transparent);
+
+  /* Type */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --fs-display: clamp(2rem, 1.5rem + 2vw, 2.5rem);
+  --fs-heading: 1.5rem;
+  --fs-small: .875rem;
+  --fs-caption: .8125rem;
+
+  /* Spacing */
+  --s1: .25rem;
+  --s2: .5rem;
+  --s3: 1rem;
+  --s4: 1.5rem;
+  --s5: 2rem;
+  --margin: 1rem;              /* page side padding (grows at breakpoints) */
+  --gutter: 1rem;              /* grid column gap                          */
+  --container: 1040px;
+
+  /* Sizes */
+  --bar-h: 3.5rem;             /* top bar height     */
+  --tab-h: 3.5rem;             /* bottom tab bar     */
+  --tap: 3rem;                 /* min touch target   */
+
+  /* Radii + motion */
+  --r-card: 1.5rem;
+  --r-icon: .75rem;
+  --r-pill: 999px;
+  --ease: .2s ease;
+}
+
+/* Dark mode: bright green buttons need dark text and a LIGHTER hover */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #08110c;
+    --surface: #121f18;
+    --label: #f2f7f4;
+    --label-2: #9db0a5;
+    --sep: rgba(120, 160, 135, .24);
+    --fill: rgba(120, 150, 130, .3);
+    --primary: #30d158;
+    --primary-hover: #5be07c;
+    --primary-soft: rgba(48, 209, 88, .16);
+    --on-primary: #04170c;
+    --hero-bg: #14573a;
+    --ok: #30d158;
+    --warn: #ffd60a;
+    --bad: #ff453a;
+  }
+}
+
+/* Larger screens get more breathing room */
+@media (min-width: 600px)  { :root { --margin: 1.5rem; --gutter: 1.5rem; } }
+@media (min-width: 1024px) { :root { --margin: 2rem; } }
+@media (min-width: 1280px) { :root { --container: 1120px; } }
+@media (max-height: 480px) and (orientation: landscape) { :root { --bar-h: 3rem; } }

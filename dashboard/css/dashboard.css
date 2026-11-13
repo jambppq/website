@@ -1,0 +1,204 @@
+/* ==========================================================================
+   dashboard.css — page-specific layout, in the same order as the page:
+     1. Header + bottom tab bar     4. Stats strip
+     2. Greeting                    5. Scores + Recent cards
+     3. Hero ("Start practice")     6. Responsive breakpoints
+   ========================================================================== */
+
+/* ---------- 1. Header + tab bar ---------- */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--bar-bg);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: .5px solid transparent;
+  transition: border-color var(--ease);
+}
+header.scrolled { border-bottom-color: var(--sep); }   /* js/chrome.js toggles this */
+
+nav { display: flex; align-items: center; justify-content: space-between; height: var(--bar-h); gap: var(--s3); }
+
+.logo { display: flex; align-items: center; gap: var(--s2); min-height: var(--tap); font-weight: 600; text-decoration: none; }
+.logo img { width: 2rem; height: 2rem; border-radius: var(--r-icon); background: var(--primary); object-fit: cover; flex: none; }
+
+.nav-list { display: none; align-items: center; gap: var(--s4); }   /* shown from 768px */
+.nav-list a { font-size: var(--fs-small); color: var(--label-2); text-decoration: none; transition: color var(--ease); }
+.nav-list a[aria-current="true"] { color: var(--label); font-weight: 600; }
+.nav-list li:last-child a {                                          /* last link = CTA pill */
+  padding: var(--s2) var(--s3);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 600;
+  border-radius: var(--r-pill);
+}
+.nav-start { display: inline-flex; }                                 /* phone-only button, hidden from 768px */
+
+.tabbar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 var(--margin) env(safe-area-inset-bottom, 0px);
+  background: var(--bar-bg);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-top: .5px solid var(--sep);
+}
+.tabbar a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tab-h);
+  color: var(--label-2);
+  font-size: .6875rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.tabbar svg {
+  width: 1.5rem; height: 1.5rem;
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.tabbar a[aria-current="true"],
+.tabbar a:active { color: var(--primary); }
+
+/* ---------- 2. Greeting ---------- */
+.hello { padding-top: var(--s2); }
+.hello h1 { font-size: var(--fs-display); font-weight: 700; line-height: 1.15; letter-spacing: -.026em; }
+.hello .line { margin-top: var(--s2); max-width: 60ch; color: var(--label-2); }
+
+/* ---------- 3. Hero: start a practice session ---------- */
+.hero-cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--hero-bg);
+  color: #fff;
+  border-radius: var(--r-card);
+}
+.hero-cta h2 { margin-bottom: var(--s1); font-size: var(--fs-heading); font-weight: 700; line-height: 1.25; letter-spacing: -.02em; }
+.hero-cta .intro { max-width: 48ch; font-size: var(--fs-small); }
+.hero-cta .act { display: flex; flex-direction: column; gap: var(--s2); }   /* subject + year + button */
+.btn-cta { background: #fff; color: var(--hero-bg); }
+.hero-cta .hint { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); font-size: var(--fs-caption); }
+.hero-cta .hint a { display: inline-flex; align-items: center; gap: var(--s1); font-weight: 600; text-underline-offset: 3px; }
+
+@media (hover: hover) {
+  .btn-cta:hover { background: rgba(255, 255, 255, .9); color: var(--hero-bg); }
+}
+
+/* ---------- 4. Stats strip (hairline gaps come from the grid background) ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5px;
+  background: var(--sep);
+  border-radius: var(--r-card);
+  overflow: hidden;
+}
+.stat { padding: var(--s3); background: var(--surface); }
+.stat-icon { display: inline-flex; width: 1.25rem; height: 1.25rem; margin-bottom: var(--s2); color: var(--primary); }
+.stat-icon svg {
+  width: 100%; height: 100%;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.stat-value { display: block; font-size: 2rem; font-weight: 700; line-height: 1.25; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat-label { display: block; font-size: var(--fs-small); font-weight: 500; }
+.stat-hint { display: block; margin-top: var(--s1); font-size: var(--fs-caption); line-height: 1.4; color: var(--label-2); }
+
+/* ---------- 5a. Scores card ---------- */
+.big { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s4); }
+.big b {
+  font-size: clamp(3rem, 2.4rem + 2.4vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.035em;
+  font-variant-numeric: tabular-nums;
+}
+.big span { font-size: var(--fs-small); font-weight: 500; color: var(--label-2); }
+
+/* One subject row: name + % on the left, "Practise" on the right, bar underneath */
+.sub {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--s3);
+  align-items: center;
+  padding-block: var(--s3);
+  border-top: .5px solid var(--sep);
+}
+.sub:first-child { padding-top: 0; border-top: 0; }
+.sub:last-child { padding-bottom: 0; }
+.subj-name { grid-column: 1; font-weight: 600; line-height: 1.3; }
+.sub-pct { grid-column: 1; font-size: var(--fs-caption); color: var(--label-2); font-variant-numeric: tabular-nums; }
+.sub .btn-mini { grid-column: 2; grid-row: 1 / span 2; }
+.sub .track { grid-column: 1 / -1; margin-top: var(--s2); }
+
+/* ---------- 5b. Recent practice card ---------- */
+.res { display: flex; align-items: center; gap: var(--s3); padding-block: var(--s3); }
+.res + .res { border-top: .5px solid var(--sep); }
+.res:first-child { padding-top: 0; }
+.res:last-child { padding-bottom: 0; }
+.res-info { flex: 1; min-width: 0; }
+.res-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); }
+.res-head b { min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.score { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
+.res small { display: block; margin-top: 2px; font-size: var(--fs-caption); line-height: 1.4; color: var(--label-2); }
+.trend { font-weight: 600; }
+.go-ic { display: none; }                                            /* arrow icon, phones only */
+
+/* Score tones, shared by .score, .trend and the progress bars */
+.score.good, .trend.up   { color: var(--ok); }
+.score.mid               { color: var(--warn); }
+.score.bad,  .trend.down { color: var(--bad); }
+
+/* ---------- 6. Responsive ---------- */
+@media (max-width: 599px) {
+  .card { padding: var(--s3); }
+  .card-head h2 { font-size: 1.25rem; }
+  .big { margin-bottom: var(--s3); }
+}
+
+@media (max-width: 479px) {                                          /* "Continue" collapses to an arrow */
+  .btn-go { width: 2rem; padding: 0; }
+  .btn-go::after { inset: -.5rem; }
+  .btn-go .go-text { display: none; }
+  .btn-go .go-ic { display: block; }
+  .res { gap: var(--s2); }
+}
+
+@media (min-width: 600px) {
+  .hero-cta { padding: var(--s5); }
+  .hero-cta .act { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .cselect--subject { flex: 1 1 12rem; min-width: 0; }
+  .cselect--year    { flex: 0 0 8.5rem; }
+  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .stat { padding: var(--s4) var(--s3); }
+  .card { padding: var(--s5); }
+}
+
+@media (min-width: 768px) {
+  body { padding-bottom: env(safe-area-inset-bottom, 0px); }         /* no tab bar on tablets+ */
+  .tabbar, .nav-start { display: none; }
+  .nav-list { display: flex; }
+
+  .hero-cta { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s4); }
+  .hero-cta .intro-wrap { flex: 1 1 304px; min-width: 0; }
+  .hero-cta .act { flex: 1 1 30rem; justify-content: flex-end; }
+  .hero-cta .hint { flex-basis: 100%; }
+
+  #scores, #recent { grid-column: span 6; }                          /* two cards side by side */
+}
+
+@media (min-width: 1024px) {
+  #scores { grid-column: span 7; }
+  #recent { grid-column: span 5; }
+}

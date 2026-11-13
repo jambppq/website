@@ -1,0 +1,94 @@
+/* ==========================================================================
+   base.css — reset, page layout helpers, accessibility, scroll-reveal motion
+   ========================================================================== */
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+[hidden] { display: none !important; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* anchor links stop BELOW the sticky header */
+  scroll-padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + var(--s3));
+}
+
+body {
+  font: 1rem/1.5 var(--font);
+  letter-spacing: -.011em;
+  background: var(--bg);
+  color: var(--label);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  /* leave room for the fixed bottom tab bar on phones */
+  padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+ul { list-style: none; padding: 0; }
+p { text-wrap: pretty; }
+h1, h2 { text-wrap: balance; }
+main { padding-block: var(--s3) var(--s5); }
+main:focus { outline: none; }
+
+/* ---------- Layout: centred container + 12-column grid ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline:
+    max(var(--margin), env(safe-area-inset-left, 0px))
+    max(var(--margin), env(safe-area-inset-right, 0px));
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--s4);
+}
+.row > * { grid-column: 1 / -1; }   /* full width by default; see dashboard.css for spans */
+
+/* ---------- Accessibility ---------- */
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+.hero-cta :focus-visible { outline-color: #fff; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--s3);
+  top: -4rem;
+  z-index: 40;
+  padding: var(--s2) var(--s3);
+  background: var(--surface);
+  color: var(--primary);
+  font-weight: 600;
+  border-radius: var(--r-pill);
+}
+.skip-link:focus { top: var(--s2); }
+
+/* ---------- Scroll-reveal (js/chrome.js adds .in) ---------- */
+.js .fade-in {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1);
+}
+.js .fade-in.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .js .fade-in { opacity: 1; transform: none; }
+}

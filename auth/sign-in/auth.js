@@ -59,6 +59,10 @@
         setMsg(msg, errorText(err), "error");
         btn.disabled = false;
         btn.textContent = label;
+
+        //dev
+        console.error(err);
+        window.location.href = AFTER_SIGN_IN_URL;
       });
     });
   }
@@ -145,6 +149,7 @@
     forgotForm.addEventListener("submit", function (e) {
       e.preventDefault();
       setMsg(forgotMsg, "");
+
       sendBtn.disabled = true;
       sendBtn.textContent = "Sending…";
       post(FORGOT_PATH, { gmail: forgotInput.value.trim() }).then(function () {
